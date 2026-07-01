@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55135076",
+  "task_name": "abc352_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T19:21:28.277794",
+  "finished_at": "2026-06-15T19:21:38.918718",
+  "elapsed_seconds": 10.64,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 10.64,
+      "estimated_cost": {
+        "total": 0.009715000000000001
+      }
+    }
+  ],
+  "faulty_function": "S = str(input())\nT = str(input())\n\na = 0\nb = []\nc = []\n\nfor i in range(len(T)):\n  if S[a] == T[i]:\n    b.append(i+1)\n    a+=1\n  else:\n    pass\n  c.append(b)\n  \nprint(c[0]) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "S = str(input())\nT = str(input())\n\na = 0\nb = []\n\nfor i in range(len(T)):\n  if a < len(S) and S[a] == T[i]:\n    b.append(i+1)\n    a += 1\n\nprint(\" \".join(map(str, b)))",
+  "fix_code_raw_response": "The issue in the provided code is that it appends the list `b` to `c` in every iteration, and then prints `c[0]`, which is not the intended behavior. Instead, we should directly print the list `b` which contains the positions of the correctly typed characters.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nS = str(input())\nT = str(input())\n\na = 0\nb = []\nc = []\n\nfor i in range(len(T)):\n  if S[a] == T[i]:\n    b.append(i+1)\n    a+=1\n  else:\n    pass\n  c.append(b)\n  \nprint(c[0]) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n</original>\n<patched>\nS = str(input())\nT = str(input())\n\na = 0\nb = []\n\nfor i in range(len(T)):\n  if a < len(S) and S[a] == T[i]:\n    b.append(i+1)\n    a += 1\n\nprint(\" \".join(map(str, b)))\n</patched>\n```\n\nExplanation:\n1. Removed the unnecessary list `c` and the line that appends `b` to `c`.\n2. Added a condition `a < len(S)` to ensure we do not go out of bounds of `S`.\n3. Changed the print statement to directly print the list `b` as a space-separated string of positions.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 920,
+        "output_tokens": 341,
+        "estimated_cost_usd": 0.009715000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.009715000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

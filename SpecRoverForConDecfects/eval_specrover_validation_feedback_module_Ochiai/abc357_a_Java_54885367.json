@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54885367",
+  "task_name": "abc357_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:17:35.900035",
+  "finished_at": "2026-06-15T10:17:47.102882",
+  "elapsed_seconds": 11.2,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 11.2,
+      "estimated_cost": {
+        "total": 0.00963
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args){\n        Scanner sc = new Scanner(System.in);\n        int count = 0;\n        int n = sc.nextInt();\n        int m = sc.nextInt();\n        for(int i=0;i<n;i++){\n            int hand = sc.nextInt();\n            m-=hand;\n            if(m-hand>=0){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                count++;\n            }\n        }\n        System.out.print(count);\n    }",
+  "fix_code": "    public static void main(String[] args){\n        Scanner sc = new Scanner(System.in);\n        int count = 0;\n        int n = sc.nextInt();\n        int m = sc.nextInt();\n        for(int i=0;i<n;i++){\n            int hand = sc.nextInt();\n            if(m >= hand){\n                m -= hand;\n                count++;\n            } else {\n                m = 0; // Use up the remaining disinfectant\n            }\n        }\n        System.out.print(count);\n    }",
+  "fix_code_raw_response": "The issue in the code is that the condition `if(m-hand>=0)` is incorrect. This condition checks if there is enough disinfectant left after subtracting the current alien's hands, but it should check if there is enough disinfectant before subtracting the current alien's hands. Additionally, the subtraction of `hand` from `m` should only occur if there is enough disinfectant left.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    public static void main(String[] args){\n        Scanner sc = new Scanner(System.in);\n        int count = 0;\n        int n = sc.nextInt();\n        int m = sc.nextInt();\n        for(int i=0;i<n;i++){\n            int hand = sc.nextInt();\n            m-=hand;\n            if(m-hand>=0){\n                count++;\n            }\n        }\n        System.out.print(count);\n    }\n</original>\n<patched>\n    public static void main(String[] args){\n        Scanner sc = new Scanner(System.in);\n        int count = 0;\n        int n = sc.nextInt();\n        int m = sc.nextInt();\n        for(int i=0;i<n;i++){\n            int hand = sc.nextInt();\n            if(m >= hand){\n                m -= hand;\n                count++;\n            } else {\n                m = 0; // Use up the remaining disinfectant\n            }\n        }\n        System.out.print(count);\n    }\n</patched>\n```\n\nThis patch ensures that the disinfectant is only subtracted if there is enough for the current alien's hands, and it correctly handles the case where the disinfectant runs out.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 894,
+        "output_tokens": 344,
+        "estimated_cost_usd": 0.00963
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.00963
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

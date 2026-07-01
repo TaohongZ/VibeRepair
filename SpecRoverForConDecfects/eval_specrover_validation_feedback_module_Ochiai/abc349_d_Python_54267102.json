@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54267102",
+  "task_name": "abc349_d",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T08:45:18.206355",
+  "finished_at": "2026-06-15T08:45:29.878914",
+  "elapsed_seconds": 11.67,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 11.67,
+      "estimated_cost": {
+        "total": 0.00909
+      }
+    }
+  ],
+  "faulty_function": "#D - Divide Interval\nl, r = map(int, input().split())\n\n#l = 3 の時、(3,4)のみ\n#l = 4の時、 (4,5)(4,6)(4,8)があるので(4,8)←4 = 2**2 (2**)\n#l = 8の時、(8,9)(8,12)(8,16)\n#l = 16の時、(16,17)(16,18)(16,20)(16,24)(16,32)\n#l + 0, l + 2**0, l + 2**1, l + 2**3, ...\n#lが奇数の時、l + 2**0のみ\n#lが偶数の時、\n\nlis = []\nif l % 2 == 1:\n  lis.append([l])\n  l = l + 1 # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\nwhile l != r:\n  i = 0\n  while l % pow(2, i+1) == 0 and l + pow(2, i+1) <= r:\n    i += 1\n  lis.append([l, l + pow(2, i)])\n  l += pow(2, i)\nprint(len(lis))\n\nfor k in range(len(lis)):\n  print(*(lis[k]))",
+  "fix_code": "#D - Divide Interval\nl, r = map(int, input().split())\n\n#l = 3 の時、(3,4)のみ\n#l = 4の時、 (4,5)(4,6)(4,8)があるので(4,8)←4 = 2**2 (2**)\n#l = 8の時、(8,9)(8,12)(8,16)\n#l = 16の時、(16,17)(16,18)(16,20)(16,24)(16,32)\n#l + 0, l + 2**0, l + 2**1, l + 2**3, ...\n#lが奇数の時、l + 2**0のみ\n#lが偶数の時、\n\nlis = []\nif l % 2 == 1:\n  lis.append([l, l + 1])\n  l = l + 1\n\nwhile l != r:\n  i = 0\n  while l % pow(2, i+1) == 0 and l + pow(2, i+1) <= r:\n    i += 1\n  lis.append([l, l + pow(2, i)])\n  l += pow(2, i)\nprint(len(lis))\n\nfor k in range(len(lis)):\n  print(*(lis[k]))",
+  "fix_code_raw_response": "The issue in the code is that when `l` is odd, the sequence `[l]` is added to the list `lis`, but it should be `[l, l+1]` to form a valid good sequence. This is causing the discrepancy in the output.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\n  lis.append([l])\n</original>\n<patched>\n  lis.append([l, l + 1])\n</patched>\n```\n\nThis change ensures that when `l` is odd, the sequence `[l, l+1]` is added to `lis`, forming a valid good sequence. The rest of the code remains unchanged and should work correctly with this fix.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1335,
+        "output_tokens": 161,
+        "estimated_cost_usd": 0.00909
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.00909
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

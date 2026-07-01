@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55062153",
+  "task_name": "abc355_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:17:47.708536",
+  "finished_at": "2026-06-15T11:17:59.144401",
+  "elapsed_seconds": 11.44,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 11.44,
+      "estimated_cost": {
+        "total": 0.00991
+      }
+    }
+  ],
+  "faulty_function": "N, M = map(int, input().split())\nA = set(map(int, input().split()))\nB = set(map(int, input().split()))\nC = sorted(list(A | B))\nfor i in range(N - 1):\n  if C[i] in A and C[i + 1] in A:\n    print('Yes')\n    exit()\nprint('No') # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "N, M = map(int, input().split())\nA = set(map(int, input().split()))\nB = set(map(int, input().split()))\nC = sorted(list(A | B))\nfor i in range(len(C) - 1):\n  if C[i] in A and C[i + 1] in A:\n    print('Yes')\n    exit()\nprint('No')",
+  "fix_code_raw_response": "The issue in the provided code is that the loop iterates only up to `N - 1`, which is incorrect because it should iterate through the entire length of the combined list `C` minus one. This is because we need to check for consecutive elements in the entire sorted list `C`, not just within the first `N` elements.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nN, M = map(int, input().split())\nA = set(map(int, input().split()))\nB = set(map(int, input().split()))\nC = sorted(list(A | B))\nfor i in range(N - 1):\n  if C[i] in A and C[i + 1] in A:\n    print('Yes')\n    exit()\nprint('No')\n</original>\n<patched>\nN, M = map(int, input().split())\nA = set(map(int, input().split()))\nB = set(map(int, input().split()))\nC = sorted(list(A | B))\nfor i in range(len(C) - 1):\n  if C[i] in A and C[i + 1] in A:\n    print('Yes')\n    exit()\nprint('No')\n</patched>\n```\n\nExplanation:\n- The loop condition `for i in range(N - 1):` was changed to `for i in range(len(C) - 1):` to ensure that we iterate through the entire sorted list `C` and check for consecutive elements appearing in `A`. This ensures that the program correctly identifies if there are any consecutive elements from `A` in the combined sorted list `C`.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 941,
+        "output_tokens": 347,
+        "estimated_cost_usd": 0.00991
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.00991
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

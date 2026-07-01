@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55035410",
+  "task_name": "abc359_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:14:01.140208",
+  "finished_at": "2026-06-15T11:14:08.545595",
+  "elapsed_seconds": 7.41,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 7.41,
+      "estimated_cost": {
+        "total": 0.00988
+      }
+    }
+  ],
+  "faulty_function": "import sys\ninput = sys.stdin.readline\n\nn = int(input().rstrip())\narr = list(map(int, input().rstrip().split()))\n\nres = 0\nfor i in range(n-2):\n  if arr[i+2] == arr[i]: res += 1 # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\nprint(res)",
+  "fix_code": "import sys\ninput = sys.stdin.readline\n\nn = int(input().rstrip())\narr = list(map(int, input().rstrip().split()))\n\nres = 0\nfor color in range(1, n+1):\n    first_index = arr.index(color)\n    second_index = arr.index(color, first_index + 1)\n    if second_index - first_index == 2:\n        res += 1\n\nprint(res)",
+  "fix_code_raw_response": "The issue in the provided code is that it only checks for a specific pattern where the same color appears with exactly one person in between. However, it does not account for the general case where the two people wearing the same color can be separated by any number of people, and we need to check if there is exactly one person between them.\n\nTo fix this, we need to iterate through the list and check for each color if the two occurrences of that color have exactly one person between them.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nimport sys\ninput = sys.stdin.readline\n\nn = int(input().rstrip())\narr = list(map(int, input().rstrip().split()))\n\nres = 0\nfor i in range(n-2):\n  if arr[i+2] == arr[i]: res += 1\n\nprint(res)\n</original>\n<patched>\nimport sys\ninput = sys.stdin.readline\n\nn = int(input().rstrip())\narr = list(map(int, input().rstrip().split()))\n\nres = 0\nfor color in range(1, n+1):\n    first_index = arr.index(color)\n    second_index = arr.index(color, first_index + 1)\n    if second_index - first_index == 2:\n        res += 1\n\nprint(res)\n</patched>\n```\n\nExplanation:\n1. We iterate through each color from 1 to N.\n2. For each color, we find the first and second occurrence indices.\n3. We check if the difference between the second and first occurrence indices is exactly 2, which means there is exactly one person between them.\n4. If the condition is satisfied, we increment the result counter.\n5. Finally, we print the result.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 890,
+        "output_tokens": 362,
+        "estimated_cost_usd": 0.00988
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.00988
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

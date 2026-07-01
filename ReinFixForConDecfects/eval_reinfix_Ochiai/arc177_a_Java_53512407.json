@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "programId": "53512407",
+  "repair_index": 5,
+  "task_name": "arc177_a",
+  "language": "Java",
+  "root_cause": "The conditional statement to update the `crons[i]` array might incorrectly alter the values of `crons` because it does not adequately account for the current value of `X` and how much decrementation should be applied without affecting logic correctness. The expression `crons[i] = Math.max(0, crons[i] - X);` might cause incorrect state adjustments or unanticipated results in further iterations.",
+  "suggestion": "Suggestion 1. Correct Decrement Calculation Replace the faulty line with separate calculations for `minUsage` and use it to adjust both `X` and `crons`. This way, the correct amount is decremented, with `X` reduced appropriately and `crons` maintaining the correct state.\n```java\nint minUsage = Math.min(cron, crons[i]); \nX -= minUsage * cronss[i]; \ncrons[i] -= minUsage;\n```\n",
+  "fix_code": "public static void main(String[] args) throws IOException {\n    int[] crons = new int[6];\n    int[] cronss = new int[]{1, 5, 10, 50, 100, 500};\n    for (int i = 0; i < 6; i++) {\n        crons[i] = nextInt();\n    }\n    int N = nextInt();\n    int[] Xs = new int[N];\n    for (int i = 0; i < N; i++) {\n        Xs[i] = nextInt();\n    }\n    for (int X : Xs) {\n        for (int i = 5; i >= 0 && X > 0; i--) {\n            int cron = X / cronss[i];\n            int minUsage = Math.min(cron, crons[i]);\n            X -= minUsage * cronss[i];\n            crons[i] -= minUsage;\n        }\n        if (X > 0) {\n            System.out.println(\"No\");\n            return;\n        }\n    }\n    System.out.println(\"Yes\");\n\n    out.flush();\n}",
+  "repair_run": 5,
+  "source_repair_index": 1,
+  "discarded_patch_count_in_same_run": 1,
+  "batch_attempt_work_dir": "/home/taohongzhu/VibeRepair/ReinFixForConDecfects/output/batch_repair_dataset_2024_work/attempts/53512407/repair_05",
+  "batch_generated_at": "2026-06-14T09:48:46.778204"
+}

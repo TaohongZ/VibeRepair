@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54917636",
+  "task_name": "abc352_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:42:52.641009",
+  "finished_at": "2026-06-15T10:42:59.186271",
+  "elapsed_seconds": 6.55,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 6.55,
+      "estimated_cost": {
+        "total": 0.007660000000000001
+      }
+    }
+  ],
+  "faulty_function": "import bisect\nimport collections\nimport functools\nimport heapq\nimport itertools\nimport math\nimport operator\nimport string\nimport sys\n\nreadline = sys.stdin.readline\nLS = lambda: readline().strip()\nLI = lambda: int(readline().strip())\nLLS = lambda: readline().strip().split()\nLL = lambda: list(map(int, readline().strip().split()))\nLLMI = lambda: list(map((1).__rsub__, LL()))\n\nn, x, y, z = LL()\nprint(\"Yes\" if x < z < y else \"No\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "import bisect\nimport collections\nimport functools\nimport heapq\nimport itertools\nimport math\nimport operator\nimport string\nimport sys\n\nreadline = sys.stdin.readline\nLS = lambda: readline().strip()\nLI = lambda: int(readline().strip())\nLLS = lambda: readline().strip().split()\nLL = lambda: list(map(int, readline().strip().split()))\nLLMI = lambda: list(map((1).__rsub__, LL()))\n\nn, x, y, z = LL()\nprint(\"Yes\" if (x < y and x < z < y) or (x > y and y < z < x) else \"No\")",
+  "fix_code_raw_response": "The issue in the code is that it only checks if `z` is between `x` and `y` when `x < y`. However, it does not account for the case when `x > y`, which would be the case for outbound trains. We need to modify the condition to handle both inbound and outbound train scenarios.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nprint(\"Yes\" if x < z < y else \"No\")\n</original>\n<patched>\nprint(\"Yes\" if (x < y and x < z < y) or (x > y and y < z < x) else \"No\")\n</patched>\n```\n\nThis patch ensures that the program correctly identifies whether the train stops at station `z` during the travel from station `x` to station `y`, regardless of the direction of travel.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 971,
+        "output_tokens": 187,
+        "estimated_cost_usd": 0.007660000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.007660000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

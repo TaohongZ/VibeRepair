@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53726659",
+  "task_name": "abc341_d",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T07:50:52.307174",
+  "finished_at": "2026-06-15T07:51:05.955873",
+  "elapsed_seconds": 13.65,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 13.65,
+      "estimated_cost": {
+        "total": 0.0072250000000000005
+      }
+    }
+  ],
+  "faulty_function": "import math\nn,m,k = (int(x) for x in input().split())\nl = math.lcm(n,m)\nlow,high = 0,10**8\nwhile high-low>1:\n  mid = (low+high)//2\n  if mid//n+mid//m-2*(mid//l) < k:\n    low = mid # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n  else: high = mid\nprint(high)",
+  "fix_code": "import math\nn,m,k = (int(x) for x in input().split())\nl = math.lcm(n,m)\nlow,high = 0,10**18\nwhile high-low>1:\n  mid = (low+high)//2\n  if mid//n+mid//m-2*(mid//l) < k:\n    low = mid\n  else: high = mid\nprint(high)",
+  "fix_code_raw_response": "The issue in the code is that the binary search range is not large enough to handle the upper constraint of K (up to 10^10). The current range is set to 10^8, which is insufficient. We need to increase the upper bound of the binary search to handle larger values of K.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nlow,high = 0,10**8\n</original>\n<patched>\nlow,high = 0,10**18\n</patched>\n```\n\nThis change increases the upper bound of the binary search range to 10^18, which is sufficient to handle the maximum value of K (10^10) given the constraints. The rest of the code logic remains the same, ensuring that the program correctly finds the K-th smallest positive integer divisible by exactly one of N and M.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 869,
+        "output_tokens": 192,
+        "estimated_cost_usd": 0.0072250000000000005
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.0072250000000000005
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

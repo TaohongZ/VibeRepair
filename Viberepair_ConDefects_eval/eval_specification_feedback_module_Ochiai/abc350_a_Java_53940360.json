@@ -1,0 +1,279 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53940360",
+  "repair_index": 1,
+  "task_name": "abc350_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_loops": 5,
+  "test_timeout_seconds": 300.0,
+  "validated_attempt_index": 2,
+  "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321",
+  "generated_at": "2026-06-10T06:34:01.439441+00:00",
+  "elapsed_seconds": 40.249,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321",
+      "elapsed_seconds": 40.249,
+      "attempts": 2
+    }
+  ],
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "status": "fail",
+      "pass": false,
+      "pass_rate": 0.0,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_01",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_01/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_01/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_01/dataset/abc350_a/Java/53940360",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_01/dataset/abc350_a/Java/53940360/faultyVersion.java",
+      "test_records": [
+        {
+          "task": "abc350_a",
+          "language": "Java",
+          "program_id": "53940360",
+          "pass_rate": 0.0,
+          "tests_run": 10,
+          "failed_tests": [],
+          "error_tests": [
+            "abc350_a/compile"
+          ]
+        }
+      ],
+      "test_error": "Java fix code failed to compile.\n\nreturncode = 1\n\nstderr:\nMain.java:4: error: illegal start of type\nimport java.util.Scanner;\n^\nMain.java:4: error: <identifier> expected\nimport java.util.Scanner;\n                        ^\n2 errors",
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function is intended to check if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, matches one of the specific contest abbreviations from a predefined list. These valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.",
+        "diagnosis_and_repair_directions": "The flawed specification has several issues:\n1. The check for non-digit characters in positions 3 to 5 is redundant since the constraints guarantee these are digits.\n2. The check for `s1` being \"ABC\" is correct but should be performed before checking the digits.\n3. The conversion of the last three characters to an integer `s2` is correct, but the condition should be adjusted to exclude \"ABC316\" and include numbers up to \"ABC349\".\n4. The condition `s2 > 349` is correct, but the condition `s2 == 316` should be changed to `s2 != 316` to exclude \"ABC316\".\n\nRepair Directions:\n- Remove the redundant digit check for positions 3 to 5.\n- Ensure the check for `s1` being \"ABC\" is performed first.\n- Correct the condition to exclude \"ABC316\" by checking `s2 != 316`.\n- Ensure the range check includes numbers up to 349.",
+        "raw_response": "Intended Behavior:\nThe function is intended to check if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, matches one of the specific contest abbreviations from a predefined list. These valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.\n\nDiagnosis and Repair Directions:\nThe flawed specification has several issues:\n1. The check for non-digit characters in positions 3 to 5 is redundant since the constraints guarantee these are digits.\n2. The check for `s1` being \"ABC\" is correct but should be performed before checking the digits.\n3. The conversion of the last three characters to an integer `s2` is correct, but the condition should be adjusted to exclude \"ABC316\" and include numbers up to \"ABC349\".\n4. The condition `s2 > 349` is correct, but the condition `s2 == 316` should be changed to `s2 != 316` to exclude \"ABC316\".\n\nRepair Directions:\n- Remove the redundant digit check for positions 3 to 5.\n- Ensure the check for `s1` being \"ABC\" is performed first.\n- Correct the condition to exclude \"ABC316\" by checking `s2 != 316`.\n- Ensure the range check includes numbers up to 349.\n\nFixed Specification:\nFunction: main\nPurpose: To read a string from the user input and determine if it is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\nBehavior:\n1. Initialize a `Scanner` object to read from standard input.\n2. Read a string `s` from the input.\n3. Extract the substring `s1` consisting of the first three characters of `s`.\n4. Check if `s1` is not equal to \"ABC\".\n5. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n6. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n7. Check if `s2` is greater than 349 or equal to 316.\n8. If `s2` is greater than 349 or equal to 316, print \"No\" and terminate the function.\n9. If none of the above conditions are met, print \"Yes\"."
+      },
+      "fixed_specification": "Function: main\nPurpose: To read a string from the user input and determine if it is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\nBehavior:\n1. Initialize a `Scanner` object to read from standard input.\n2. Read a string `s` from the input.\n3. Extract the substring `s1` consisting of the first three characters of `s`.\n4. Check if `s1` is not equal to \"ABC\".\n5. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n6. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n7. Check if `s2` is greater than 349 or equal to 316.\n8. If `s2` is greater than 349 or equal to 316, print \"No\" and terminate the function.\n9. If none of the above conditions are met, print \"Yes\".",
+      "fix_specification_usage": {
+        "input_tokens": 844,
+        "output_tokens": 549,
+        "total_tokens": 1393
+      },
+      "fix_specification_estimated_cost": 0.0076,
+      "fix_code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        var sc = new Scanner(System.in);\n        String s = sc.next();\n        \n        String s1 = s.substring(0, 3);\n        if (!s1.equals(\"ABC\")) {\n            System.out.print(\"No\");\n            return;\n        }\n        \n        int s2 = Integer.valueOf(s.substring(3));\n        \n        if (s2 > 349 || s2 == 316) {\n            System.out.print(\"No\");\n            return;\n        } else {\n            System.out.print(\"Yes\");\n        }\n    }\n}\n",
+      "fix_code_raw_response": "```java\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        var sc = new Scanner(System.in);\n        String s = sc.next();\n        \n        String s1 = s.substring(0, 3);\n        if (!s1.equals(\"ABC\")) {\n            System.out.print(\"No\");\n            return;\n        }\n        \n        int s2 = Integer.valueOf(s.substring(3));\n        \n        if (s2 > 349 || s2 == 316) {\n            System.out.print(\"No\");\n            return;\n        } else {\n            System.out.print(\"Yes\");\n        }\n    }\n}\n```",
+      "fix_code_usage": {
+        "input_tokens": 814,
+        "output_tokens": 132,
+        "total_tokens": 946
+      },
+      "fix_code_estimated_cost": 0.003355
+    },
+    {
+      "attempt_index": 2,
+      "status": "pass",
+      "pass": true,
+      "pass_rate": 1.0,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_02",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_02/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_02/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_02/dataset/abc350_a/Java/53940360",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_02/dataset/abc350_a/Java/53940360/faultyVersion.java",
+      "test_records": [
+        {
+          "task": "abc350_a",
+          "language": "Java",
+          "program_id": "53940360",
+          "pass_rate": 1.0,
+          "tests_run": 10,
+          "failed_tests": [],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function is intended to check if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, matches one of the specific contest abbreviations from a predefined list. These valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.",
+        "diagnosis_and_repair_directions": "The feedback indicates a structural issue with the previous fix, where the method was incorrectly wrapped in a new class, causing a compile error. This is a code-structure/entry-point incompatibility rather than a semantic behavior error. The fix must preserve the original method's structure, signature, and entry point without introducing a new class wrapper. The semantic logic of checking the abbreviation remains correct, but the implementation must be adjusted to fit within the existing method structure.\nRepair Directions:\n- Ensure the fix is applied directly to the method body without introducing a new class wrapper.\n- Maintain the original method signature and entry point.\n- Ensure the logic checks that the string starts with \"ABC\" and the numeric part is between 1 and 349, excluding 316.",
+        "raw_response": "Intended Behavior:\nThe function is intended to check if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, matches one of the specific contest abbreviations from a predefined list. These valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a structural issue with the previous fix, where the method was incorrectly wrapped in a new class, causing a compile error. This is a code-structure/entry-point incompatibility rather than a semantic behavior error. The fix must preserve the original method's structure, signature, and entry point without introducing a new class wrapper. The semantic logic of checking the abbreviation remains correct, but the implementation must be adjusted to fit within the existing method structure.\n\nRepair Directions:\n- Ensure the fix is applied directly to the method body without introducing a new class wrapper.\n- Maintain the original method signature and entry point.\n- Ensure the logic checks that the string starts with \"ABC\" and the numeric part is between 1 and 349, excluding 316.\n\nFixed Specification:\nFunction: main\nPurpose: To read a string from the user input and determine if it is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\nBehavior:\n1. Initialize a `Scanner` object to read from standard input.\n2. Read a string `s` from the input.\n3. Extract the substring `s1` consisting of the first three characters of `s`.\n4. Check if `s1` is not equal to \"ABC\".\n5. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n6. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n7. Check if `s2` is less than 1, greater than 349, or equal to 316.\n8. If `s2` is less than 1, greater than 349, or equal to 316, print \"No\" and terminate the function.\n9. If none of the above conditions are met, print \"Yes\"."
+      },
+      "fixed_specification": "Function: main\nPurpose: To read a string from the user input and determine if it is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\nBehavior:\n1. Initialize a `Scanner` object to read from standard input.\n2. Read a string `s` from the input.\n3. Extract the substring `s1` consisting of the first three characters of `s`.\n4. Check if `s1` is not equal to \"ABC\".\n5. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n6. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n7. Check if `s2` is less than 1, greater than 349, or equal to 316.\n8. If `s2` is less than 1, greater than 349, or equal to 316, print \"No\" and terminate the function.\n9. If none of the above conditions are met, print \"Yes\".",
+      "fix_specification_usage": {
+        "input_tokens": 1811,
+        "output_tokens": 510,
+        "total_tokens": 2321
+      },
+      "fix_specification_estimated_cost": 0.0096275,
+      "fix_code": "public static void main(String[] args) {\n    var sc = new Scanner(System.in);\n    String s = sc.next();\n    String s1 = s.substring(0, 3);\n    if (!s1.equals(\"ABC\")) {\n        System.out.print(\"No\");\n        return;\n    }\n    int s2 = Integer.valueOf(s.substring(3));\n    if (s2 < 1 || s2 > 349 || s2 == 316) {\n        System.out.print(\"No\");\n        return;\n    } else {\n        System.out.print(\"Yes\");\n    }\n}\n",
+      "fix_code_raw_response": "```java\npublic static void main(String[] args) {\n    var sc = new Scanner(System.in);\n    String s = sc.next();\n    String s1 = s.substring(0, 3);\n    if (!s1.equals(\"ABC\")) {\n        System.out.print(\"No\");\n        return;\n    }\n    int s2 = Integer.valueOf(s.substring(3));\n    if (s2 < 1 || s2 > 349 || s2 == 316) {\n        System.out.print(\"No\");\n        return;\n    } else {\n        System.out.print(\"Yes\");\n    }\n}\n```",
+      "fix_code_usage": {
+        "input_tokens": 826,
+        "output_tokens": 123,
+        "total_tokens": 949
+      },
+      "fix_code_estimated_cost": 0.003295
+    }
+  ],
+  "last_chain_summary": {
+    "status": "success",
+    "generated_at": "2026-06-10T06:33:37.089928+00:00",
+    "programId": "53940360",
+    "task_name": "abc350_a",
+    "language": "Java",
+    "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321",
+    "max_loops": 5,
+    "use_structure_adapter": false,
+    "faulty_function": "\tpublic static void main(String[] args) {\n\t\tvar sc = new Scanner(System.in);\n\t\tString s = sc.next();\n\t\tfor(int i = 3; i < 6; i ++ ) {\n\t\t\tif(s.charAt(i) < '0' || s.charAt(i) > '9') {\n\t\t\t\tSystem.out.print(\"No\");\n\t\t\t\treturn ;\n\t\t\t}\n\t\t}\n\t\tString s1 = s.substring(0, 3);\n\t\tif(!s1.equals(\"ABC\")) {\n\t\t\tSystem.out.print(\"No\");\n\t\t\treturn ;\n\t\t}\n\t\tint s2 = Integer.valueOf(s.substring(3));\n\t\t\n\t\tif(s2 > 349 || s2 == 316) { // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\t\t\tSystem.out.print(\"No\");\n\t\t\treturn ;\n\t\t} else {\n\t\t\tSystem.out.print(\"Yes\");\n\t\t}\n\t}",
+    "flawed_specification": "[\n  Function: main\n  Purpose: To read a string from the user input and determine if it meets specific criteria.\n  Signature: main(String[] args)\n  Input: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\n  Output: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\n  Behavior:\n    1. Initialize a `Scanner` object to read from standard input.\n    2. Read a string `s` from the input.\n    3. Iterate over the characters at positions 3 to 5 of the string `s`.\n    4. For each character in this range, check if it is not a digit ('0'-'9').\n    5. If any character in the range is not a digit, print \"No\" and terminate the function.\n    6. Extract the substring `s1` consisting of the first three characters of `s`.\n    7. Check if `s1` is not equal to \"ABC\".\n    8. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n    9. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n    10. Check if `s2` is greater than 349 or equal to 316 (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n    11. If `s2` is greater than 349 or equal to 316, print \"No\" and terminate the function.\n    12. If none of the above conditions are met, print \"Yes\".\n]",
+    "flawed_specification_usage": {
+      "input_tokens": 681,
+      "output_tokens": 363,
+      "total_tokens": 1044
+    },
+    "flawed_specification_estimated_cost": 0.0053325,
+    "validated_attempt_index": 2,
+    "final_fix_code": "public static void main(String[] args) {\n    var sc = new Scanner(System.in);\n    String s = sc.next();\n    String s1 = s.substring(0, 3);\n    if (!s1.equals(\"ABC\")) {\n        System.out.print(\"No\");\n        return;\n    }\n    int s2 = Integer.valueOf(s.substring(3));\n    if (s2 < 1 || s2 > 349 || s2 == 316) {\n        System.out.print(\"No\");\n        return;\n    } else {\n        System.out.print(\"Yes\");\n    }\n}\n",
+    "outer_run_index": 1,
+    "elapsed_seconds": 40.249,
+    "attempts": [
+      {
+        "attempt_index": 1,
+        "status": "fail",
+        "pass": false,
+        "pass_rate": 0.0,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_01",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_01/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_01/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_01/dataset/abc350_a/Java/53940360",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_01/dataset/abc350_a/Java/53940360/faultyVersion.java",
+        "test_records": [
+          {
+            "task": "abc350_a",
+            "language": "Java",
+            "program_id": "53940360",
+            "pass_rate": 0.0,
+            "tests_run": 10,
+            "failed_tests": [],
+            "error_tests": [
+              "abc350_a/compile"
+            ]
+          }
+        ],
+        "test_error": "Java fix code failed to compile.\n\nreturncode = 1\n\nstderr:\nMain.java:4: error: illegal start of type\nimport java.util.Scanner;\n^\nMain.java:4: error: <identifier> expected\nimport java.util.Scanner;\n                        ^\n2 errors",
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function is intended to check if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, matches one of the specific contest abbreviations from a predefined list. These valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.",
+          "diagnosis_and_repair_directions": "The flawed specification has several issues:\n1. The check for non-digit characters in positions 3 to 5 is redundant since the constraints guarantee these are digits.\n2. The check for `s1` being \"ABC\" is correct but should be performed before checking the digits.\n3. The conversion of the last three characters to an integer `s2` is correct, but the condition should be adjusted to exclude \"ABC316\" and include numbers up to \"ABC349\".\n4. The condition `s2 > 349` is correct, but the condition `s2 == 316` should be changed to `s2 != 316` to exclude \"ABC316\".\n\nRepair Directions:\n- Remove the redundant digit check for positions 3 to 5.\n- Ensure the check for `s1` being \"ABC\" is performed first.\n- Correct the condition to exclude \"ABC316\" by checking `s2 != 316`.\n- Ensure the range check includes numbers up to 349.",
+          "raw_response": "Intended Behavior:\nThe function is intended to check if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, matches one of the specific contest abbreviations from a predefined list. These valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.\n\nDiagnosis and Repair Directions:\nThe flawed specification has several issues:\n1. The check for non-digit characters in positions 3 to 5 is redundant since the constraints guarantee these are digits.\n2. The check for `s1` being \"ABC\" is correct but should be performed before checking the digits.\n3. The conversion of the last three characters to an integer `s2` is correct, but the condition should be adjusted to exclude \"ABC316\" and include numbers up to \"ABC349\".\n4. The condition `s2 > 349` is correct, but the condition `s2 == 316` should be changed to `s2 != 316` to exclude \"ABC316\".\n\nRepair Directions:\n- Remove the redundant digit check for positions 3 to 5.\n- Ensure the check for `s1` being \"ABC\" is performed first.\n- Correct the condition to exclude \"ABC316\" by checking `s2 != 316`.\n- Ensure the range check includes numbers up to 349.\n\nFixed Specification:\nFunction: main\nPurpose: To read a string from the user input and determine if it is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\nBehavior:\n1. Initialize a `Scanner` object to read from standard input.\n2. Read a string `s` from the input.\n3. Extract the substring `s1` consisting of the first three characters of `s`.\n4. Check if `s1` is not equal to \"ABC\".\n5. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n6. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n7. Check if `s2` is greater than 349 or equal to 316.\n8. If `s2` is greater than 349 or equal to 316, print \"No\" and terminate the function.\n9. If none of the above conditions are met, print \"Yes\"."
+        },
+        "fixed_specification": "Function: main\nPurpose: To read a string from the user input and determine if it is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\nBehavior:\n1. Initialize a `Scanner` object to read from standard input.\n2. Read a string `s` from the input.\n3. Extract the substring `s1` consisting of the first three characters of `s`.\n4. Check if `s1` is not equal to \"ABC\".\n5. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n6. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n7. Check if `s2` is greater than 349 or equal to 316.\n8. If `s2` is greater than 349 or equal to 316, print \"No\" and terminate the function.\n9. If none of the above conditions are met, print \"Yes\".",
+        "fix_specification_usage": {
+          "input_tokens": 844,
+          "output_tokens": 549,
+          "total_tokens": 1393
+        },
+        "fix_specification_estimated_cost": 0.0076,
+        "fix_code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        var sc = new Scanner(System.in);\n        String s = sc.next();\n        \n        String s1 = s.substring(0, 3);\n        if (!s1.equals(\"ABC\")) {\n            System.out.print(\"No\");\n            return;\n        }\n        \n        int s2 = Integer.valueOf(s.substring(3));\n        \n        if (s2 > 349 || s2 == 316) {\n            System.out.print(\"No\");\n            return;\n        } else {\n            System.out.print(\"Yes\");\n        }\n    }\n}\n",
+        "fix_code_raw_response": "```java\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        var sc = new Scanner(System.in);\n        String s = sc.next();\n        \n        String s1 = s.substring(0, 3);\n        if (!s1.equals(\"ABC\")) {\n            System.out.print(\"No\");\n            return;\n        }\n        \n        int s2 = Integer.valueOf(s.substring(3));\n        \n        if (s2 > 349 || s2 == 316) {\n            System.out.print(\"No\");\n            return;\n        } else {\n            System.out.print(\"Yes\");\n        }\n    }\n}\n```",
+        "fix_code_usage": {
+          "input_tokens": 814,
+          "output_tokens": 132,
+          "total_tokens": 946
+        },
+        "fix_code_estimated_cost": 0.003355
+      },
+      {
+        "attempt_index": 2,
+        "status": "pass",
+        "pass": true,
+        "pass_rate": 1.0,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_02",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_02/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_02/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_02/dataset/abc350_a/Java/53940360",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53940360/outer_run_01/53940360_20260610_063321/attempt_02/dataset/abc350_a/Java/53940360/faultyVersion.java",
+        "test_records": [
+          {
+            "task": "abc350_a",
+            "language": "Java",
+            "program_id": "53940360",
+            "pass_rate": 1.0,
+            "tests_run": 10,
+            "failed_tests": [],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function is intended to check if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, matches one of the specific contest abbreviations from a predefined list. These valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.",
+          "diagnosis_and_repair_directions": "The feedback indicates a structural issue with the previous fix, where the method was incorrectly wrapped in a new class, causing a compile error. This is a code-structure/entry-point incompatibility rather than a semantic behavior error. The fix must preserve the original method's structure, signature, and entry point without introducing a new class wrapper. The semantic logic of checking the abbreviation remains correct, but the implementation must be adjusted to fit within the existing method structure.\nRepair Directions:\n- Ensure the fix is applied directly to the method body without introducing a new class wrapper.\n- Maintain the original method signature and entry point.\n- Ensure the logic checks that the string starts with \"ABC\" and the numeric part is between 1 and 349, excluding 316.",
+          "raw_response": "Intended Behavior:\nThe function is intended to check if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, matches one of the specific contest abbreviations from a predefined list. These valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a structural issue with the previous fix, where the method was incorrectly wrapped in a new class, causing a compile error. This is a code-structure/entry-point incompatibility rather than a semantic behavior error. The fix must preserve the original method's structure, signature, and entry point without introducing a new class wrapper. The semantic logic of checking the abbreviation remains correct, but the implementation must be adjusted to fit within the existing method structure.\n\nRepair Directions:\n- Ensure the fix is applied directly to the method body without introducing a new class wrapper.\n- Maintain the original method signature and entry point.\n- Ensure the logic checks that the string starts with \"ABC\" and the numeric part is between 1 and 349, excluding 316.\n\nFixed Specification:\nFunction: main\nPurpose: To read a string from the user input and determine if it is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\nBehavior:\n1. Initialize a `Scanner` object to read from standard input.\n2. Read a string `s` from the input.\n3. Extract the substring `s1` consisting of the first three characters of `s`.\n4. Check if `s1` is not equal to \"ABC\".\n5. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n6. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n7. Check if `s2` is less than 1, greater than 349, or equal to 316.\n8. If `s2` is less than 1, greater than 349, or equal to 316, print \"No\" and terminate the function.\n9. If none of the above conditions are met, print \"Yes\"."
+        },
+        "fixed_specification": "Function: main\nPurpose: To read a string from the user input and determine if it is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\nBehavior:\n1. Initialize a `Scanner` object to read from standard input.\n2. Read a string `s` from the input.\n3. Extract the substring `s1` consisting of the first three characters of `s`.\n4. Check if `s1` is not equal to \"ABC\".\n5. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n6. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n7. Check if `s2` is less than 1, greater than 349, or equal to 316.\n8. If `s2` is less than 1, greater than 349, or equal to 316, print \"No\" and terminate the function.\n9. If none of the above conditions are met, print \"Yes\".",
+        "fix_specification_usage": {
+          "input_tokens": 1811,
+          "output_tokens": 510,
+          "total_tokens": 2321
+        },
+        "fix_specification_estimated_cost": 0.0096275,
+        "fix_code": "public static void main(String[] args) {\n    var sc = new Scanner(System.in);\n    String s = sc.next();\n    String s1 = s.substring(0, 3);\n    if (!s1.equals(\"ABC\")) {\n        System.out.print(\"No\");\n        return;\n    }\n    int s2 = Integer.valueOf(s.substring(3));\n    if (s2 < 1 || s2 > 349 || s2 == 316) {\n        System.out.print(\"No\");\n        return;\n    } else {\n        System.out.print(\"Yes\");\n    }\n}\n",
+        "fix_code_raw_response": "```java\npublic static void main(String[] args) {\n    var sc = new Scanner(System.in);\n    String s = sc.next();\n    String s1 = s.substring(0, 3);\n    if (!s1.equals(\"ABC\")) {\n        System.out.print(\"No\");\n        return;\n    }\n    int s2 = Integer.valueOf(s.substring(3));\n    if (s2 < 1 || s2 > 349 || s2 == 316) {\n        System.out.print(\"No\");\n        return;\n    } else {\n        System.out.print(\"Yes\");\n    }\n}\n```",
+        "fix_code_usage": {
+          "input_tokens": 826,
+          "output_tokens": 123,
+          "total_tokens": 949
+        },
+        "fix_code_estimated_cost": 0.003295
+      }
+    ]
+  },
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\tvar sc = new Scanner(System.in);\n\t\tString s = sc.next();\n\t\tfor(int i = 3; i < 6; i ++ ) {\n\t\t\tif(s.charAt(i) < '0' || s.charAt(i) > '9') {\n\t\t\t\tSystem.out.print(\"No\");\n\t\t\t\treturn ;\n\t\t\t}\n\t\t}\n\t\tString s1 = s.substring(0, 3);\n\t\tif(!s1.equals(\"ABC\")) {\n\t\t\tSystem.out.print(\"No\");\n\t\t\treturn ;\n\t\t}\n\t\tint s2 = Integer.valueOf(s.substring(3));\n\t\t\n\t\tif(s2 > 349 || s2 == 316) { // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\t\t\tSystem.out.print(\"No\");\n\t\t\treturn ;\n\t\t} else {\n\t\t\tSystem.out.print(\"Yes\");\n\t\t}\n\t}",
+  "flawed_specification": "[\n  Function: main\n  Purpose: To read a string from the user input and determine if it meets specific criteria.\n  Signature: main(String[] args)\n  Input: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\n  Output: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\n  Behavior:\n    1. Initialize a `Scanner` object to read from standard input.\n    2. Read a string `s` from the input.\n    3. Iterate over the characters at positions 3 to 5 of the string `s`.\n    4. For each character in this range, check if it is not a digit ('0'-'9').\n    5. If any character in the range is not a digit, print \"No\" and terminate the function.\n    6. Extract the substring `s1` consisting of the first three characters of `s`.\n    7. Check if `s1` is not equal to \"ABC\".\n    8. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n    9. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n    10. Check if `s2` is greater than 349 or equal to 316 (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n    11. If `s2` is greater than 349 or equal to 316, print \"No\" and terminate the function.\n    12. If none of the above conditions are met, print \"Yes\".\n]",
+  "flawed_specification_usage": {
+    "input_tokens": 681,
+    "output_tokens": 363,
+    "total_tokens": 1044
+  },
+  "flawed_specification_estimated_cost": 0.0053325,
+  "selected_inner_attempt_index": 2,
+  "selected_inner_attempt_status": "pass",
+  "pass_rate": 1.0,
+  "test_records": [
+    {
+      "task": "abc350_a",
+      "language": "Java",
+      "program_id": "53940360",
+      "pass_rate": 1.0,
+      "tests_run": 10,
+      "failed_tests": [],
+      "error_tests": []
+    }
+  ],
+  "test_error": null,
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function is intended to check if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, matches one of the specific contest abbreviations from a predefined list. These valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.",
+    "diagnosis_and_repair_directions": "The feedback indicates a structural issue with the previous fix, where the method was incorrectly wrapped in a new class, causing a compile error. This is a code-structure/entry-point incompatibility rather than a semantic behavior error. The fix must preserve the original method's structure, signature, and entry point without introducing a new class wrapper. The semantic logic of checking the abbreviation remains correct, but the implementation must be adjusted to fit within the existing method structure.\nRepair Directions:\n- Ensure the fix is applied directly to the method body without introducing a new class wrapper.\n- Maintain the original method signature and entry point.\n- Ensure the logic checks that the string starts with \"ABC\" and the numeric part is between 1 and 349, excluding 316.",
+    "raw_response": "Intended Behavior:\nThe function is intended to check if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, matches one of the specific contest abbreviations from a predefined list. These valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a structural issue with the previous fix, where the method was incorrectly wrapped in a new class, causing a compile error. This is a code-structure/entry-point incompatibility rather than a semantic behavior error. The fix must preserve the original method's structure, signature, and entry point without introducing a new class wrapper. The semantic logic of checking the abbreviation remains correct, but the implementation must be adjusted to fit within the existing method structure.\n\nRepair Directions:\n- Ensure the fix is applied directly to the method body without introducing a new class wrapper.\n- Maintain the original method signature and entry point.\n- Ensure the logic checks that the string starts with \"ABC\" and the numeric part is between 1 and 349, excluding 316.\n\nFixed Specification:\nFunction: main\nPurpose: To read a string from the user input and determine if it is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\nBehavior:\n1. Initialize a `Scanner` object to read from standard input.\n2. Read a string `s` from the input.\n3. Extract the substring `s1` consisting of the first three characters of `s`.\n4. Check if `s1` is not equal to \"ABC\".\n5. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n6. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n7. Check if `s2` is less than 1, greater than 349, or equal to 316.\n8. If `s2` is less than 1, greater than 349, or equal to 316, print \"No\" and terminate the function.\n9. If none of the above conditions are met, print \"Yes\"."
+  },
+  "fixed_specification": "Function: main\nPurpose: To read a string from the user input and determine if it is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the evaluation of the input string.\nBehavior:\n1. Initialize a `Scanner` object to read from standard input.\n2. Read a string `s` from the input.\n3. Extract the substring `s1` consisting of the first three characters of `s`.\n4. Check if `s1` is not equal to \"ABC\".\n5. If `s1` is not \"ABC\", print \"No\" and terminate the function.\n6. Convert the substring from the fourth character to the end of `s` into an integer `s2`.\n7. Check if `s2` is less than 1, greater than 349, or equal to 316.\n8. If `s2` is less than 1, greater than 349, or equal to 316, print \"No\" and terminate the function.\n9. If none of the above conditions are met, print \"Yes\".",
+  "fix_code": "public static void main(String[] args) {\n    var sc = new Scanner(System.in);\n    String s = sc.next();\n    String s1 = s.substring(0, 3);\n    if (!s1.equals(\"ABC\")) {\n        System.out.print(\"No\");\n        return;\n    }\n    int s2 = Integer.valueOf(s.substring(3));\n    if (s2 < 1 || s2 > 349 || s2 == 316) {\n        System.out.print(\"No\");\n        return;\n    } else {\n        System.out.print(\"Yes\");\n    }\n}\n",
+  "fix_code_raw_response": "```java\npublic static void main(String[] args) {\n    var sc = new Scanner(System.in);\n    String s = sc.next();\n    String s1 = s.substring(0, 3);\n    if (!s1.equals(\"ABC\")) {\n        System.out.print(\"No\");\n        return;\n    }\n    int s2 = Integer.valueOf(s.substring(3));\n    if (s2 < 1 || s2 > 349 || s2 == 316) {\n        System.out.print(\"No\");\n        return;\n    } else {\n        System.out.print(\"Yes\");\n    }\n}\n```",
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 681,
+      "output_tokens": 363,
+      "total_tokens": 1044
+    },
+    "fix_specification": {
+      "input_tokens": 1811,
+      "output_tokens": 510,
+      "total_tokens": 2321
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 826,
+      "output_tokens": 123,
+      "total_tokens": 949
+    }
+  },
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.0053325,
+    "fix_specification": 0.0096275,
+    "fix_specification_and_buggy_code_to_fix_code": 0.003295
+  }
+}

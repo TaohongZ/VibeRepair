@@ -1,0 +1,78 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53993578",
+  "task_name": "abc352_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T08:34:56.940927",
+  "finished_at": "2026-06-15T08:35:39.244036",
+  "elapsed_seconds": 42.3,
+  "selected_outer_run_index": 2,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 33.68,
+      "estimated_cost": {
+        "total": 0.07457500000000002
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 8.62,
+      "estimated_cost": {
+        "total": 0.01114
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\tint n = sc.nextInt();\n\t\tint x = sc.nextInt();\n\t\tint y = sc.nextInt();\n\t\tint z = sc.nextInt();\n\t\tsc.close();\n\t\tSystem.out.println((x - y) * (y - z) > 0 ? \"Yes\" : \"No\"); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t}",
+  "fix_code": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\tint n = sc.nextInt();\n\t\tint x = sc.nextInt();\n\t\tint y = sc.nextInt();\n\t\tint z = sc.nextInt();\n\t\tsc.close();\n\t\tboolean stopsAtZ = (x < y && x < z && z < y) || (x > y && x > z && z > y);\n\t\tSystem.out.println(stopsAtZ ? \"Yes\" : \"No\");\n\t}",
+  "fix_code_raw_response": "The issue in the code is that the logic for determining whether the train stops at station Z during the travel from station X to station Y is incorrect. The current logic `(x - y) * (y - z) > 0` does not correctly capture the conditions for the train stopping at station Z.\n\nTo fix this, we need to check if station Z lies between station X and station Y in the direction of travel. For inbound trains (X < Y), Z should be between X and Y. For outbound trains (X > Y), Z should also be between X and Y but in the reverse order.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\tint n = sc.nextInt();\n\t\tint x = sc.nextInt();\n\t\tint y = sc.nextInt();\n\t\tint z = sc.nextInt();\n\t\tsc.close();\n\t\tSystem.out.println((x - y) * (y - z) > 0 ? \"Yes\" : \"No\");\n\t}\n</original>\n<patched>\n\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\tint n = sc.nextInt();\n\t\tint x = sc.nextInt();\n\t\tint y = sc.nextInt();\n\t\tint z = sc.nextInt();\n\t\tsc.close();\n\t\tboolean stopsAtZ = (x < y && x < z && z < y) || (x > y && x > z && z > y);\n\t\tSystem.out.println(stopsAtZ ? \"Yes\" : \"No\");\n\t}\n</patched>\n```\n\nExplanation:\n- The original condition `(x - y) * (y - z) > 0` is replaced with a more accurate condition.\n- For inbound trains (X < Y), we check if `X < Z < Y`.\n- For outbound trains (X > Y), we check if `X > Z > Y`.\n- This ensures that station Z lies between station X and station Y in the direction of travel.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 917,
+        "output_tokens": 437,
+        "estimated_cost_usd": 0.01114
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.01114
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

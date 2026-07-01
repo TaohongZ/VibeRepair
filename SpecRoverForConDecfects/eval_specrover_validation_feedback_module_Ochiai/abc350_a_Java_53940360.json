@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53940360",
+  "task_name": "abc350_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T08:25:08.846255",
+  "finished_at": "2026-06-15T08:25:16.827594",
+  "elapsed_seconds": 7.98,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 7.98,
+      "estimated_cost": {
+        "total": 0.00941
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\tvar sc = new Scanner(System.in);\n\t\tString s = sc.next();\n\t\tfor(int i = 3; i < 6; i ++ ) {\n\t\t\tif(s.charAt(i) < '0' || s.charAt(i) > '9') {\n\t\t\t\tSystem.out.print(\"No\");\n\t\t\t\treturn ;\n\t\t\t}\n\t\t}\n\t\tString s1 = s.substring(0, 3);\n\t\tif(!s1.equals(\"ABC\")) {\n\t\t\tSystem.out.print(\"No\");\n\t\t\treturn ;\n\t\t}\n\t\tint s2 = Integer.valueOf(s.substring(3));\n\t\t\n\t\tif(s2 > 349 || s2 == 316) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\tSystem.out.print(\"No\");\n\t\t\treturn ;\n\t\t} else {\n\t\t\tSystem.out.print(\"Yes\");\n\t\t}\n\t}",
+  "fix_code": "\tpublic static void main(String[] args) {\n\t\tvar sc = new Scanner(System.in);\n\t\tString s = sc.next();\n\t\tfor(int i = 3; i < 6; i ++ ) {\n\t\t\tif(s.charAt(i) < '0' || s.charAt(i) > '9') {\n\t\t\t\tSystem.out.print(\"No\");\n\t\t\t\treturn ;\n\t\t\t}\n\t\t}\n\t\tString s1 = s.substring(0, 3);\n\t\tif(!s1.equals(\"ABC\")) {\n\t\t\tSystem.out.print(\"No\");\n\t\t\treturn ;\n\t\t}\n\t\tint s2 = Integer.valueOf(s.substring(3));\n\t\t\n\t\tif(s2 < 1 || s2 > 349 || s2 == 316) {\n\t\t\tSystem.out.print(\"No\");\n\t\t\treturn ;\n\t\t} else {\n\t\t\tSystem.out.print(\"Yes\");\n\t\t}\n\t}",
+  "fix_code_raw_response": "The issue in the code is that it does not correctly handle the range of valid contest abbreviations. Specifically, it should exclude numbers greater than 349 and the number 316, but it also needs to ensure that numbers less than 1 are excluded. The current code does not handle the case where the number is less than 1, which is why \"ABC000\" is incorrectly considered valid.\n\nTo fix this, we need to modify the condition that checks the validity of the number part of the string.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\t\tif(s2 > 349 || s2 == 316) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\tSystem.out.print(\"No\");\n\t\t\treturn ;\n\t\t} else {\n\t\t\tSystem.out.print(\"Yes\");\n\t\t}\n</original>\n<patched>\n\t\tif(s2 < 1 || s2 > 349 || s2 == 316) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\tSystem.out.print(\"No\");\n\t\t\treturn ;\n\t\t} else {\n\t\t\tSystem.out.print(\"Yes\");\n\t\t}\n</patched>\n```\n\nThis patch ensures that the number part of the string is within the valid range (1 to 349, excluding 316).",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 991,
+        "output_tokens": 297,
+        "estimated_cost_usd": 0.00941
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.00941
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

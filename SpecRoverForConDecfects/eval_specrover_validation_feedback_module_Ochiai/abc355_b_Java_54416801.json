@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54416801",
+  "task_name": "abc355_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T08:51:04.959520",
+  "finished_at": "2026-06-15T08:51:20.455186",
+  "elapsed_seconds": 15.5,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 15.5,
+      "estimated_cost": {
+        "total": 0.010905000000000001
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n\n        List<Integer> A = new ArrayList<>();\n        List<Integer> B = new ArrayList<>();\n        List<Integer> C = new ArrayList<>();\n\n        for (int i = 0; i < N; i++)\n            A.add(sc.nextInt());\n\n        for (int i = 0; i < M; i++)\n            B.add(sc.nextInt());\n\n        C.addAll(A);\n        C.addAll(B);\n        C.sort(Comparator.naturalOrder());\n\n        for (int i = 0; i < C.size() - 1; i++) {\n            boolean b1 = A.contains(C.get(i));\n            boolean b2 = A.contains(C.get(i) + 1); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\n            if (b1 && b2) {\n                System.out.println(\"Yes\");\n                return;\n            }\n        }\n\n        System.out.println(\"No\");\n    }",
+  "fix_code": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n\n        List<Integer> A = new ArrayList<>();\n        List<Integer> B = new ArrayList<>();\n        List<Integer> C = new ArrayList<>();\n\n        for (int i = 0; i < N; i++)\n            A.add(sc.nextInt());\n\n        for (int i = 0; i < M; i++)\n            B.add(sc.nextInt());\n\n        C.addAll(A);\n        C.addAll(B);\n        C.sort(Comparator.naturalOrder());\n\n        for (int i = 0; i < C.size() - 1; i++) {\n            boolean b1 = A.contains(C.get(i));\n            boolean b2 = A.contains(C.get(i + 1)); // Check if the next element in the sorted list is also from A\n\n            if (b1 && b2) {\n                System.out.println(\"Yes\");\n                return;\n            }\n        }\n\n        System.out.println(\"No\");\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that the check for consecutive elements from sequence A in the sorted sequence C is incorrect. The current implementation checks if an element from A and the next integer (element + 1) are both in A, which is not the correct logic. Instead, we need to check if two consecutive elements in the sorted list C are both from A.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n        for (int i = 0; i < C.size() - 1; i++) {\n            boolean b1 = A.contains(C.get(i));\n            boolean b2 = A.contains(C.get(i) + 1); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\n            if (b1 && b2) {\n                System.out.println(\"Yes\");\n                return;\n            }\n        }\n</original>\n<patched>\n        for (int i = 0; i < C.size() - 1; i++) {\n            boolean b1 = A.contains(C.get(i));\n            boolean b2 = A.contains(C.get(i + 1)); // Check if the next element in the sorted list is also from A\n\n            if (b1 && b2) {\n                System.out.println(\"Yes\");\n                return;\n            }\n        }\n</patched>\n```\n\nThis patch corrects the logic to check if two consecutive elements in the sorted list C are both from sequence A. The original code incorrectly checked if an element and the next integer (element + 1) are both in A, which does not correctly identify consecutive elements in the sorted list. The patched code correctly checks if the current element and the next element in the sorted list are both from A.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1056,
+        "output_tokens": 375,
+        "estimated_cost_usd": 0.010905000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.010905000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

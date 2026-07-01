@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "52190690",
+  "task_name": "abc347_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T06:36:41.211842",
+  "finished_at": "2026-06-15T06:36:50.598404",
+  "elapsed_seconds": 9.39,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 9.39,
+      "estimated_cost": {
+        "total": 0.008015000000000001
+      }
+    }
+  ],
+  "faulty_function": "  public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    String S = sc.next();\n    \n    int length = S.length();\n    \n    Set<String> partString = new HashSet<>();\n    \n    for(int i=1;i<=length;i++){\n      for(int j=0;j<length-i;j++){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n        String temp = S.substring(j,j+i);\n        partString.add(temp);\n      }\n    }\n    \n    System.out.println(partString.size());\n  }",
+  "fix_code": "  public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    String S = sc.next();\n    \n    int length = S.length();\n    \n    Set<String> partString = new HashSet<>();\n    \n    for(int i=1;i<=length;i++){\n      for(int j=0;j<=length-i;j++){\n        String temp = S.substring(j,j+i);\n        partString.add(temp);\n      }\n    }\n    \n    System.out.println(partString.size());\n  }",
+  "fix_code_raw_response": "The issue in the provided code is that the inner loop does not correctly iterate over all possible substrings. Specifically, the condition `j < length - i` should be `j <= length - i` to ensure that substrings of the maximum possible length are included.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    for(int i=1;i<=length;i++){\n      for(int j=0;j<length-i;j++){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n        String temp = S.substring(j,j+i);\n        partString.add(temp);\n      }\n    }\n</original>\n<patched>\n    for(int i=1;i<=length;i++){\n      for(int j=0;j<=length-i;j++){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n        String temp = S.substring(j,j+i);\n        partString.add(temp);\n      }\n    }\n</patched>\n```\n\nThis change ensures that the inner loop correctly iterates over all possible substrings, including those of the maximum length, thus fixing the issue.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 835,
+        "output_tokens": 256,
+        "estimated_cost_usd": 0.008015000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.008015000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

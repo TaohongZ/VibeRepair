@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54497882",
+  "task_name": "abc355_c",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:29:58.184383",
+  "finished_at": "2026-06-15T09:30:21.501347",
+  "elapsed_seconds": 23.32,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 23.32,
+      "estimated_cost": {
+        "total": 0.008150000000000001
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int t = sc.nextInt();\n        int[] row = new int[n];\n        int[] col = new int[n];\n        int left = 0, right = 0;\n\n        for(int i = 0; i < t; i++){\n            int a = sc.nextInt();\n            int arow = (a-1) / n;\n            int acol = (a-1) % n;\n            row[arow]++;\n            col[acol]++;\n            if(arow == acol){\n                left++;\n            }\n            if(arow == n - acol){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                right++;\n            }\n            if(row[arow] == n || col[acol] == n || left == n || right == n){\n                System.out.println(i+1);\n                return ;\n            }\n        }\n        System.out.println(-1);\n    }",
+  "fix_code": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int t = sc.nextInt();\n        int[] row = new int[n];\n        int[] col = new int[n];\n        int left = 0, right = 0;\n\n        for(int i = 0; i < t; i++){\n            int a = sc.nextInt();\n            int arow = (a-1) / n;\n            int acol = (a-1) % n;\n            row[arow]++;\n            col[acol]++;\n            if(arow == acol){\n                left++;\n            }\n            if(arow + acol == n - 1){\n                right++;\n            }\n            if(row[arow] == n || col[acol] == n || left == n || right == n){\n                System.out.println(i+1);\n                return ;\n            }\n        }\n        System.out.println(-1);\n    }",
+  "fix_code_raw_response": "The issue in the code is with the condition that checks if a cell is on the top-right to bottom-left diagonal. The current condition `if(arow == n - acol)` is incorrect. The correct condition should be `if(arow + acol == n - 1)`.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n            if(arow == n - acol){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n</original>\n<patched>\n            if(arow + acol == n - 1){\n</patched>\n```\n\nThis change ensures that the condition correctly identifies cells on the top-right to bottom-left diagonal, which is necessary for correctly determining when Bingo is achieved.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1117,
+        "output_tokens": 171,
+        "estimated_cost_usd": 0.008150000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.008150000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

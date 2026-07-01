@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54971222",
+  "task_name": "abc359_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:56:29.744246",
+  "finished_at": "2026-06-15T10:56:38.890897",
+  "elapsed_seconds": 9.15,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 9.15,
+      "estimated_cost": {
+        "total": 0.012620000000000001
+      }
+    }
+  ],
+  "faulty_function": "  public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt(), a1 = sc.nextInt(), a2 = sc.nextInt(), an, count = 0;\n    for(int i=3; i<2*n; i++) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      an = sc.nextInt();\n      if(a1 == an) ++count;\n      a1 = a2;\n      a2 = an;\n    }\n    System.out.print(count);\n  }",
+  "fix_code": "  public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int[] A = new int[2 * n];\n    for (int i = 0; i < 2 * n; i++) {\n      A[i] = sc.nextInt();\n    }\n    int count = 0;\n    for (int i = 1; i <= n; i++) {\n      int first = -1, second = -1;\n      for (int j = 0; j < 2 * n; j++) {\n        if (A[j] == i) {\n          if (first == -1) {\n            first = j;\n          } else {\n            second = j;\n            break;\n          }\n        }\n      }\n      if (second - first == 2) {\n        count++;\n      }\n    }\n    System.out.print(count);\n  }",
+  "fix_code_raw_response": "The issue in the provided code is that it does not correctly count the number of colors that have exactly one person between the two people wearing clothes of that color. The current implementation only checks if the first and the current person have the same color, which is not sufficient to solve the problem.\n\nTo fix this, we need to:\n1. Store the positions of each color.\n2. Check if the difference between the positions of the same color is exactly 2.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n  public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt(), a1 = sc.nextInt(), a2 = sc.nextInt(), an, count = 0;\n    for(int i=3; i<2*n; i++) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      an = sc.nextInt();\n      if(a1 == an) ++count;\n      a1 = a2;\n      a2 = an;\n    }\n    System.out.print(count);\n  }\n</original>\n<patched>\n  public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int[] A = new int[2 * n];\n    for (int i = 0; i < 2 * n; i++) {\n      A[i] = sc.nextInt();\n    }\n    int count = 0;\n    for (int i = 1; i <= n; i++) {\n      int first = -1, second = -1;\n      for (int j = 0; j < 2 * n; j++) {\n        if (A[j] == i) {\n          if (first == -1) {\n            first = j;\n          } else {\n            second = j;\n            break;\n          }\n        }\n      }\n      if (second - first == 2) {\n        count++;\n      }\n    }\n    System.out.print(count);\n  }\n</patched>\n```\n\nExplanation:\n1. We read all the input values into an array `A`.\n2. We iterate over each color from 1 to `n`.\n3. For each color, we find the positions of the two people wearing that color.\n4. We check if the difference between these positions is exactly 2.\n5. If the condition is satisfied, we increment the count.\n6. Finally, we print the count.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 916,
+        "output_tokens": 536,
+        "estimated_cost_usd": 0.012620000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.012620000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

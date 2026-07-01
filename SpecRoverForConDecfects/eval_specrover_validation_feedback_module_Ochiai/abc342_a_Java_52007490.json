@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "52007490",
+  "task_name": "abc342_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T14:50:56.772341",
+  "finished_at": "2026-06-15T14:51:12.525796",
+  "elapsed_seconds": 15.75,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 15.75,
+      "estimated_cost": {
+        "total": 0.024115
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args){\n\n        Scanner sc = new Scanner(System.in);\n\n        String S = sc.next();\n        int sLength = S.length();\n        for (int i=0;i<sLength;i++) {\n            char ch = S.charAt(i);\n            int cnt = 0;\n            for (int j=0;j<sLength;j++){\n                char ch2 = S.charAt(j);\n                if (i != j && ch != ch2){\n                    cnt++;\n                    if (cnt == 2) {\n                        System.out.println(ch);\n                        return; // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n                    } \n                }\n            }\n        }\n\t}",
+  "fix_code": "\tpublic static void main(String[] args){\n\n        Scanner sc = new Scanner(System.in);\n\n        String S = sc.next();\n        int sLength = S.length();\n        int[] charCount = new int[26];\n        \n        // Count occurrences of each character\n        for (int i = 0; i < sLength; i++) {\n            charCount[S.charAt(i) - 'a']++;\n        }\n        \n        // Find the character that appears only once and print its 1-based index\n        for (int i = 0; i < sLength; i++) {\n            if (charCount[S.charAt(i) - 'a'] == 1) {\n                System.out.println(i + 1);\n                return;\n            }\n        }\n\t}",
+  "fix_code_raw_response": "To resolve the issue, we need to identify the character that appears only once in the string and then return its 1-based index. The current approach of counting differing characters is flawed. Instead, we should count the occurrences of each character and find the one that appears only once.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\tpublic static void main(String[] args){\n\n        Scanner sc = new Scanner(System.in);\n\n        String S = sc.next();\n        int sLength = S.length();\n        for (int i=0;i<sLength;i++) {\n            char ch = S.charAt(i);\n            int cnt = 0;\n            for (int j=0;j<sLength;j++){\n                char ch2 = S.charAt(j);\n                if (i != j && ch != ch2){\n                    cnt++;\n                    if (cnt == 2) {\n                        System.out.println(ch);\n                        return;\n                    } \n                }\n            }\n        }\n\t}\n</original>\n<patched>\n\tpublic static void main(String[] args){\n\n        Scanner sc = new Scanner(System.in);\n\n        String S = sc.next();\n        int sLength = S.length();\n        int[] charCount = new int[26];\n        \n        // Count occurrences of each character\n        for (int i = 0; i < sLength; i++) {\n            charCount[S.charAt(i) - 'a']++;\n        }\n        \n        // Find the character that appears only once and print its 1-based index\n        for (int i = 0; i < sLength; i++) {\n            if (charCount[S.charAt(i) - 'a'] == 1) {\n                System.out.println(i + 1);\n                return;\n            }\n        }\n\t}\n</patched>\n```\n\nThis patch counts the occurrences of each character in the string and then finds the character that appears only once. It then prints the 1-based index of that character, which resolves the issue as described in the problem statement.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 896,
+        "output_tokens": 384,
+        "estimated_cost_usd": 0.01024
+      },
+      {
+        "input_tokens": 1518,
+        "output_tokens": 419,
+        "estimated_cost_usd": 0.013875
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.024115
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55035534",
+  "task_name": "abc358_d",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:14:18.759965",
+  "finished_at": "2026-06-15T11:16:11.021027",
+  "elapsed_seconds": 112.26,
+  "selected_outer_run_index": 3,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": false,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 0.5454545454545454,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 56.05,
+      "estimated_cost": {
+        "total": 0.17532
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 29.47,
+      "estimated_cost": {
+        "total": 0.207655
+      }
+    },
+    {
+      "outer_run_index": 3,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "2",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 26.74,
+      "estimated_cost": {
+        "total": 0.09728500000000001
+      }
+    }
+  ],
+  "faulty_function": "# 入力\nnum_item, num_friend = input().split()\nnum_item, num_friend = int(num_item), int(num_friend)\nitem_data = sorted(list(map(int, input().split())))\nfriend_data = sorted(list(map(int, input().split())))\ncost = 0\nbuy_flg = True\nitem_idx = 0\nfriend_idx=0\nif item_data[-1] < friend_data[-1]:\n  buy_flg=False\nwhile friend_idx < num_friend:\n  if item_data[item_idx] >= friend_data[friend_idx]:\n    cost += item_data[item_idx]\n    friend_idx +=1\n  item_idx +=1\n  if item_idx >= num_item:\n    buy_flg=False\n    break\n\nif buy_flg:\n  print(cost)\nelse:\n  print(-1) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "# 入力\nimport heapq\n\nnum_item, num_friend = input().split()\nnum_item, num_friend = int(num_item), int(num_friend)\nitem_data = sorted(list(map(int, input().split())), reverse=True)\nfriend_data = sorted(list(map(int, input().split())), reverse=True)\ncost = 0\nbuy_flg = True\nitem_idx = 0\n\n# Priority queue to store available items\navailable_items = []\n\n# Iterate through friends and find the minimum cost to satisfy each friend's requirement\nfor friend_candy in friend_data:\n    # Add all items that can satisfy the current friend's requirement to the priority queue\n    while item_idx < num_item and item_data[item_idx] >= friend_candy:\n        heapq.heappush(available_items, item_data[item_idx])\n        item_idx += 1\n    \n    # If there are no available items that can satisfy the current friend's requirement, set buy_flg to False\n    if not available_items:\n        buy_flg = False\n        break\n    \n    # Use the cheapest available item to satisfy the current friend's requirement\n    cost += heapq.heappop(available_items)\n\nif buy_flg:\n  print(cost)\nelse:\n  print(-1)",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that we are selecting the minimum cost items that satisfy the candy requirements for each friend. The previous patch had a logical error in the condition for adding items to the priority queue. We need to correct this and ensure that the program handles the constraints correctly.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nnum_item, num_friend = input().split()\nnum_item, num_friend = int(num_item), int(num_friend)\nitem_data = sorted(list(map(int, input().split())))\nfriend_data = sorted(list(map(int, input().split())))\ncost = 0\nbuy_flg = True\nitem_idx = 0\nfriend_idx=0\nif item_data[-1] < friend_data[-1]:\n  buy_flg=False\nwhile friend_idx < num_friend:\n  if item_data[item_idx] >= friend_data[friend_idx]:\n    cost += item_data[item_idx]\n    friend_idx +=1\n  item_idx +=1\n  if item_idx >= num_item:\n    buy_flg=False\n    break\n\nif buy_flg:\n  print(cost)\nelse:\n  print(-1)\n</original>\n<patched>\nimport heapq\n\nnum_item, num_friend = input().split()\nnum_item, num_friend = int(num_item), int(num_friend)\nitem_data = sorted(list(map(int, input().split())), reverse=True)\nfriend_data = sorted(list(map(int, input().split())), reverse=True)\ncost = 0\nbuy_flg = True\nitem_idx = 0\n\n# Priority queue to store available items\navailable_items = []\n\n# Iterate through friends and find the minimum cost to satisfy each friend's requirement\nfor friend_candy in friend_data:\n    # Add all items that can satisfy the current friend's requirement to the priority queue\n    while item_idx < num_item and item_data[item_idx] >= friend_candy:\n        heapq.heappush(available_items, item_data[item_idx])\n        item_idx += 1\n    \n    # If there are no available items that can satisfy the current friend's requirement, set buy_flg to False\n    if not available_items:\n        buy_flg = False\n        break\n    \n    # Use the cheapest available item to satisfy the current friend's requirement\n    cost += heapq.heappop(available_items)\n\nif buy_flg:\n  print(cost)\nelse:\n  print(-1)\n</patched>\n```\n\nExplanation:\n1. Import the `heapq` module to use a priority queue (min-heap).\n2. Sort `item_data` and `friend_data` in descending order to ensure we are always considering the largest available items first.\n3. Iterate through the sorted list of friends' candy requirements.\n4. For each friend's requirement, add all items that can satisfy the requirement to the priority queue.\n5. If there are no available items that can satisfy the current friend's requirement, set `buy_flg` to `False` and break the loop.\n6. Use the cheapest available item from the priority queue to satisfy the current friend's requirement and add its cost to the total cost.\n7. Finally, print the total cost if `buy_flg` is `True`, otherwise, print `-1`.\n\nThis patch ensures that the program correctly handles the constraints and minimizes the total cost while satisfying the candy requirements for each friend.",
+  "patch_handle": "2",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2681,
+        "output_tokens": 736,
+        "estimated_cost_usd": 0.024445
+      },
+      {
+        "input_tokens": 5287,
+        "output_tokens": 662,
+        "estimated_cost_usd": 0.036365
+      },
+      {
+        "input_tokens": 5201,
+        "output_tokens": 698,
+        "estimated_cost_usd": 0.03647500000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.09728500000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

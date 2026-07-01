@@ -1,0 +1,78 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54879664",
+  "task_name": "abc352_d",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T19:24:25.360751",
+  "finished_at": "2026-06-15T19:25:07.010297",
+  "elapsed_seconds": 41.65,
+  "selected_outer_run_index": 2,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 10.19,
+      "estimated_cost": {
+        "total": 0.021455000000000002
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 31.46,
+      "estimated_cost": {
+        "total": 0.018755
+      }
+    }
+  ],
+  "faulty_function": "from sortedcontainers import SortedList,SortedSet,SortedDict\n\nn,k = map(int,input().split())\np = list(map(int,input().split()))\ns = SortedList()\nidx = [0]*(n+1)\nfor i in range(n):\n    idx[p[i]] = i\nans = float('inf')\nfor i in range(1,n+1):\n    s.add(idx[i])\n    if len(s) > k:\n        s.discard(idx[i-k])\n        ans = min(ans,s[-1]-s[0])\nprint(ans) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "from sortedcontainers import SortedList,SortedSet,SortedDict\n\nn,k = map(int,input().split())\np = list(map(int,input().split()))\ns = SortedList()\nidx = [0]*(n+1)\nfor i in range(n):\n    idx[p[i]] = i\nans = float('inf')\nfor i in range(1,n+1):\n    s.add(idx[i])\n    if len(s) > k:\n        s.discard(idx[i-k])\n    if len(s) >= k:\n        ans = min(ans,s[-1]-s[0])\nprint(ans)",
+  "fix_code_raw_response": "The issue in the provided code is that the condition to update the `ans` variable is inside the `if len(s) > k:` block, which means it only updates `ans` when the size of the sorted list `s` exceeds `k`. However, we need to update `ans` whenever we have at least `k` elements in `s`.\n\nTo fix this, we should update `ans` whenever the size of `s` is at least `k`, not just when it exceeds `k`.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nfor i in range(1,n+1):\n    s.add(idx[i])\n    if len(s) > k:\n        s.discard(idx[i-k])\n        ans = min(ans,s[-1]-s[0])\n</original>\n<patched>\nfor i in range(1,n+1):\n    s.add(idx[i])\n    if len(s) > k:\n        s.discard(idx[i-k])\n    if len(s) >= k:\n        ans = min(ans,s[-1]-s[0])\n</patched>\n```\n\nThis patch ensures that `ans` is updated whenever the size of `s` is at least `k`, which should resolve the issue and produce the correct output.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2935,
+        "output_tokens": 272,
+        "estimated_cost_usd": 0.018755
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.018755
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

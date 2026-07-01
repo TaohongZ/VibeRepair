@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54949643",
+  "task_name": "abc345_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T16:49:47.958012",
+  "finished_at": "2026-06-15T16:50:09.657749",
+  "elapsed_seconds": 21.7,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "2",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 21.7,
+      "estimated_cost": {
+        "total": 0.03671
+      }
+    }
+  ],
+  "faulty_function": "n = input()\ncnta,cntb =0,0\nstack = []\nbool = True\nfor i in range(len(n)):\n  if n[i]=='<':\n    cnta+=1\n  elif n[i]=='>':\n    cntb+=1\n    if cntb>cnta:\n        bool = False\n        break;\nif bool and cnta==cntb:\n  print(\"Yes\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nelse:\n  print(\"No\")",
+  "fix_code": "n = input()\nif len(n) >= 3 and n[0] == '<' and n[-1] == '>' and all(c == '=' for c in n[1:-1]):\n    print(\"Yes\")\nelse:\n    print(\"No\")",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the string matches the pattern of a bidirectional arrow string, which starts with '<', followed by one or more '=', and ends with '>'. The length of the string should be between 3 and 100 characters inclusive.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nn = input()\ncnta,cntb =0,0\nstack = []\nbool = True\nfor i in range(len(n)):\n  if n[i]=='<':\n    cnta+=1\n  elif n[i]=='>':\n    cntb+=1\n    if cntb>cnta:\n        bool = False\n        break;\nif bool and cnta==cntb:\n  print(\"Yes\")\nelse:\n  print(\"No\")\n</original>\n<patched>\nn = input()\nif len(n) >= 3 and n[0] == '<' and n[-1] == '>' and all(c == '=' for c in n[1:-1]):\n    print(\"Yes\")\nelse:\n    print(\"No\")\n</patched>\n```\n\nExplanation:\n- We first check if the length of the string `n` is at least 3.\n- We then check if the first character is '<' and the last character is '>'.\n- We ensure that all characters between the first and last characters are '='.\n- If all these conditions are met, we print \"Yes\"; otherwise, we print \"No\".\n\nThis patch ensures that the program correctly identifies bidirectional arrow strings according to the problem statement and constraints.",
+  "patch_handle": "2",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 873,
+        "output_tokens": 378,
+        "estimated_cost_usd": 0.010035
+      },
+      {
+        "input_tokens": 1493,
+        "output_tokens": 425,
+        "estimated_cost_usd": 0.013840000000000002
+      },
+      {
+        "input_tokens": 1583,
+        "output_tokens": 328,
+        "estimated_cost_usd": 0.012835
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.03671
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

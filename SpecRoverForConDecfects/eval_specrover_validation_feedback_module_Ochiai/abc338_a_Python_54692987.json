@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54692987",
+  "task_name": "abc338_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T12:25:10.491340",
+  "finished_at": "2026-06-15T12:25:19.902330",
+  "elapsed_seconds": 9.41,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 9.41,
+      "estimated_cost": {
+        "total": 0.00763
+      }
+    }
+  ],
+  "faulty_function": "s = input()\nprint(\"Yes\" if s[0].isupper() and s[1:].islower() else \"No\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "s = input()\nprint(\"Yes\" if s[0].isupper() and (len(s) == 1 or s[1:].islower()) else \"No\")",
+  "fix_code_raw_response": "The issue arises because the current implementation does not handle the case where the string `S` has only one character correctly. Specifically, when `S` has only one character, `s[1:]` results in an empty string, and `islower()` on an empty string returns `False`. This causes the condition to fail even if the single character is uppercase.\n\nTo fix this, we need to adjust the condition to handle the case where the string length is 1 separately.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\ns = input()\nprint(\"Yes\" if s[0].isupper() and s[1:].islower() else \"No\")\n</original>\n<patched>\ns = input()\nprint(\"Yes\" if s[0].isupper() and (len(s) == 1 or s[1:].islower()) else \"No\")\n</patched>\n```\n\nThis patch ensures that if the string length is 1, the condition will still return \"Yes\" if the single character is uppercase. For strings longer than 1, it checks that the first character is uppercase and all subsequent characters are lowercase.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 788,
+        "output_tokens": 246,
+        "estimated_cost_usd": 0.00763
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.00763
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

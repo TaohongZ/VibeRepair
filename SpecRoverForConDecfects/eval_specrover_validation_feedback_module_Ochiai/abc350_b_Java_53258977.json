@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53258977",
+  "task_name": "abc350_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T07:15:32.975461",
+  "finished_at": "2026-06-15T07:15:43.368639",
+  "elapsed_seconds": 10.39,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 10.39,
+      "estimated_cost": {
+        "total": 0.01082
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        int N = sc.nextInt(); // 歯の本数\n        int Q = sc.nextInt(); // 治療の回数\n        \n        // 歯の状態を管理する配列を初期化 (true: 歯が生えている, false: 歯が生えていない)\n        boolean[] teeth = new boolean[N + 1]; // インデックス1から使うため、サイズをN+1に設定\n        \n        // 治療を行う\n        for (int i = 0; i < Q; i++) {\n            int hole = sc.nextInt(); // 穴の番号\n            \n            // 治療内容に応じて穴の状態を更新する\n            if (teeth[hole]) {\n                teeth[hole] = false; // 歯が生えている場合は歯を抜く\n            } else {\n                teeth[hole] = true; // 歯が生えていない場合は歯を生やす\n            }\n        }\n        \n        // 歯の本数を数える\n        int count = 0;\n        for (int i = 1; i <= N; i++) {\n            if (teeth[i]) { // 歯が生えている場合は本数をカウントする\n                count++;\n            }\n        }\n        \n        // 答えを出力する\n        System.out.println(count); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n    }",
+  "fix_code": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        int N = sc.nextInt(); // 歯の本数\n        int Q = sc.nextInt(); // 治療の回数\n        \n    // 歯の状態を管理する配列を初期化 (true: 歯が生えている, false: 歯が生えていない)\n    boolean[] teeth = new boolean[N + 1]; // インデックス1から使うため、サイズをN+1に設定\n    // 初期状態ではすべての歯が生えている\n    for (int i = 1; i <= N; i++) {\n        teeth[i] = true;\n    }\n        \n        // 治療を行う\n        for (int i = 0; i < Q; i++) {\n            int hole = sc.nextInt(); // 穴の番号\n            \n            // 治療内容に応じて穴の状態を更新する\n            if (teeth[hole]) {\n                teeth[hole] = false; // 歯が生えている場合は歯を抜く\n            } else {\n                teeth[hole] = true; // 歯が生えていない場合は歯を生やす\n            }\n        }\n        \n        // 歯の本数を数える\n        int count = 0;\n        for (int i = 1; i <= N; i++) {\n            if (teeth[i]) { // 歯が生えている場合は本数をカウントする\n                count++;\n            }\n        }\n        \n        // 答えを出力する\n        System.out.println(count);\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that the initial state of the teeth is not correctly set. By default, all teeth should be present initially, but the boolean array `teeth` is initialized to `false` for all elements, indicating that no teeth are present initially. This leads to incorrect results when counting the number of teeth after the treatments.\n\nTo fix this, we need to initialize the `teeth` array to `true` for all elements from index 1 to N, indicating that all teeth are present initially.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    // 歯の状態を管理する配列を初期化 (true: 歯が生えている, false: 歯が生えていない)\n    boolean[] teeth = new boolean[N + 1]; // インデックス1から使うため、サイズをN+1に設定\n</original>\n<patched>\n    // 歯の状態を管理する配列を初期化 (true: 歯が生えている, false: 歯が生えていない)\n    boolean[] teeth = new boolean[N + 1]; // インデックス1から使うため、サイズをN+1に設定\n    // 初期状態ではすべての歯が生えている\n    for (int i = 1; i <= N; i++) {\n        teeth[i] = true;\n    }\n</patched>\n```\n\nThis patch ensures that all teeth are initially present, and the rest of the code correctly handles the treatments and counts the remaining teeth.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1144,
+        "output_tokens": 340,
+        "estimated_cost_usd": 0.01082
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.01082
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

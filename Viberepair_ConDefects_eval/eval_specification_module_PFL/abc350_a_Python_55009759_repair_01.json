@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "55009759",
+  "repair_index": 1,
+  "task_name": "abc350_a",
+  "language": "Python",
+  "flawed_specification": "[\n  Function: check_substring_value\n  Purpose: To determine if a specific substring of an input string meets certain conditions and print a corresponding message.\n  Signature: check_substring_value()\n  Input: A string input from the user, where the relevant portion is the substring from index 3 to 6, which is then converted to an integer.\n  Output: A printed message, either \"Yes\" or \"No\", based on the evaluation of the conditions.\n  Behavior:\n    1. Read a string input from the user.\n    2. Extract the substring from index 3 to 6 of the input string.\n    3. Convert the extracted substring to an integer and assign it to the variable S.\n    4. Check if S is not equal to 316 and S is less than 350 (bug is here).\n    5. If the condition is true, print \"Yes\".\n    6. If the condition is false, print \"No\".\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should determine if a given string S is a valid abbreviation of a contest held and concluded on AtCoder before the start of this contest. The string S is valid if it starts with \"ABC\" and the last three digits form a number that is one of the specified valid contest numbers. These numbers range from 001 to 349, excluding 316.",
+    "diagnosis_and_repair_directions": "The flawed specification incorrectly checks if the number is less than 350 and not equal to 316. This condition is too broad because it includes numbers that are not part of the valid contest numbers (e.g., 320, 321, etc.). The correct approach is to explicitly check if the number is within the specified valid range (001 to 349) and not equal to 316. The function should also ensure that the input string is exactly 6 characters long and starts with \"ABC\".",
+    "raw_response": "Intended Behavior:\nThe function should determine if a given string S is a valid abbreviation of a contest held and concluded on AtCoder before the start of this contest. The string S is valid if it starts with \"ABC\" and the last three digits form a number that is one of the specified valid contest numbers. These numbers range from 001 to 349, excluding 316.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly checks if the number is less than 350 and not equal to 316. This condition is too broad because it includes numbers that are not part of the valid contest numbers (e.g., 320, 321, etc.). The correct approach is to explicitly check if the number is within the specified valid range (001 to 349) and not equal to 316. The function should also ensure that the input string is exactly 6 characters long and starts with \"ABC\".\n\nFixed Specification:\nFunction: check_contest_abbreviation\nPurpose: To determine if a given string is a valid abbreviation of a contest held and concluded on AtCoder before the start of this contest.\nSignature: check_contest_abbreviation(S: str) -> str\nInput: A string S of length 6, where the first three characters are \"ABC\" and the last three characters are digits.\nOutput: A string \"Yes\" if S is a valid contest abbreviation, otherwise \"No\".\nBehavior:\n1. Verify that the input string S is exactly 6 characters long and starts with \"ABC\".\n2. Extract the last three characters of S and convert them to an integer.\n3. Check if the integer is within the range 1 to 349, excluding 316.\n4. If the integer is valid, return \"Yes\".\n5. Otherwise, return \"No\"."
+  },
+  "fixed_specification": "Function: check_contest_abbreviation\nPurpose: To determine if a given string is a valid abbreviation of a contest held and concluded on AtCoder before the start of this contest.\nSignature: check_contest_abbreviation(S: str) -> str\nInput: A string S of length 6, where the first three characters are \"ABC\" and the last three characters are digits.\nOutput: A string \"Yes\" if S is a valid contest abbreviation, otherwise \"No\".\nBehavior:\n1. Verify that the input string S is exactly 6 characters long and starts with \"ABC\".\n2. Extract the last three characters of S and convert them to an integer.\n3. Check if the integer is within the range 1 to 349, excluding 316.\n4. If the integer is valid, return \"Yes\".\n5. Otherwise, return \"No\".",
+  "fix_code": "def check_contest_abbreviation(S: str) -> str:\n    if len(S) == 6 and S.startswith(\"ABC\"):\n        number = int(S[3:6])\n        if 1 <= number <= 349 and number != 316:\n            return \"Yes\"\n    return \"No\"\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.003045,
+    "fix_specification": 0.0053225,
+    "fix_specification_and_buggy_code_to_fix_code": 0.0016675,
+    "total": 0.010035
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 410,
+      "output_tokens": 202,
+      "total_tokens": 612
+    },
+    "fix_specification": {
+      "input_tokens": 693,
+      "output_tokens": 359,
+      "total_tokens": 1052
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 403,
+      "output_tokens": 66,
+      "total_tokens": 469
+    }
+  }
+}

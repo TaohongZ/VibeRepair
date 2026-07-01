@@ -1,0 +1,123 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54617478",
+  "task_name": "abc358_e",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:34:19.696237",
+  "finished_at": "2026-06-15T09:37:29.815828",
+  "elapsed_seconds": 190.12,
+  "selected_outer_run_index": 5,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 26.08,
+      "estimated_cost": {
+        "total": 0.08647
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "error",
+      "pass": false,
+      "validation_passed": false,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 0.18181818181818182,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 48.76,
+      "estimated_cost": {
+        "total": 0.09223500000000001
+      }
+    },
+    {
+      "outer_run_index": 3,
+      "status": "error",
+      "pass": false,
+      "validation_passed": false,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 0.18181818181818182,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 61.92,
+      "estimated_cost": {
+        "total": 0.0951
+      }
+    },
+    {
+      "outer_run_index": 4,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 39.63,
+      "estimated_cost": {
+        "total": 0.141325
+      }
+    },
+    {
+      "outer_run_index": 5,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 13.73,
+      "estimated_cost": {
+        "total": 0.010275000000000001
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String args[]) throws IOException {\n        in = new FastReader();\n        out = new PrintWriter(System.out);\n        boolean flag = false;\n        int t = flag ? in.nextInt() : 1;\n        int n = 1001;\n        long inv[] = new long[n];\n        inv[1] = 1;\n        for(int i = 2; i < n; i++){\n            inv[i] = (mod-(mod/i)*(inv[(int)(mod%i)]%mod))%mod; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n        }\n       p = new long[1001];\n        invFac = new long[n];\n        p[0] = 1;\n        invFac[1] = 1;\n        for(int i = 1; i < 1001; i++){\n            p[i] = (i*p[i-1])%mod;\n            if(i != 1){\n                invFac[i] = (invFac[i-1]*inv[i])%mod;\n            }\n\n        }\n        Main m = new Main();\n        while (t-- > 0) {\n            m.solve();\n        }\n        out.close();\n    }",
+  "fix_code": "    public static void main(String args[]) throws IOException {\n        in = new FastReader();\n        out = new PrintWriter(System.out);\n        boolean flag = false;\n        int t = flag ? in.nextInt() : 1;\n        int n = 1001;\n        long inv[] = new long[n];\n        inv[1] = 1;\n    for(int i = 2; i < n; i++){\n        inv[i] = (mod - (mod / i) * inv[(int)(mod % i)] % mod + mod) % mod; // Adding mod before the final modulo operation to ensure non-negative result\n    }\n       p = new long[1001];\n        invFac = new long[n];\n        p[0] = 1;\n        invFac[1] = 1;\n        for(int i = 1; i < 1001; i++){\n            p[i] = (i*p[i-1])%mod;\n            if(i != 1){\n                invFac[i] = (invFac[i-1]*inv[i])%mod;\n            }\n\n        }\n        Main m = new Main();\n        while (t-- > 0) {\n            m.solve();\n        }\n        out.close();\n    }",
+  "fix_code_raw_response": "The issue seems to be related to the calculation of modular inverses, which is causing incorrect results. The modular inverse calculation is crucial for combinatorial problems, especially when dealing with large numbers and modulo operations. The problem lies in the line where the modular inverse is calculated. The formula used is correct, but there might be an issue with the data type casting or the modulo operation itself.\n\nLet's fix the modular inverse calculation to ensure it handles large numbers correctly and returns the expected results.\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    for(int i = 2; i < n; i++){\n        inv[i] = (mod-(mod/i)*(inv[(int)(mod%i)]%mod))%mod; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n    }\n</original>\n<patched>\n    for(int i = 2; i < n; i++){\n        inv[i] = (mod - (mod / i) * inv[(int)(mod % i)] % mod + mod) % mod; // Adding mod before the final modulo operation to ensure non-negative result\n    }\n</patched>\n```\n\nThis patch ensures that the result of the modular inverse calculation is always non-negative by adding `mod` before taking the final modulo. This is a common technique to handle negative results in modular arithmetic.\n\nThis should resolve the issue and produce the correct output for the given test case.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1137,
+        "output_tokens": 306,
+        "estimated_cost_usd": 0.010275000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.010275000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

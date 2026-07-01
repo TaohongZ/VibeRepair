@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "programId": "52943371",
+  "repair_index": 2,
+  "task_name": "abc346_b",
+  "language": "Java",
+  "root_cause": "The nested loops used to count 'w' and 'b' characters are highly inefficient and can lead to missed conditions as well as time complexity issues. The sliding window approach and unnecessary character counts within nested loops cause the logic to fail for larger strings.",
+  "suggestion": "Suggestion 1. Optimize using a single pass with prefix sums The nested loops should be replaced by a single pass using a more efficient counting method. Calculate the prefix sums of 'w' and 'b' beforehand and then use a sliding window over those sums to find the required segments.\n```java\npublic static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    int w = sc.nextInt();\n    int b = sc.nextInt();\n    String wb = \"wbwbwwbwbwbw\", s = \"\";\n    for(int i = 0; i < 20; i++) s += wb;\n    int sl = s.length();\n\n    int[] wPrefix = new int[sl + 1];\n    int[] bPrefix = new int[sl + 1];\n\n    for(int i = 0; i < sl; i++) {\n        wPrefix[i + 1] = wPrefix[i] + (s.charAt(i) == 'w' ? 1 : 0);\n        bPrefix[i + 1] = bPrefix[i] + (s.charAt(i) == 'b' ? 1 : 0);\n    }\n\n    for(int i = 0; i <= sl; i++) {\n        for(int j = i + 1; j <= sl; j++) {\n            int wnum = wPrefix[j] - wPrefix[i];\n            int bnum = bPrefix[j] - bPrefix[i];\n            if(wnum == w && bnum == b) {\n                System.out.println(\"Yes\");\n                return;\n            }\n        }\n    }\n    System.out.println(\"No\");\n}\n```\n",
+  "fix_code": "public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    int w = sc.nextInt();\n    int b = sc.nextInt();\n    String wb = \"wbwbwwbwbwbw\", s = \"\";\n    for(int i = 0; i < 20; i++) s += wb;\n    int sl = s.length();\n\n    int[] wPrefix = new int[sl + 1];\n    int[] bPrefix = new int[sl + 1];\n\n    for(int i = 0; i < sl; i++) {\n        wPrefix[i + 1] = wPrefix[i] + (s.charAt(i) == 'w' ? 1 : 0);\n        bPrefix[i + 1] = bPrefix[i] + (s.charAt(i) == 'b' ? 1 : 0);\n    }\n\n    for(int i = 0; i <= sl; i++) {\n        for(int j = i + 1; j <= sl; j++) {\n            int wnum = wPrefix[j] - wPrefix[i];\n            int bnum = bPrefix[j] - bPrefix[i];\n            if(wnum == w && bnum == b) {\n                System.out.println(\"Yes\");\n                return;\n            }\n        }\n    }\n    System.out.println(\"No\");\n}",
+  "repair_run": 2,
+  "source_repair_index": 1,
+  "discarded_patch_count_in_same_run": 1,
+  "batch_attempt_work_dir": "/home/taohongzhu/VibeRepair/ReinFixForConDecfects/output/batch_repair_dataset_2024_work/attempts/52943371/repair_02",
+  "batch_generated_at": "2026-06-14T14:30:10.901824"
+}

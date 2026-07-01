@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "51493957",
+  "repair_index": 2,
+  "task_name": "abc343_b",
+  "language": "Java",
+  "flawed_specification": "[\n  Function: main\n  Purpose: To read a matrix of integers from input and print the column indices of elements equal to 1 for each row.\n  Signature: main(String[] args)\n  Input: A single integer n, followed by n*n integers representing a matrix of size n x n, read from standard input.\n  Output: Prints the column indices of elements equal to 1 for each row, with each row's indices printed on a new line.\n  Behavior:\n    1. Read an integer n from input, which represents the size of the matrix.\n    2. Initialize a boolean variable f to false.\n    3. Iterate over each row index i from 1 to n.\n    4. For each row, iterate over each column index j from 1 to n.\n    5. Read an integer r from input.\n    6. If r is equal to 1, print the current column index j (bug is here) and set f to true.\n    7. After iterating through all columns of a row, if f is true, print a newline character.\n    8. Reset f to false before processing the next row.\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The intended behavior is to process an adjacency matrix of an undirected graph and print the vertices directly connected to each vertex in ascending order. For each vertex i, the program should output the indices of vertices j where there is an edge between i and j (i.e., where the adjacency matrix entry A[i][j] is 1).",
+    "diagnosis_and_repair_directions": "The flawed specification incorrectly prints the column indices of elements equal to 1 for each row, but it does not account for the requirement to print the indices in ascending order starting from 1, not 0. Additionally, the specification incorrectly uses a boolean flag to manage newline printing, which is unnecessary since each vertex's connections should be printed on a new line regardless. The specification also does not correctly handle the input format, which should be read as a single integer followed by a matrix of integers.\nConcrete directions for repair:\n1. Adjust the index handling to ensure indices are printed in ascending order starting from 1.\n2. Remove the unnecessary boolean flag for newline management.\n3. Ensure the input is read correctly as a single integer followed by a matrix of integers.\n4. Ensure the output format matches the intended behavior, printing each vertex's connections on a new line.",
+    "raw_response": "Intended Behavior:\nThe intended behavior is to process an adjacency matrix of an undirected graph and print the vertices directly connected to each vertex in ascending order. For each vertex i, the program should output the indices of vertices j where there is an edge between i and j (i.e., where the adjacency matrix entry A[i][j] is 1).\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly prints the column indices of elements equal to 1 for each row, but it does not account for the requirement to print the indices in ascending order starting from 1, not 0. Additionally, the specification incorrectly uses a boolean flag to manage newline printing, which is unnecessary since each vertex's connections should be printed on a new line regardless. The specification also does not correctly handle the input format, which should be read as a single integer followed by a matrix of integers.\n\nConcrete directions for repair:\n1. Adjust the index handling to ensure indices are printed in ascending order starting from 1.\n2. Remove the unnecessary boolean flag for newline management.\n3. Ensure the input is read correctly as a single integer followed by a matrix of integers.\n4. Ensure the output format matches the intended behavior, printing each vertex's connections on a new line.\n\nFixed Specification:\nFunction: main\nPurpose: To read an adjacency matrix of an undirected graph from input and print the indices of vertices directly connected to each vertex in ascending order.\nSignature: main(String[] args)\nInput: A single integer n, followed by n*n integers representing a matrix of size n x n, read from standard input.\nOutput: Prints the indices of vertices directly connected to each vertex, with each vertex's connections printed on a new line.\nBehavior:\n1. Read an integer n from input, which represents the size of the matrix.\n2. Initialize a 2D list to store the adjacency matrix.\n3. Read n*n integers from input to populate the adjacency matrix.\n4. For each vertex index i from 1 to n:\n   a. Initialize an empty list to store connected vertices.\n   b. For each vertex index j from 1 to n:\n      i. If the adjacency matrix entry A[i-1][j-1] is 1, append j to the list of connected vertices.\n   c. Print the list of connected vertices for vertex i, with indices in ascending order."
+  },
+  "fixed_specification": "Function: main\nPurpose: To read an adjacency matrix of an undirected graph from input and print the indices of vertices directly connected to each vertex in ascending order.\nSignature: main(String[] args)\nInput: A single integer n, followed by n*n integers representing a matrix of size n x n, read from standard input.\nOutput: Prints the indices of vertices directly connected to each vertex, with each vertex's connections printed on a new line.\nBehavior:\n1. Read an integer n from input, which represents the size of the matrix.\n2. Initialize a 2D list to store the adjacency matrix.\n3. Read n*n integers from input to populate the adjacency matrix.\n4. For each vertex index i from 1 to n:\n   a. Initialize an empty list to store connected vertices.\n   b. For each vertex index j from 1 to n:\n      i. If the adjacency matrix entry A[i-1][j-1] is 1, append j to the list of connected vertices.\n   c. Print the list of connected vertices for vertex i, with indices in ascending order.",
+  "fix_code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[][] adjacencyMatrix = new int[n][n];\n\n        // Read the adjacency matrix\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                adjacencyMatrix[i][j] = sc.nextInt();\n            }\n        }\n\n        // Process each vertex\n        for (int i = 0; i < n; i++) {\n            boolean first = true;\n            for (int j = 0; j < n; j++) {\n                if (adjacencyMatrix[i][j] == 1) {\n                    if (!first) {\n                        System.out.print(\" \");\n                    }\n                    System.out.print(j + 1);\n                    first = false;\n                }\n            }\n            System.out.println();\n        }\n    }\n}\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.003635,
+    "fix_specification": 0.0066975,
+    "fix_specification_and_buggy_code_to_fix_code": 0.003385,
+    "total": 0.0137175
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 478,
+      "output_tokens": 244,
+      "total_tokens": 722
+    },
+    "fix_specification": {
+      "input_tokens": 763,
+      "output_tokens": 479,
+      "total_tokens": 1242
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 522,
+      "output_tokens": 208,
+      "total_tokens": 730
+    }
+  }
+}

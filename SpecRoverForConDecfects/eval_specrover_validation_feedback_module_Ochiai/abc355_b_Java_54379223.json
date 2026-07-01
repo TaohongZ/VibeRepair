@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54379223",
+  "task_name": "abc355_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T19:38:19.190636",
+  "finished_at": "2026-06-15T19:38:32.858663",
+  "elapsed_seconds": 13.67,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 13.67,
+      "estimated_cost": {
+        "total": 0.010295000000000002
+      }
+    }
+  ],
+  "faulty_function": "    public Main(Scanner sc) {\n        // 入力\n        n = sc.nextInt();\n        m = sc.nextInt();\n        sc.nextLine();\n\n        for (int i = 0; i < n; i++) {\n            p.put(sc.nextInt(), \"a\");\n        }\n        sc.nextLine();\n        for (int i = 0; i < m; i++) {\n            p.put(sc.nextInt(), \"b\");\n        }\n\n        // System.out.println(p);\n\n        String pre = \"\";\n        for (String pi : p.values()) {\n            if (pre.equals(pi)) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                System.out.println(\"Yes\");\n                return;\n            }\n            pre = pi;\n        }\n\n        System.out.println(\"No\");\n\n    }",
+  "fix_code": "    public Main(Scanner sc) {\n        // 入力\n        n = sc.nextInt();\n        m = sc.nextInt();\n        sc.nextLine();\n\n        for (int i = 0; i < n; i++) {\n            p.put(sc.nextInt(), \"a\");\n        }\n        sc.nextLine();\n        for (int i = 0; i < m; i++) {\n            p.put(sc.nextInt(), \"b\");\n        }\n\n        // System.out.println(p);\n\n    List<Integer> keys = new ArrayList<>(p.keySet());\n    Collections.sort(keys);\n\n    String pre = \"\";\n    for (Integer key : keys) {\n        String pi = p.get(key);\n        if (pre.equals(\"a\") && pi.equals(\"a\")) {\n            System.out.println(\"Yes\");\n            return;\n        }\n        pre = pi;\n    }\n\n    System.out.println(\"No\");\n\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that it checks for consecutive elements in the merged sequence by comparing the values associated with the keys in the map `p`. However, the map `p` does not maintain the order of elements, and thus the comparison logic is flawed. We need to sort the keys of the map and then check for consecutive elements from sequence A.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    String pre = \"\";\n    for (String pi : p.values()) {\n        if (pre.equals(pi)) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n            System.out.println(\"Yes\");\n            return;\n        }\n        pre = pi;\n    }\n\n    System.out.println(\"No\");\n</original>\n<patched>\n    List<Integer> keys = new ArrayList<>(p.keySet());\n    Collections.sort(keys);\n\n    String pre = \"\";\n    for (Integer key : keys) {\n        String pi = p.get(key);\n        if (pre.equals(\"a\") && pi.equals(\"a\")) {\n            System.out.println(\"Yes\");\n            return;\n        }\n        pre = pi;\n    }\n\n    System.out.println(\"No\");\n</patched>\n```\n\nExplanation:\n1. Extract the keys from the map `p` and sort them.\n2. Iterate through the sorted keys and check if two consecutive elements belong to sequence A by comparing the values associated with the keys.\n3. If two consecutive elements from sequence A are found, print \"Yes\" and return.\n4. If no such consecutive elements are found, print \"No\".",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1027,
+        "output_tokens": 344,
+        "estimated_cost_usd": 0.010295000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.010295000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

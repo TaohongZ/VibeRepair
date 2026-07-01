@@ -1,0 +1,83 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "52943371",
+  "task_name": "abc346_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T17:13:52.698954",
+  "finished_at": "2026-06-15T17:15:14.247406",
+  "elapsed_seconds": 81.55,
+  "selected_outer_run_index": 2,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": false,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 0.6363636363636364,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 62.0,
+      "estimated_cost": {
+        "total": 0.092305
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 19.54,
+      "estimated_cost": {
+        "total": 0.029540000000000004
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args){\n\t\tScanner sc = new Scanner(System.in);\n\t\tint w = sc.nextInt();\n\t\tint b = sc.nextInt();\n\t\tString wb = \"wbwbwwbwbwbw\", s = \"\";\n\t\tfor(int i = 0; i < 20; i++) s += wb;\n\t\tint sl = s.length();\n\t\tfor(int i = 0; i < sl; i++){\n\t\t  for(int j = i+1; j < sl; j++){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t    int wnum = 0, bnum = 0;\n\t\t    for(int k = i; k < j+1; k++){\n\t\t      if(s.charAt(k) == 'w') wnum++;\n\t\t      else bnum++;\n\t\t    }\n\t\t    if(wnum == w && bnum == b){\n\t\t      System.out.println(\"Yes\");\n\t\t      return;\n\t\t    }\n\t\t  }\n\t\t}\n\t\tSystem.out.println(\"No\");\n\t}",
+  "fix_code": "\tpublic static void main(String[] args){\n\t\tScanner sc = new Scanner(System.in);\n\t\tint w = sc.nextInt();\n\t\tint b = sc.nextInt();\n\t\tString wb = \"wbwbwwbwbwbw\";\n\t\tint patternLength = wb.length();\n\t\tint windowLength = w + b;\n\n\t\tfor (int start = 0; start < patternLength; start++) {\n\t\t\tint wnum = 0, bnum = 0;\n\t\t\tfor (int i = 0; i < windowLength; i++) {\n\t\t\t\tchar c = wb.charAt((start + i) % patternLength);\n\t\t\t\tif (c == 'w') wnum++;\n\t\t\t\telse bnum++;\n\t\t\t}\n\t\t\tif (wnum == w && bnum == b) {\n\t\t\t\tSystem.out.println(\"Yes\");\n\t\t\t\treturn;\n\t\t\t}\n\t\t}\n\t\tSystem.out.println(\"No\");\n\t}",
+  "fix_code_raw_response": "To address the issue, we need to ensure that the program can handle the infinite nature of the keyboard effectively. Instead of generating a long string and checking all possible substrings, we can use a sliding window technique to check for the required number of 'w' and 'b' characters.\n\nHere is the reasoning:\n1. The string \"wbwbwwbwbwbw\" has a fixed pattern that repeats every 12 characters.\n2. We can use a sliding window of size `W + B` to check for the required number of 'w' and 'b' characters.\n3. By sliding the window over the first 12 characters of the pattern, we can determine if a valid substring exists.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\tpublic static void main(String[] args){\n\t\tScanner sc = new Scanner(System.in);\n\t\tint w = sc.nextInt();\n\t\tint b = sc.nextInt();\n\t\tString wb = \"wbwbwwbwbwbw\", s = \"\";\n\t\tfor(int i = 0; i < 20; i++) s += wb;\n\t\tint sl = s.length();\n\t\tfor(int i = 0; i < sl; i++){\n\t\t  for(int j = i+1; j < sl; j++){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t    int wnum = 0, bnum = 0;\n\t\t    for(int k = i; k < j+1; k++){\n\t\t      if(s.charAt(k) == 'w') wnum++;\n\t\t      else bnum++;\n\t\t    }\n\t\t    if(wnum == w && bnum == b){\n\t\t      System.out.println(\"Yes\");\n\t\t      return;\n\t\t    }\n\t\t  }\n\t\t}\n\t\tSystem.out.println(\"No\");\n\t}\n</original>\n<patched>\n\tpublic static void main(String[] args){\n\t\tScanner sc = new Scanner(System.in);\n\t\tint w = sc.nextInt();\n\t\tint b = sc.nextInt();\n\t\tString wb = \"wbwbwwbwbwbw\";\n\t\tint patternLength = wb.length();\n\t\tint windowLength = w + b;\n\n\t\tfor (int start = 0; start < patternLength; start++) {\n\t\t\tint wnum = 0, bnum = 0;\n\t\t\tfor (int i = 0; i < windowLength; i++) {\n\t\t\t\tchar c = wb.charAt((start + i) % patternLength);\n\t\t\t\tif (c == 'w') wnum++;\n\t\t\t\telse bnum++;\n\t\t\t}\n\t\t\tif (wnum == w && bnum == b) {\n\t\t\t\tSystem.out.println(\"Yes\");\n\t\t\t\treturn;\n\t\t\t}\n\t\t}\n\t\tSystem.out.println(\"No\");\n\t}\n</patched>\n```\n\nThis patch uses a sliding window approach to check for the required number of 'w' and 'b' characters within the repeating pattern. It ensures that the program handles the infinite nature of the keyboard effectively and efficiently.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1012,
+        "output_tokens": 425,
+        "estimated_cost_usd": 0.011435
+      },
+      {
+        "input_tokens": 1749,
+        "output_tokens": 624,
+        "estimated_cost_usd": 0.018105000000000003
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.029540000000000004
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

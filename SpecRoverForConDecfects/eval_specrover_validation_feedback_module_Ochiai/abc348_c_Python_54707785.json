@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54707785",
+  "task_name": "abc348_c",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:46:45.572585",
+  "finished_at": "2026-06-15T09:47:08.243056",
+  "elapsed_seconds": 22.67,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "2",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 22.67,
+      "estimated_cost": {
+        "total": 0.030210000000000004
+      }
+    }
+  ],
+  "faulty_function": "n = int(input())\ncs = {}\nfor i in range(n):\n  a, c = map(int, input().split())\n  if c in cs:\n    cs[c].append(a)\n  else:\n    cs[c] = [a]\n\nkeys = cs.keys()\nc = -1\na = 0\nfor k in keys:\n  m = min(cs[k])\n  if m > a:\n    c = k\n    a = m\nprint(c) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "n = int(input())\ncs = {}\nfor i in range(n):\n  a, c = map(int, input().split())\n  if c in cs:\n    cs[c].append(a)\n  else:\n    cs[c] = [a]\n\nkeys = cs.keys()\nmin_values = [min(cs[k]) for k in cs]\nresult = max(min_values)\nprint(result)",
+  "fix_code_raw_response": "The issue is that the code currently finds the minimum deliciousness for each color and then selects the maximum of these minimum values. The goal is to maximize the minimum possible deliciousness of the bean you eat, which means we should be looking for the maximum of the minimum deliciousness values for each color.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nc = -1\na = 0\nfor k in keys:\n  m = min(cs[k])\n  if m > a:\n    c = k\n    a = m\nprint(c) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n</original>\n<patched>\nmin_values = [min(cs[k]) for k in cs]\nresult = max(min_values)\nprint(result)\n</patched>\n```\n\nExplanation:\n1. Collect the minimum deliciousness value for each color into a list `min_values`.\n2. Find the maximum value from this list, which represents the maximum of the minimum deliciousness values.\n3. Print the result, which is the desired output.",
+  "patch_handle": "2",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 930,
+        "output_tokens": 172,
+        "estimated_cost_usd": 0.00723
+      },
+      {
+        "input_tokens": 1381,
+        "output_tokens": 297,
+        "estimated_cost_usd": 0.01136
+      },
+      {
+        "input_tokens": 1550,
+        "output_tokens": 258,
+        "estimated_cost_usd": 0.011620000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.030210000000000004
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

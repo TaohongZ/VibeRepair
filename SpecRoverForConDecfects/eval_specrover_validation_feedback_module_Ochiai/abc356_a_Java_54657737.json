@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54657737",
+  "task_name": "abc356_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:41:43.982361",
+  "finished_at": "2026-06-15T09:41:53.857931",
+  "elapsed_seconds": 9.88,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 9.88,
+      "estimated_cost": {
+        "total": 0.007770000000000001
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args){\n        Scanner scan = new Scanner(System.in);\n        ArrayList<Integer> list = new ArrayList<Integer>();\n\n        int N = scan.nextInt();\n        int L = scan.nextInt() - 1;\n        int R = scan.nextInt() - 1;\n        int S = (R - L + 1) / 2;\n\n        for(int i = 0 ; i < N ; i++){\n            list.add(i + 1);\n        }\n        \n        int comL = 0;\n        int comR = 0;\n        \n        while(L <= R){\n          comL = list.get(L);    //左を一時格納\n          comR = list.get(R);    //右を一時格納\n          list.set(L, comR);\n          list.set(R, comL);\n          L++;\n          R--;\n        }\n        \n        for(int i = 0 ; i < N ; i++){\n            System.out.print(list.get(i)); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n        }\n        \n        scan.close();\n    }",
+  "fix_code": "    public static void main(String[] args){\n        Scanner scan = new Scanner(System.in);\n        ArrayList<Integer> list = new ArrayList<Integer>();\n\n        int N = scan.nextInt();\n        int L = scan.nextInt() - 1;\n        int R = scan.nextInt() - 1;\n        int S = (R - L + 1) / 2;\n\n        for(int i = 0 ; i < N ; i++){\n            list.add(i + 1);\n        }\n        \n        int comL = 0;\n        int comR = 0;\n        \n        while(L <= R){\n          comL = list.get(L);    //左を一時格納\n          comR = list.get(R);    //右を一時格納\n          list.set(L, comR);\n          list.set(R, comL);\n          L++;\n          R--;\n        }\n        \n        for(int i = 0 ; i < N ; i++){\n            System.out.print(list.get(i) + \" \"); // Add a space after each element\n        }\n        \n        scan.close();\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that the output is not formatted correctly. The elements of the list are printed without spaces, which causes the output to be concatenated together. We need to add spaces between the elements when printing the list.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n        for(int i = 0 ; i < N ; i++){\n            System.out.print(list.get(i)); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n        }\n</original>\n<patched>\n        for(int i = 0 ; i < N ; i++){\n            System.out.print(list.get(i) + \" \"); // Add a space after each element\n        }\n</patched>\n```\n\nThis change ensures that each element of the list is followed by a space, making the output correctly formatted as expected.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 972,
+        "output_tokens": 194,
+        "estimated_cost_usd": 0.007770000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.007770000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

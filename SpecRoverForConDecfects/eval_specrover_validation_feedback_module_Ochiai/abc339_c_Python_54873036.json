@@ -1,0 +1,93 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54873036",
+  "task_name": "abc339_c",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T13:07:19.195131",
+  "finished_at": "2026-06-15T13:08:24.996214",
+  "elapsed_seconds": 65.8,
+  "selected_outer_run_index": 2,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 29.68,
+      "estimated_cost": {
+        "total": 0.174295
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "3",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 36.12,
+      "estimated_cost": {
+        "total": 0.10844000000000001
+      }
+    }
+  ],
+  "faulty_function": "n = int(input())\na_s = list(map(int, input().split()))\n\nnum = 0\n\npassengers = []\ncurrent_passenger = 0\nfor i in range(len(a_s)):\n    current_passenger = current_passenger + a_s[i]\n    passengers.append(current_passenger)\n\nif min(passengers) >= 0:\n    print(max(passengers)) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nelse:\n    print(passengers[-1] + abs(min(passengers)))",
+  "fix_code": "n = int(input())\na_s = list(map(int, input().split()))\n\ncurrent_passenger = 0\nmin_passenger = 0\n\nfor i in range(len(a_s)):\n    current_passenger += a_s[i]\n    if current_passenger < min_passenger:\n        min_passenger = current_passenger\n\nprint(current_passenger - min_passenger)",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the number of passengers on the bus never goes below zero at any stop. This can be done by tracking the minimum cumulative sum of passengers at each stop and ensuring that the minimum possible number of passengers is non-negative.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nn = int(input())\na_s = list(map(int, input().split()))\n\nnum = 0\n\npassengers = []\ncurrent_passenger = 0\nfor i in range(len(a_s)):\n    current_passenger = current_passenger + a_s[i]\n    passengers.append(current_passenger)\n\nif min(passengers) >= 0:\n    print(max(passengers)) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nelse:\n    print(passengers[-1] + abs(min(passengers)))\n</original>\n<patched>\nn = int(input())\na_s = list(map(int, input().split()))\n\ncurrent_passenger = 0\nmin_passenger = 0\n\nfor i in range(len(a_s)):\n    current_passenger += a_s[i]\n    if current_passenger < min_passenger:\n        min_passenger = current_passenger\n\nprint(current_passenger - min_passenger)\n</patched>\n```\n\nExplanation:\n1. We initialize `current_passenger` to track the current number of passengers and `min_passenger` to track the minimum number of passengers at any point.\n2. We iterate through the list of changes in passengers (`a_s`), updating `current_passenger` and checking if it is less than `min_passenger`.\n3. Finally, we print `current_passenger - min_passenger`, which represents the minimum possible current number of passengers on the bus, ensuring it is non-negative. This ensures that the number of passengers never goes below zero at any stop.",
+  "patch_handle": "3",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2482,
+        "output_tokens": 441,
+        "estimated_cost_usd": 0.019025
+      },
+      {
+        "input_tokens": 4740,
+        "output_tokens": 390,
+        "estimated_cost_usd": 0.029550000000000003
+      },
+      {
+        "input_tokens": 4668,
+        "output_tokens": 416,
+        "estimated_cost_usd": 0.029580000000000002
+      },
+      {
+        "input_tokens": 4815,
+        "output_tokens": 414,
+        "estimated_cost_usd": 0.030285000000000003
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.10844000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

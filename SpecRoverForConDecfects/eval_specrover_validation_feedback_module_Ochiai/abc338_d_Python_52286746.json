@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "52286746",
+  "task_name": "abc338_d",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T06:43:07.154566",
+  "finished_at": "2026-06-15T06:43:20.342704",
+  "elapsed_seconds": 13.19,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 13.19,
+      "estimated_cost": {
+        "total": 0.02054
+      }
+    }
+  ],
+  "faulty_function": "def main():\n    N, M = map(int, input().split())\n    A = list(map(int, input().split()))\n\n    cost = [0]*(2*N)\n    ans = 0\n    for i in range(M-1):\n        s, t = A[i], A[i+1]\n        s, t = min(s, t), max(s, t)\n        if 2*(t-s) < N:\n            ans += t-s\n            d = N + 2*s - 2*t\n            cost[s] += d\n            cost[t+1] -= d # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n        else:\n            ans += N+s-t\n            d = - N - 2*s + 2*t\n            cost[t] += d\n            cost[N+s] -= d\n\n    for i in range(2*N-1):\n        cost[i+1] += cost[i]\n\n    _cost = []\n    for i in range(N):\n        _cost.append(cost[i] + cost[N+i])\n    print(ans+min(_cost))",
+  "fix_code": "def main():\n    N, M = map(int, input().split())\n    A = list(map(int, input().split()))\n\n    cost = [0]*(2*N)\n    ans = 0\n    for i in range(M-1):\n        s, t = A[i], A[i+1]\n        s, t = min(s, t), max(s, t)\n        if 2*(t-s) < N:\n            ans += t-s\n            d = N + 2*s - 2*t\n            cost[s] += d\n            cost[t] -= d\n        else:\n            ans += N+s-t\n            d = - N - 2*s + 2*t\n            cost[t] += d\n            cost[N+s] -= d\n\n    for i in range(2*N-1):\n        cost[i+1] += cost[i]\n\n    _cost = []\n    for i in range(N):\n        _cost.append(cost[i] + cost[N+i])\n    print(ans+min(_cost))",
+  "fix_code_raw_response": "The issue in the code is related to the handling of the cost array updates, particularly when the bridge to be closed is chosen optimally. The line identified as having the highest suspiciousness score is likely causing an incorrect update to the cost array, leading to an incorrect calculation of the minimum possible length of the tour.\n\nThe problem lies in the way the cost array is updated when the condition `2*(t-s) < N` is true. Specifically, the line `cost[t+1] -= d` should be corrected to ensure the cost array is updated correctly.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\n            cost[t+1] -= d\n</original>\n<patched>\n            cost[t] -= d\n</patched>\n```\n\nExplanation:\n- The original line `cost[t+1] -= d` incorrectly updates the cost array at index `t+1`, which is not the correct position for decrementing the cost.\n- The corrected line `cost[t] -= d` ensures that the cost array is updated correctly at index `t`, which aligns with the logic of the problem statement and constraints.\n\nThis minimal change should resolve the issue while preserving the program's functionality.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 3331,
+        "output_tokens": 259,
+        "estimated_cost_usd": 0.02054
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.02054
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

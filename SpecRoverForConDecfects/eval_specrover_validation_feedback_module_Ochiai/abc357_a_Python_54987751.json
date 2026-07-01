@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54987751",
+  "task_name": "abc357_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:05:25.159048",
+  "finished_at": "2026-06-15T11:05:46.790648",
+  "elapsed_seconds": 21.63,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "2",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 21.63,
+      "estimated_cost": {
+        "total": 0.041319999999999996
+      }
+    }
+  ],
+  "faulty_function": "n = list(map(int, input().split()))\na = list(map(int, input().split()))\nc = 0\nb = 0\nfor i in range(n[0]):\n    c = c + a[i]\n    b = b + 1\n    if c >= n[1]:\n        break\nif c == n[1]:\n    print(b)\nelif c < n[1]:\n    print(1) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nelse:\n    print(b - 1)",
+  "fix_code": "n, m = map(int, input().split())\na = list(map(int, input().split()))\ncount = 0\nfor hands in a:\n    if m >= hands:\n        count += 1\n        m -= hands\n    else:\n        break\nprint(count)",
+  "fix_code_raw_response": "To address the issue, we need to correctly handle the decrement of the disinfectant capacity by the number of hands for each alien and count how many aliens can fully disinfect their hands before the disinfectant runs out. The current logic does not account for the fact that an alien will use up the remaining disinfectant even if there is not enough for all their hands.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nn = list(map(int, input().split()))\na = list(map(int, input().split()))\nc = 0\nb = 0\nfor i in range(n[0]):\n    c = c + a[i]\n    b = b + 1\n    if c >= n[1]:\n        break\nif c == n[1]:\n    print(b)\nelif c < n[1]:\n    print(1)\nelse:\n    print(b - 1)\n</original>\n<patched>\nn, m = map(int, input().split())\na = list(map(int, input().split()))\ncount = 0\nfor hands in a:\n    if m >= hands:\n        count += 1\n        m -= hands\n    else:\n        break\nprint(count)\n</patched>\n```\n\nExplanation:\n1. The input is read and parsed into `n` (number of aliens) and `m` (total disinfectant capacity).\n2. The list `a` contains the number of hands each alien has.\n3. We initialize `count` to keep track of how many aliens can fully disinfect their hands.\n4. For each alien's hands in `a`, we check if the remaining disinfectant `m` is enough to disinfect all their hands.\n5. If it is, we increment `count` and decrement `m` by the number of hands.\n6. If it is not, we break out of the loop as no further aliens can fully disinfect their hands.\n7. Finally, we print the `count` of aliens who have fully disinfected their hands.\n\nThis patch ensures that the program correctly counts and prints the number of aliens that can fully disinfect their hands with the available disinfectant.",
+  "patch_handle": "2",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 923,
+        "output_tokens": 444,
+        "estimated_cost_usd": 0.011275
+      },
+      {
+        "input_tokens": 1625,
+        "output_tokens": 444,
+        "estimated_cost_usd": 0.014785
+      },
+      {
+        "input_tokens": 1711,
+        "output_tokens": 447,
+        "estimated_cost_usd": 0.01526
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.041319999999999996
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

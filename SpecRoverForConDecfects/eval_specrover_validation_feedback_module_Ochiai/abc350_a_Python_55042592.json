@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55042592",
+  "task_name": "abc350_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:16:39.534487",
+  "finished_at": "2026-06-15T11:16:50.306149",
+  "elapsed_seconds": 10.77,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 10.77,
+      "estimated_cost": {
+        "total": 0.021910000000000002
+      }
+    }
+  ],
+  "faulty_function": "s = input()\ns = s.replace(\"ABC\",\"\")\nif int(s) ==316:\n  print(\"No\")\nelif 000 <= int(s) <= 349:\n  print(\"Yes\")   # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nelse:\n  print(\"No\")",
+  "fix_code": "s = input()\ns = s.replace(\"ABC\",\"\")\nif s == \"000\" or int(s) == 316:\n  print(\"No\")\nelif 1 <= int(s) <= 315 or 317 <= int(s) <= 349:\n  print(\"Yes\")\nelse:\n  print(\"No\")",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the input string \"ABC000\" is correctly identified as invalid. The problem lies in the condition that checks if the integer value of the last three characters is between 000 and 349, inclusive. We need to exclude \"000\" and \"316\" explicitly.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\ns = input()\ns = s.replace(\"ABC\",\"\")\nif int(s) ==316:\n  print(\"No\")\nelif 000 <= int(s) <= 349:\n  print(\"Yes\")   # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nelse:\n  print(\"No\")\n</original>\n<patched>\ns = input()\ns = s.replace(\"ABC\",\"\")\nif s == \"000\" or int(s) == 316:\n  print(\"No\")\nelif 1 <= int(s) <= 315 or 317 <= int(s) <= 349:\n  print(\"Yes\")\nelse:\n  print(\"No\")\n</patched>\n```\n\nExplanation:\n- The original code incorrectly includes \"000\" as a valid contest number.\n- The patched code explicitly checks if the remaining digits are \"000\" and prints \"No\" in that case.\n- The range check is updated to ensure that \"000\" is not included and the valid range is split to exclude \"316\".",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 885,
+        "output_tokens": 357,
+        "estimated_cost_usd": 0.00978
+      },
+      {
+        "input_tokens": 1469,
+        "output_tokens": 319,
+        "estimated_cost_usd": 0.012130000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.021910000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

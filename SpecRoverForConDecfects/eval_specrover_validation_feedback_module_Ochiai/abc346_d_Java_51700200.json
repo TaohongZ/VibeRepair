@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "51700200",
+  "task_name": "abc346_d",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T17:16:53.738730",
+  "finished_at": "2026-06-15T17:17:15.820043",
+  "elapsed_seconds": 22.08,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 22.08,
+      "estimated_cost": {
+        "total": 0.01666
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        char[] S = sc.next().toCharArray();\n        int[] C = new int[N];\n        for (int i = 0; i < N; i++) {\n            C[i] = sc.nextInt();\n        }\n        int[][][] dp = new int[N][2][2]; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n        dp[0][0][0] = 0;\n        dp[0][0][1] = C[0];\n        dp[0][1][0] = Integer.MAX_VALUE;\n        dp[0][1][1] = Integer.MAX_VALUE;\n\n        dp[1][1][1] = S[0] == S[1] ? C[0]+C[1]: C[1];\n        dp[1][0][1] = S[0] == S[1] ? C[1] : C[0] + C[1];\n        dp[1][0][0] = S[0] == S[1] ? C[0] : 0;\n        dp[1][1][0] = S[0] == S[1] ? 0 : C[0];\n\n        for (int i = 2; i < S.length; i++) {\n            dp[i][0][0] = S[i] == S[i - 1] ? dp[i - 1][0][1] : dp[i - 1][0][0];\n            dp[i][1][0] = S[i] == S[i - 1] ? Math.min(dp[i - 1][1][1], dp[i - 1][0][0]) : Math.min(dp[i - 1][0][1], dp[i - 1][1][0]);\n            dp[i][0][1] = S[i] == S[i - 1] ? dp[i - 1][0][0] + C[i] : dp[i - 1][0][1] + C[i];\n            dp[i][1][1] = S[i] == S[i - 1] ? Math.min(dp[i - 1][1][0], dp[i - 1][0][1]) + C[i] : Math.min(dp[i - 1][1][1], dp[i - 1][0][0]) + C[i];\n        }\n\n        System.out.println(Math.min(dp[S.length - 1][1][0], dp[S.length - 1][1][1]));\n    }",
+  "fix_code": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        char[] S = sc.next().toCharArray();\n        int[] C = new int[N];\n        for (int i = 0; i < N; i++) {\n            C[i] = sc.nextInt();\n        }\n        long[][][] dp = new long[N][2][2];\n        dp[0][0][0] = 0;\n        dp[0][0][1] = C[0];\n    dp[0][1][0] = Long.MAX_VALUE;\n    dp[0][1][1] = Long.MAX_VALUE;\n\n        dp[1][1][1] = S[0] == S[1] ? (long)C[0] + C[1] : C[1];\n        dp[1][0][1] = S[0] == S[1] ? C[1] : (long)C[0] + C[1];\n        dp[1][0][0] = S[0] == S[1] ? C[0] : 0;\n        dp[1][1][0] = S[0] == S[1] ? 0 : C[0];\n\n        for (int i = 2; i < S.length; i++) {\n            dp[i][0][0] = S[i] == S[i - 1] ? dp[i - 1][0][1] : dp[i - 1][0][0];\n            dp[i][1][0] = S[i] == S[i - 1] ? Math.min(dp[i - 1][1][1], dp[i - 1][0][0]) : Math.min(dp[i - 1][0][1], dp[i - 1][1][0]);\n            dp[i][0][1] = S[i] == S[i - 1] ? dp[i - 1][0][0] + C[i] : dp[i - 1][0][1] + C[i];\n            dp[i][1][1] = S[i] == S[i - 1] ? Math.min(dp[i - 1][1][0], dp[i - 1][0][1]) + C[i] : Math.min(dp[i - 1][1][1], dp[i - 1][0][0]) + C[i];\n        }\n\n        System.out.println(Math.min(dp[S.length - 1][1][0], dp[S.length - 1][1][1]));\n    }",
+  "fix_code_raw_response": "The issue in the provided code is due to integer overflow when calculating the minimum cost. The `int` type in Java is not sufficient to handle the large values of costs (`C_i`) as specified in the constraints. We need to use `long` instead of `int` to store these values to avoid overflow.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    int[][][] dp = new int[N][2][2];\n</original>\n<patched>\n    long[][][] dp = new long[N][2][2];\n</patched>\n```\n\n# modification 2\n```\n<file>faultyVersion.java</file>\n<original>\n    dp[0][1][0] = Integer.MAX_VALUE;\n    dp[0][1][1] = Integer.MAX_VALUE;\n</original>\n<patched>\n    dp[0][1][0] = Long.MAX_VALUE;\n    dp[0][1][1] = Long.MAX_VALUE;\n</patched>\n```\n\n# modification 3\n```\n<file>faultyVersion.java</file>\n<original>\n        dp[1][1][1] = S[0] == S[1] ? C[0]+C[1]: C[1];\n        dp[1][0][1] = S[0] == S[1] ? C[1] : C[0] + C[1];\n        dp[1][0][0] = S[0] == S[1] ? C[0] : 0;\n        dp[1][1][0] = S[0] == S[1] ? 0 : C[0];\n</original>\n<patched>\n        dp[1][1][1] = S[0] == S[1] ? (long)C[0] + C[1] : C[1];\n        dp[1][0][1] = S[0] == S[1] ? C[1] : (long)C[0] + C[1];\n        dp[1][0][0] = S[0] == S[1] ? C[0] : 0;\n        dp[1][1][0] = S[0] == S[1] ? 0 : C[0];\n</patched>\n```\n\n# modification 4\n```\n<file>faultyVersion.java</file>\n<original>\n        System.out.println(Math.min(dp[S.length - 1][1][0], dp[S.length - 1][1][1]));\n</original>\n<patched>\n        System.out.println(Math.min(dp[S.length - 1][1][0], dp[S.length - 1][1][1]));\n</patched>\n```\n\nThese changes ensure that the program uses `long` to store the costs and intermediate results, preventing integer overflow and producing the correct output for large input values.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1478,
+        "output_tokens": 618,
+        "estimated_cost_usd": 0.01666
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.01666
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

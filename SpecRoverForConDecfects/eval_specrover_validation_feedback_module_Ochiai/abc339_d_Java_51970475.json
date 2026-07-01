@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "51970475",
+  "task_name": "abc339_d",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T06:29:57.451231",
+  "finished_at": "2026-06-15T06:30:56.521710",
+  "elapsed_seconds": 59.07,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 59.07,
+      "estimated_cost": {
+        "total": 0.011755
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\ttry(Scanner sc = new Scanner(System.in);) {\n\t\t\tint n = Integer.parseInt(sc.next());\n\t\t\tchar[][] s = new char[n][n];\n\t\t\tfor(int i = 0; i < n; i++) s[i] = sc.next().toCharArray();\n\t\t\tint x1 = -1;\n\t\t\tint y1 = -1;\n\t\t\tint x2 = -1;\n\t\t\tint y2 = -1;\n\t\t\tfor(int i = 0; i < n; i++) {\n\t\t\t\tfor(int j = 0; j < n; j++) {\n\t\t\t\t\tif(s[i][j] == 'P') {\n\t\t\t\t\t\tif(x1 == -1) {\n\t\t\t\t\t\t\tx1 = i;\n\t\t\t\t\t\t\ty1 = j;\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tx2 = i;\n\t\t\t\t\t\t\ty2 = j;\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t\n\t\t\tfinal int[] dx = {-1, 0, 1, 0};\n\t\t\tfinal int[] dy = {0, 1, 0, -1};\n\t\t\tfinal int INF = 1 << 30;\n\t\t\t\n\t\t\tint[][][][] dist = new int[n][n][n][n];\n\t\t\tfor(int i = 0; i < n; i++) {\n\t\t\t\tfor(int j = 0; j < n; j++) {\n\t\t\t\t\tfor(int k = 0; k < n; k++) {\n\t\t\t\t\t\tArrays.fill(dist[i][j][k], INF);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\tQueue<Integer[]> que = new ArrayDeque<Integer[]>();\n\t\t\tque.add(new Integer[] {x1, y1, x2, y2});\n\t\t\tdist[x1][y1][x2][y2] = 0;\n\t\t\t\n\t\t\twhile(!que.isEmpty()) {\n\t\t\t\tint nx1 = que.peek()[0];\n\t\t\t\tint ny1 = que.peek()[1];\n\t\t\t\tint nx2 = que.peek()[2];\n\t\t\t\tint ny2 = que.peek()[3];\n\t\t\t\tque.poll();\n\t\t\t\tfor(int i = 0; i < 4; i++) {\n\t\t\t\t\tint ntx1 = nx1 + dx[i];\n\t\t\t\t\tint nty1 = ny1 + dy[i];\n\t\t\t\t\tint ntx2 = nx2 + dx[i];\n\t\t\t\t\tint nty2 = ny2 + dy[i];\n\t\t\t\t\t\n\t\t\t\t\tif(ntx1 < 0 || n <= ntx1 || nty1 < 0 || n <= nty1 || s[ntx1][nty1] == '#') {\n\t\t\t\t\t\tntx1 = nx1;\n\t\t\t\t\t\tnty1 = ny1;\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tif(ntx2 < 0 || n <= ntx2 || nty2 < 0 || n <= nty2 || s[ntx2][nty2] == '#') {\n\t\t\t\t\t\tntx2 = nx2;\n\t\t\t\t\t\tnty2 = ny2;\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tif(dist[ntx1][nty1][ntx2][nty2] > dist[nx1][ny1][nx2][ny2] + 1) {\n\t\t\t\t\t\tdist[ntx1][nty1][ntx2][nty2] = dist[nx1][ny1][nx2][ny2] + 1;\n\t\t\t\t\t\tque.add(new Integer[] {ntx1, nty1, ntx2, nty2});\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t\n\t\t\tint ans = 1 << 60;\n\t\t\tfor(int i = 0; i < n; i++) {\n\t\t\t\tfor(int j = 0; j < n; j++) {\n\t\t\t\t\tans = Math.min(ans, dist[i][j][i][j]);\n\t\t\t\t}\n\t\t\t}\n\t\t\tif(ans == INF) ans = -1;\n\t\t\tSystem.out.println(ans);\n\t\t}\n\t} // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "\tpublic static void main(String[] args) {\n\t\ttry(Scanner sc = new Scanner(System.in);) {\n\t\t\tint n = Integer.parseInt(sc.next());\n\t\t\tchar[][] s = new char[n][n];\n\t\t\tfor(int i = 0; i < n; i++) s[i] = sc.next().toCharArray();\n\t\t\tint x1 = -1;\n\t\t\tint y1 = -1;\n\t\t\tint x2 = -1;\n\t\t\tint y2 = -1;\n\t\t\tfor(int i = 0; i < n; i++) {\n\t\t\t\tfor(int j = 0; j < n; j++) {\n\t\t\t\t\tif(s[i][j] == 'P') {\n\t\t\t\t\t\tif(x1 == -1) {\n\t\t\t\t\t\t\tx1 = i;\n\t\t\t\t\t\t\ty1 = j;\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tx2 = i;\n\t\t\t\t\t\t\ty2 = j;\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t\n\t\t\tfinal int[] dx = {-1, 0, 1, 0};\n\t\t\tfinal int[] dy = {0, 1, 0, -1};\n\t\t\tfinal int INF = 1 << 60;\n\t\t\t\n\t\t\tint[][][][] dist = new int[n][n][n][n];\n\t\t\tfor(int i = 0; i < n; i++) {\n\t\t\t\tfor(int j = 0; j < n; j++) {\n\t\t\t\t\tfor(int k = 0; k < n; k++) {\n\t\t\t\t\t\tArrays.fill(dist[i][j][k], INF);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\tQueue<Integer[]> que = new ArrayDeque<Integer[]>();\n\t\t\tque.add(new Integer[] {x1, y1, x2, y2});\n\t\t\tdist[x1][y1][x2][y2] = 0;\n\t\t\t\n\t\t\twhile(!que.isEmpty()) {\n\t\t\t\tint nx1 = que.peek()[0];\n\t\t\t\tint ny1 = que.peek()[1];\n\t\t\t\tint nx2 = que.peek()[2];\n\t\t\t\tint ny2 = que.peek()[3];\n\t\t\t\tque.poll();\n\t\t\t\tfor(int i = 0; i < 4; i++) {\n\t\t\t\t\tint ntx1 = nx1 + dx[i];\n\t\t\t\t\tint nty1 = ny1 + dy[i];\n\t\t\t\t\tint ntx2 = nx2 + dx[i];\n\t\t\t\t\tint nty2 = ny2 + dy[i];\n\t\t\t\t\t\n\t\t\t\t\tif(ntx1 < 0 || n <= ntx1 || nty1 < 0 || n <= nty1 || s[ntx1][nty1] == '#') {\n\t\t\t\t\t\tntx1 = nx1;\n\t\t\t\t\t\tnty1 = ny1;\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tif(ntx2 < 0 || n <= ntx2 || nty2 < 0 || n <= nty2 || s[ntx2][nty2] == '#') {\n\t\t\t\t\t\tntx2 = nx2;\n\t\t\t\t\t\tnty2 = ny2;\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tif(dist[ntx1][nty1][ntx2][nty2] > dist[nx1][ny1][nx2][ny2] + 1) {\n\t\t\t\t\t\tdist[ntx1][nty1][ntx2][nty2] = dist[nx1][ny1][nx2][ny2] + 1;\n\t\t\t\t\t\tque.add(new Integer[] {ntx1, nty1, ntx2, nty2});\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t\n\t\t\tint ans = 1 << 60;\n\t\t\tfor(int i = 0; i < n; i++) {\n\t\t\t\tfor(int j = 0; j < n; j++) {\n\t\t\t\t\tans = Math.min(ans, dist[i][j][i][j]);\n\t\t\t\t}\n\t\t\t}\n\t\t\tif(ans == INF) ans = -1;\n\t\t\tSystem.out.println(ans);\n\t\t}\n\t}",
+  "fix_code_raw_response": "The issue in the code is that the variable `INF` is set to `1 << 30`, which is not large enough to represent infinity in this context. This causes the program to incorrectly determine the minimum number of moves required to bring the two players to the same cell. The correct value for `INF` should be `1 << 60` to ensure it is large enough to represent an unreachable state.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\t\t\tfinal int INF = 1 << 30;\n</original>\n<patched>\n\t\t\tfinal int INF = 1 << 60;\n</patched>\n```\n\nThis change ensures that the `INF` value is sufficiently large to represent an unreachable state, which will correctly handle cases where it is impossible to bring the two players to the same cell.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1805,
+        "output_tokens": 182,
+        "estimated_cost_usd": 0.011755
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.011755
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

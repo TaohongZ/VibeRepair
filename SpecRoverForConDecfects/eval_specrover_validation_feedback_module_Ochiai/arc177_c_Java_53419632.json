@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53419632",
+  "task_name": "arc177_c",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T07:22:11.265904",
+  "finished_at": "2026-06-15T07:22:30.690806",
+  "elapsed_seconds": 19.43,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 19.42,
+      "estimated_cost": {
+        "total": 0.01125
+      }
+    }
+  ],
+  "faulty_function": "  private int calc(char c){\n    int[][] len = new int[N][N];\n    for (var is:len)\n      fill(is,infI);\n\n    Deque<int[]> que = new ArrayDeque<>();\n    if (c == 'R') {\n      if (S[0][0] == c) {\n        len[0][0] = 0;\n        que.add(new int[]{0, 0, 0});\n      } else {\n        len[0][0] = 1;\n        que.add(new int[]{0, 0, 1});\n      }\n    } else if (S[0][0] == c) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      len[0][N -1] = 0;\n      que.add(new int[]{0, N -1, 0});\n    } else {\n      len[0][N -1] = 1;\n      que.add(new int[]{0, N -1, 1});\n    }\n\n    while (!que.isEmpty()) {\n      var cur = que.poll();\n      int i = cur[0];\n      int j = cur[1];\n\n      List<int[]> sur = new ArrayList<>();\n      if (0 < i)\n        sur.add(new int[]{i -1, j});\n      if (0 < j)\n        sur.add(new int[]{i, j -1});\n      if (i +1 < N)\n        sur.add(new int[]{i +1, j});\n      if (j +1 < N)\n        sur.add(new int[]{i, j +1});\n\n      for (var s:sur) {\n        int l = S[s[0]][s[1]] == c ? 0 : 1;\n        if (len[s[0]][s[1]] > cur[2] +l) {\n          len[s[0]][s[1]] = cur[2] +l;\n          if (l == 0)\n            que.addFirst(new int[]{s[0], s[1], len[s[0]][s[1]]});\n          else\n            que.addLast(new int[]{s[0], s[1], len[s[0]][s[1]]});\n        }\n      }\n    }\n\n    return c == 'R' ? len[N -1][N -1] : len[N -1][0];\n  }",
+  "fix_code": "  private int calc(char c){\n    int[][] len = new int[N][N];\n    for (var is:len)\n      fill(is,infI);\n\n    Deque<int[]> que = new ArrayDeque<>();\n    if (c == 'R') {\n      if (S[0][0] == c) {\n        len[0][0] = 0;\n        que.add(new int[]{0, 0, 0});\n      } else {\n        len[0][0] = 1;\n        que.add(new int[]{0, 0, 1});\n      }\n    } else if (S[0][N - 1] == c) {\n      len[0][N - 1] = 0;\n      que.add(new int[]{0, N - 1, 0});\n    } else {\n      len[0][N -1] = 1;\n      que.add(new int[]{0, N -1, 1});\n    }\n\n    while (!que.isEmpty()) {\n      var cur = que.poll();\n      int i = cur[0];\n      int j = cur[1];\n\n      List<int[]> sur = new ArrayList<>();\n      if (0 < i)\n        sur.add(new int[]{i -1, j});\n      if (0 < j)\n        sur.add(new int[]{i, j -1});\n      if (i +1 < N)\n        sur.add(new int[]{i +1, j});\n      if (j +1 < N)\n        sur.add(new int[]{i, j +1});\n\n      for (var s:sur) {\n        int l = S[s[0]][s[1]] == c ? 0 : 1;\n        if (len[s[0]][s[1]] > cur[2] +l) {\n          len[s[0]][s[1]] = cur[2] +l;\n          if (l == 0)\n            que.addFirst(new int[]{s[0], s[1], len[s[0]][s[1]]});\n          else\n            que.addLast(new int[]{s[0], s[1], len[s[0]][s[1]]});\n        }\n      }\n    }\n\n    return c == 'R' ? len[N -1][N -1] : len[N -1][0];\n  }",
+  "fix_code_raw_response": "The issue in the provided code is that the initialization for the blue path (when `c == 'B'`) is incorrectly checking the starting cell `(0, 0)` instead of the correct starting cell `(0, N-1)`. This causes the algorithm to not properly initialize the starting conditions for the blue path, leading to incorrect results.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    } else if (S[0][0] == c) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      len[0][N -1] = 0;\n      que.add(new int[]{0, N -1, 0});\n</original>\n<patched>\n    } else if (S[0][N - 1] == c) {\n      len[0][N - 1] = 0;\n      que.add(new int[]{0, N - 1, 0});\n</patched>\n```\n\nThis change ensures that the initialization for the blue path correctly checks the starting cell `(0, N-1)` instead of `(0, 0)`. This should resolve the issue and produce the expected output.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1449,
+        "output_tokens": 267,
+        "estimated_cost_usd": 0.01125
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.01125
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

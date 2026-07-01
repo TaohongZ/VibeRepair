@@ -1,0 +1,78 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54971919",
+  "task_name": "abc350_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:56:38.893874",
+  "finished_at": "2026-06-15T10:56:56.744027",
+  "elapsed_seconds": 17.85,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "3",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 17.85,
+      "estimated_cost": {
+        "total": 0.04309
+      }
+    }
+  ],
+  "faulty_function": "S = input()\nif int(S[3:]) == 316 or int(S[3:]) > 349:\n    print(\"No\")\nelse:\n    print(\"Yes\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "S = input()\nnumber_part = S[3:]\nif number_part == \"316\" or not (number_part.isdigit() and 1 <= int(number_part) <= 349):\n    print(\"No\")\nelse:\n    print(\"Yes\")",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the numeric part of the string `S` is between \"001\" and \"349\", excluding \"316\". The previous patch did not correctly handle the case where the number part is \"000\". We need to account for leading zeros and ensure the number part is within the valid range.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nS = input()\nif int(S[3:]) == 316 or int(S[3:]) > 349:\n    print(\"No\")\nelse:\n    print(\"Yes\")\n</original>\n<patched>\nS = input()\nnumber_part = S[3:]\nif number_part == \"316\" or not (number_part.isdigit() and 1 <= int(number_part) <= 349):\n    print(\"No\")\nelse:\n    print(\"Yes\")\n</patched>\n```\n\nExplanation:\n- We extract the numeric part of the string `S` and keep it as a string to handle leading zeros.\n- We check if this number part is \"316\".\n- We also check if the number part is a digit and within the range 1 to 349 (inclusive).\n- If any of these conditions are true, we print \"No\".\n- Otherwise, we print \"Yes\".",
+  "patch_handle": "3",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 874,
+        "output_tokens": 281,
+        "estimated_cost_usd": 0.008585
+      },
+      {
+        "input_tokens": 1373,
+        "output_tokens": 299,
+        "estimated_cost_usd": 0.01135
+      },
+      {
+        "input_tokens": 1453,
+        "output_tokens": 317,
+        "estimated_cost_usd": 0.012020000000000001
+      },
+      {
+        "input_tokens": 1414,
+        "output_tokens": 271,
+        "estimated_cost_usd": 0.011135
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.04309
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

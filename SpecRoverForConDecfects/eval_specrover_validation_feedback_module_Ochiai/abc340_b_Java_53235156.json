@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53235156",
+  "task_name": "abc340_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T07:10:35.696110",
+  "finished_at": "2026-06-15T07:10:46.515325",
+  "elapsed_seconds": 10.82,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 10.82,
+      "estimated_cost": {
+        "total": 0.014335
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) throws Exception {\n        // Your code here!\n        Scanner sc = new Scanner(System.in);\n        HashMap<Integer,Long> map = new HashMap<Integer,Long>();\n        int n = sc.nextInt();\n        int idx=0;\n        for(int i=0;i<n;i++){\n            long a =sc.nextLong();\n            if(a ==1){\n                map.put(i+1,sc.nextLong());\n                idx++;\n            }else {\n                int b = sc.nextInt();\n                System.out.println(map.get(idx-b+1)); // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n            }\n            \n\n        }\n        \n    }",
+  "fix_code": "    public static void main(String[] args) throws Exception {\n        // Your code here!\n        Scanner sc = new Scanner(System.in);\n        List<Long> list = new ArrayList<Long>();\n        int n = sc.nextInt();\n        for(int i=0;i<n;i++){\n            int queryType = sc.nextInt();\n            if(queryType == 1){\n                list.add(sc.nextLong());\n            }else {\n                int k = sc.nextInt();\n                System.out.println(list.get(list.size() - k));\n            }\n        }\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that it uses a `HashMap` to store the sequence elements, which does not maintain the order of insertion. This causes incorrect results when trying to access elements based on their position from the end of the sequence. Instead, we should use a `List` to maintain the order of elements.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    public static void main(String[] args) throws Exception {\n        // Your code here!\n        Scanner sc = new Scanner(System.in);\n        HashMap<Integer,Long> map = new HashMap<Integer,Long>();\n        int n = sc.nextInt();\n        int idx=0;\n        for(int i=0;i<n;i++){\n            long a =sc.nextLong();\n            if(a ==1){\n                map.put(i+1,sc.nextLong());\n                idx++;\n            }else {\n                int b = sc.nextInt();\n                System.out.println(map.get(idx-b+1));\n            }\n        }\n    }\n</original>\n<patched>\n    public static void main(String[] args) throws Exception {\n        // Your code here!\n        Scanner sc = new Scanner(System.in);\n        List<Long> list = new ArrayList<Long>();\n        int n = sc.nextInt();\n        for(int i=0;i<n;i++){\n            int queryType = sc.nextInt();\n            if(queryType == 1){\n                list.add(sc.nextLong());\n            }else {\n                int k = sc.nextInt();\n                System.out.println(list.get(list.size() - k));\n            }\n        }\n    }\n</patched>\n```\n\n### Reasoning:\n1. **Use of List instead of HashMap**: The `HashMap` does not maintain the order of elements, which is crucial for this problem. By using a `List`, we can maintain the order of elements as they are appended.\n2. **Accessing elements from the end**: The `List` allows us to directly access elements based on their index, which simplifies finding the k-th element from the end.\n\nThis patch ensures that the sequence maintains the correct order and allows for accurate retrieval of elements based on their position from the end.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1499,
+        "output_tokens": 456,
+        "estimated_cost_usd": 0.014335
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.014335
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

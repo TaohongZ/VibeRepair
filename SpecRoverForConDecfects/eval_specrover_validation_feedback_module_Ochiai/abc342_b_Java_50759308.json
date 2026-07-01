@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "50759308",
+  "task_name": "abc342_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T05:45:19.338942",
+  "finished_at": "2026-06-15T05:45:28.979152",
+  "elapsed_seconds": 9.64,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 9.64,
+      "estimated_cost": {
+        "total": 0.009765
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) throws Exception {\n        Scanner sc = new Scanner(System.in);\n        int pnum = sc.nextInt();\n        \n        int [] order = new int [pnum];\n        \n        for(int i = 0; i < pnum; i++){\n            int person = sc.nextInt();\n            order[person - 1] = i;\n        }\n        \n        int qnum = sc.nextInt();\n \n        for(int i = 0; i < qnum; i++){\n            int query1 = sc.nextInt();\n            int query2 = sc.nextInt();\n            if (query1 < query2){\n                System.out.println(query1);\n            }else{\n                System.out.println(query2);\n            }\n        }\n    \n    } // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "    public static void main(String[] args) throws Exception {\n        Scanner sc = new Scanner(System.in);\n        int pnum = sc.nextInt();\n        \n        int [] order = new int [pnum];\n        \n        for(int i = 0; i < pnum; i++){\n            int person = sc.nextInt();\n            order[person - 1] = i;\n        }\n        \n        int qnum = sc.nextInt();\n \n        for(int i = 0; i < qnum; i++){\n            int query1 = sc.nextInt();\n            int query2 = sc.nextInt();\n    if (order[query1 - 1] < order[query2 - 1]){\n        System.out.println(query1);\n    }else{\n        System.out.println(query2);\n    }\n        }\n    \n    }",
+  "fix_code_raw_response": "The issue in the code is that the comparison between `query1` and `query2` is done directly, which does not take into account the positions of the persons in the line. Instead, we should compare their positions in the `order` array to determine who is standing further to the front.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    if (query1 < query2){\n        System.out.println(query1);\n    }else{\n        System.out.println(query2);\n    }\n</original>\n<patched>\n    if (order[query1 - 1] < order[query2 - 1]){\n        System.out.println(query1);\n    }else{\n        System.out.println(query2);\n    }\n</patched>\n```\n\nExplanation:\n- The original code compares `query1` and `query2` directly, which is incorrect.\n- The patched code compares the positions of `query1` and `query2` in the `order` array. The `order` array stores the positions of the persons in the line, so `order[query1 - 1]` gives the position of the person `query1` and `order[query2 - 1]` gives the position of the person `query2`.\n- By comparing `order[query1 - 1]` and `order[query2 - 1]`, we can determine who is standing further to the front and print the correct person number.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1011,
+        "output_tokens": 314,
+        "estimated_cost_usd": 0.009765
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.009765
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

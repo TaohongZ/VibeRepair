@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "53817916",
+  "repair_index": 5,
+  "task_name": "abc350_a",
+  "language": "Java",
+  "flawed_specification": "[\n  Function: main\n  Purpose: To determine if a specific integer value derived from user input is within a predefined range and print a corresponding message.\n  Signature: main(String[] args)\n  Input: A single command-line argument, `args`, which is an array of strings. The function reads a line of input from the user, which is expected to be a string containing an integer starting from the fourth character.\n  Output: Prints \"Yes\" if the integer derived from the input matches any integer from 0 to 349, except 316. Prints \"No\" otherwise.\n  Behavior:\n    1. Initialize a `Scanner` object to read input from the standard input stream.\n    2. Read a line of input from the user and store it in the string variable `s`.\n    3. Extract a substring from `s` starting at index 3 and convert it to an integer, storing it in `sEnd`.\n    4. Iterate over integers `i` from 0 to 349.\n    5. If `i` equals 316, skip the current iteration (bug is here).\n    6. If `sEnd` equals `i`, print \"Yes\" and terminate the function.\n    7. If the loop completes without finding a match, print \"No\".\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should determine if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, represents a valid contest abbreviation on AtCoder. The valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if the string matches any of these valid abbreviations and \"No\" otherwise.",
+    "diagnosis_and_repair_directions": "The flawed specification incorrectly focuses on checking if an integer derived from the input is within a range, rather than directly verifying if the input string matches one of the valid contest abbreviations. The main issue is the logic that iterates over integers and skips 316, which is unnecessary and incorrect for string comparison. Instead, the function should directly check if the input string `S` is in the set of valid contest strings.\nRepair Directions:\n1. Change the input handling to directly use the string `S` as provided, without converting part of it to an integer.\n2. Create a set of valid contest strings from \"ABC001\" to \"ABC349\", excluding \"ABC316\".\n3. Check if the input string `S` is in this set.\n4. Print \"Yes\" if `S` is in the set, otherwise print \"No\".",
+    "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` of length 6, which starts with \"ABC\" and ends with three digits, represents a valid contest abbreviation on AtCoder. The valid abbreviations are \"ABC001\" to \"ABC349\", excluding \"ABC316\". The function should output \"Yes\" if the string matches any of these valid abbreviations and \"No\" otherwise.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly focuses on checking if an integer derived from the input is within a range, rather than directly verifying if the input string matches one of the valid contest abbreviations. The main issue is the logic that iterates over integers and skips 316, which is unnecessary and incorrect for string comparison. Instead, the function should directly check if the input string `S` is in the set of valid contest strings.\n\nRepair Directions:\n1. Change the input handling to directly use the string `S` as provided, without converting part of it to an integer.\n2. Create a set of valid contest strings from \"ABC001\" to \"ABC349\", excluding \"ABC316\".\n3. Check if the input string `S` is in this set.\n4. Print \"Yes\" if `S` is in the set, otherwise print \"No\".\n\nFixed Specification:\nFunction: main\nPurpose: To determine if a given string is a valid contest abbreviation on AtCoder.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a line of input from the user, which is expected to be a string of length 6 starting with \"ABC\" and ending with three digits.\nOutput: Prints \"Yes\" if the input string matches any valid contest abbreviation from \"ABC001\" to \"ABC349\", excluding \"ABC316\". Prints \"No\" otherwise.\nBehavior:\n1. Initialize a `Scanner` object to read input from the standard input stream.\n2. Read a line of input from the user and store it in the string variable `S`.\n3. Create a set of valid contest strings from \"ABC001\" to \"ABC349\", excluding \"ABC316\".\n4. Check if `S` is in the set of valid contest strings.\n5. If `S` is in the set, print \"Yes\". Otherwise, print \"No\"."
+  },
+  "fixed_specification": "Function: main\nPurpose: To determine if a given string is a valid contest abbreviation on AtCoder.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a line of input from the user, which is expected to be a string of length 6 starting with \"ABC\" and ending with three digits.\nOutput: Prints \"Yes\" if the input string matches any valid contest abbreviation from \"ABC001\" to \"ABC349\", excluding \"ABC316\". Prints \"No\" otherwise.\nBehavior:\n1. Initialize a `Scanner` object to read input from the standard input stream.\n2. Read a line of input from the user and store it in the string variable `S`.\n3. Create a set of valid contest strings from \"ABC001\" to \"ABC349\", excluding \"ABC316\".\n4. Check if `S` is in the set of valid contest strings.\n5. If `S` is in the set, print \"Yes\". Otherwise, print \"No\".",
+  "fix_code": "import java.util.Scanner;\n\npublic static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    String s = sc.nextLine();\n    if (s.length() == 6 && s.startsWith(\"ABC\")) {\n        int sEnd = Integer.parseInt(s.substring(3));\n        if (sEnd >= 1 && sEnd <= 349 && sEnd != 316) {\n            System.out.println(\"Yes\");\n            return;\n        }\n    }\n    System.out.println(\"No\");\n}\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.0038925,
+    "fix_specification": 0.006685,
+    "fix_specification_and_buggy_code_to_fix_code": 0.0023575,
+    "total": 0.012935
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 473,
+      "output_tokens": 271,
+      "total_tokens": 744
+    },
+    "fix_specification": {
+      "input_tokens": 762,
+      "output_tokens": 478,
+      "total_tokens": 1240
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 507,
+      "output_tokens": 109,
+      "total_tokens": 616
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53476783",
+  "task_name": "abc352_f",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T19:25:07.019728",
+  "finished_at": "2026-06-15T19:25:59.455265",
+  "elapsed_seconds": 52.44,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 52.44,
+      "estimated_cost": {
+        "total": 0.035315000000000006
+      }
+    }
+  ],
+  "faulty_function": "n, m = map(int, input().split())\nG = [[] for _ in range(n)]\nfor _ in range(m):\n    a, b, c = map(int, input().split())\n    a -= 1\n    b -= 1\n    G[a].append((b, -c))\n    G[b].append((a, c))\n\nused = [False for _ in range(n)]\ncost = [0 for _ in range(n)]\ndef dfs(u, d):\n    res = [u]\n    used[u] = True\n    cost[u] = d\n    for v, c in G[u]:\n        if used[v]: continue\n        res += dfs(v, d + c)\n    return res\n\ng = []\nst = []\nfor i in range(n):\n    if used[i]: continue\n    comp = dfs(i, 0)\n    m = min(cost[u] for u in comp)\n    for u in comp:\n        cost[u] -= m\n    bit = 0\n    for u in comp:\n        bit |= (1 << cost[u])\n    g.append(bit)\n    st.append(comp)\n\nbitset=[[]for _ in range(n+1)]\nfor bit in range(1<<n):\n    cnt=bit.bit_count()\n    bitset[cnt].append(bit)\n\n\nans=[-1]*n\nfor i in range(len(g)):\n    now=0\n    dp=[False]*(1<<n)\n    dp[0]=True \n    x=g[i]\n    for j in range(len(g)):\n        if i==j:\n            continue \n        for bit in bitset[now]:\n            if dp[bit]==False:\n                continue \n            for sft in range(n):\n                if bit|(g[j]<<sft)>=(1<<n):\n                    break\n                dp[bit|(g[j]<<sft)]=True \n        now+=g[j].bit_count()\n    # print(dp)\n    ok=[]\n    for bit in bitset[n-x.bit_count()]:\n        if dp[bit]==False:\n            continue \n        # print(x,bit)\n        for sft in range(n):\n            if x<<sft>=(1<<n):\n                break \n            if bit^(x<<sft)==(1<<n)-1:\n                ok.append(sft)\n    if len(ok)==1:\n        # print(ok)\n        # print(st[i])\n        for s in st[i]:\n            ans[s]=s+ok[0]+1 # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\nprint(*ans)",
+  "fix_code": "n, m = map(int, input().split())\nG = [[] for _ in range(n)]\nfor _ in range(m):\n    a, b, c = map(int, input().split())\n    a -= 1\n    b -= 1\n    G[a].append((b, -c))\n    G[b].append((a, c))\n\nused = [False for _ in range(n)]\ncost = [0 for _ in range(n)]\ndef dfs(u, d):\n    res = [u]\n    used[u] = True\n    cost[u] = d\n    for v, c in G[u]:\n        if used[v]: continue\n        res += dfs(v, d + c)\n    return res\n\ng = []\nst = []\nfor i in range(n):\n    if used[i]: continue\n    comp = dfs(i, 0)\n    m = min(cost[u] for u in comp)\n    for u in comp:\n        cost[u] -= m\n    bit = 0\n    for u in comp:\n        bit |= (1 << cost[u])\n    g.append(bit)\n    st.append(comp)\n\nbitset=[[]for _ in range(n+1)]\nfor bit in range(1<<n):\n    cnt=bit.bit_count()\n    bitset[cnt].append(bit)\n\n\nans=[-1]*n\nfor i in range(len(g)):\n    now=0\n    dp=[False]*(1<<n)\n    dp[0]=True \n    x=g[i]\n    for j in range(len(g)):\n        if i==j:\n            continue \n        for bit in bitset[now]:\n            if dp[bit]==False:\n                continue \n            for sft in range(n):\n                if bit|(g[j]<<sft)>=(1<<n):\n                    break\n                dp[bit|(g[j]<<sft)]=True \n        now+=g[j].bit_count()\n    # print(dp)\n    ok=[]\n    for bit in bitset[n-x.bit_count()]:\n        if dp[bit]==False:\n            continue \n        # print(x,bit)\n        for sft in range(n):\n            if x<<sft>=(1<<n):\n                break \n            if bit^(x<<sft)==(1<<n)-1:\n                ok.append(sft)\n    if len(ok)==1:\n        # print(ok)\n        # print(st[i])\n        for s in st[i]:\n            ans[s]=cost[s]+ok[0]+1\n\nprint(*ans)",
+  "fix_code_raw_response": "The issue seems to be with the rank assignment logic. The current approach using bit manipulation and dynamic programming is not yielding the correct results. We need to ensure that the rank is correctly computed based on the given constraints and relationships.\n\nTo fix this, we will adjust the rank assignment logic to correctly reflect the minimum cost in the component and ensure that the rank is correctly based on the minimum cost in the component.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nfor s in st[i]:\n    ans[s]=s+ok[0]+1\n</original>\n<patched>\nfor s in st[i]:\n    ans[s]=cost[s]+ok[0]+1\n</patched>\n```\n\nExplanation:\nThe original code was incorrectly adding `s` to the rank, which caused the ranks to be incorrect. By using `cost[s]` instead of `s`, we ensure that the rank is correctly based on the minimum cost in the component. This should resolve the issue and produce the correct ranks for the given input.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2233,
+        "output_tokens": 224,
+        "estimated_cost_usd": 0.014525000000000001
+      },
+      {
+        "input_tokens": 3498,
+        "output_tokens": 220,
+        "estimated_cost_usd": 0.020790000000000003
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.035315000000000006
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "programId": "50835129",
+  "repair_index": 5,
+  "task_name": "abc343_g",
+  "language": "Java",
+  "root_cause": "The decrement of the loop counter `i` within a nested loop alongside the decrement of `N` causes the outer loop to potentially run indefinitely or skip necessary iterations. The decrement of `i` should be managed such that it's correctly reset to ensure the proper continuation of the outer loop.",
+  "suggestion": "Suggestion 1. Reset Loop Counter Instead of decrementing `i`, reset `i` to -1 so that it becomes 0 in the next iteration of the outer loop. This ensures the outer loop runs correctly without skipping necessary iterations.\n```java\ni = -1;\n```\n",
+  "fix_code": "public Object solve(){\n    int N = in.it();\n    String[] SS = in.str(N);\n\n    a:for (int i = 0;i < N;i++)\n      for (int j = 0;j < N;j++) {\n        if (i == j)\n          continue;\n        if (SS[i].contains(SS[j])) {\n          SS[j] = SS[N -1];\n          N--;\n          i = -1; // Reset loop counter to ensure outer loop runs correctly\n          continue a;\n        }\n      }\n\n    char[][] S = new char[N][];\n    for (int i = 0;i < N;i++)\n      S[i] = SS[i].toCharArray();\n    RollingHash[] rhs = new RollingHash[N];\n    for (int i = 0;i < N;i++)\n      rhs[i] = new RollingHash(S[i],false);\n    int[][] E = new int[N][N];\n    for (int i = 0;i < N;i++)\n      for (int j = 0;j < N;j++)\n        for (int l = 1;l <= min(S[i].length,S[j].length);l++)\n          if (rhs[i].get(S[i].length -l,S[i].length) == rhs[j].get(0,l))\n            E[i][j] = l;\n\n    long[][] dp = new long[1 <<N][N];\n\n    for (int bit = 0;bit < 1 <<N;bit++)\n      for (int i = 0;i < N;i++)\n        for (int j = 0;j < N;j++) {\n          if ((bit >>i &1) == 0 || (bit >>j &1) == 1)\n            continue;\n          dp[bit |1 <<j][j] = max(dp[bit |1 <<j][j],dp[bit][i] +E[i][j]);\n        }\n    long sum = 0;\n    for (var s:S)\n      sum += s.length;\n\n    long ans = infL;\n    for (int i = 0;i < N;i++)\n      ans = min(ans,sum -dp[(1 <<N) -1][i]);\n    return ans;\n  }",
+  "repair_run": 5,
+  "source_repair_index": 1,
+  "discarded_patch_count_in_same_run": 1,
+  "batch_attempt_work_dir": "/home/taohongzhu/VibeRepair/ReinFixForConDecfects/output/batch_repair_dataset_2024_work/attempts/50835129/repair_05",
+  "batch_generated_at": "2026-06-14T08:33:15.122865"
+}

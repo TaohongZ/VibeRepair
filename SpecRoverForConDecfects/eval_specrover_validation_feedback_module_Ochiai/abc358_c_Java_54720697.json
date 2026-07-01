@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54720697",
+  "task_name": "abc358_c",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:52:06.115711",
+  "finished_at": "2026-06-15T09:52:19.557374",
+  "elapsed_seconds": 13.44,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 13.44,
+      "estimated_cost": {
+        "total": 0.008675
+      }
+    }
+  ],
+  "faulty_function": "  public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int N=sc.nextInt();\n    int M=sc.nextInt();\n    String[] S=new String[N];\n    for(int i=0;i<N;i++){\n      S[i]=sc.next();\n    }\n    int ans=N;\n    for(int bit=0;bit<(1<<N);bit++){\n      boolean[] exist=new boolean[M];\n      int cnt=0;\n      for(int i=0;i<N;i++){\n        if(bit>>(i&1)==1){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n         cnt++;\n          for(int j=0;j<M;j++){\n            if(S[i].charAt(j)=='o'){\n              exist[j]=true;\n            }\n          }\n        }\n      }\n      boolean allExist=true;\n      for(int j=0;j<M;j++){\n        if(!exist[j]){\n          allExist=false;\n          break;\n        }\n      }\n      if(allExist){\n        ans=Math.min(ans,cnt);\n      }\n    }\n    System.out.println(ans);\n    // @Test\n    // void addition() {\n    // assertEquals(2, 1 + 1);\n  }",
+  "fix_code": "  public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int N=sc.nextInt();\n    int M=sc.nextInt();\n    String[] S=new String[N];\n    for(int i=0;i<N;i++){\n      S[i]=sc.next();\n    }\n    int ans=N;\n    for(int bit=0;bit<(1<<N);bit++){\n      boolean[] exist=new boolean[M];\n      int cnt=0;\n      for(int i=0;i<N;i++){\n        if((bit>>i & 1)==1){\n         cnt++;\n          for(int j=0;j<M;j++){\n            if(S[i].charAt(j)=='o'){\n              exist[j]=true;\n            }\n          }\n        }\n      }\n      boolean allExist=true;\n      for(int j=0;j<M;j++){\n        if(!exist[j]){\n          allExist=false;\n          break;\n        }\n      }\n      if(allExist){\n        ans=Math.min(ans,cnt);\n      }\n    }\n    System.out.println(ans);\n    // @Test\n    // void addition() {\n    // assertEquals(2, 1 + 1);\n  }",
+  "fix_code_raw_response": "The issue in the code is with the bitwise operation used to check if a stand is included in the current subset. The condition `if(bit>>(i&1)==1)` is incorrect. The correct condition should be `if((bit>>i & 1)==1)` to properly check if the i-th bit in the bitmask is set.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n        if(bit>>(i&1)==1){\n</original>\n<patched>\n        if((bit>>i & 1)==1){\n</patched>\n```\n\nThis change ensures that the program correctly checks if the i-th stand is included in the current subset represented by the bitmask `bit`. This will allow the program to correctly determine the minimum number of stands needed to cover all flavors of popcorn.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1192,
+        "output_tokens": 181,
+        "estimated_cost_usd": 0.008675
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.008675
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

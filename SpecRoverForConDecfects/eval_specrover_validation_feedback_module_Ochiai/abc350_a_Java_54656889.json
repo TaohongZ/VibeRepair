@@ -1,0 +1,78 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54656889",
+  "task_name": "abc350_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:41:08.618824",
+  "finished_at": "2026-06-15T09:41:43.978368",
+  "elapsed_seconds": 35.36,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "3",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 35.36,
+      "estimated_cost": {
+        "total": 0.05832000000000001
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args){\n        Scanner scan = new Scanner(System.in);\n        String S = scan.nextLine();\n        String letters = S.replaceAll(\"[0-9]\", \"\");\n        String numbers = S.replaceAll(\"[^0-9]\", \"\");\n        int intNum = Integer.parseInt(numbers);\n        \n        if((intNum == 316) || (intNum >= 350)){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n          System.out.println(\"No\");\n        }else{\n          System.out.println(\"Yes\");\n        }\n        \n        scan.close();\n    }",
+  "fix_code": "    public static void main(String[] args){\n        Scanner scan = new Scanner(System.in);\n        String S = scan.nextLine();\n        \n        if (S.length() != 6 || !S.startsWith(\"ABC\")) {\n            System.out.println(\"No\");\n        } else {\n            String numbers = S.substring(3);\n            if (numbers.length() != 3) {\n                System.out.println(\"No\");\n            } else {\n                int intNum = Integer.parseInt(numbers);\n                if (intNum == 316 || intNum < 1 || intNum > 349) {\n                    System.out.println(\"No\");\n                } else {\n                    System.out.println(\"Yes\");\n                }\n            }\n        }\n        \n        scan.close();\n    }",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the input string `S` meets the following criteria:\n1. The first three characters are \"ABC\".\n2. The last three characters form a valid contest number between 001 and 349, excluding 316.\n3. The last three characters should be exactly three digits long.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    public static void main(String[] args){\n        Scanner scan = new Scanner(System.in);\n        String S = scan.nextLine();\n        String letters = S.replaceAll(\"[0-9]\", \"\");\n        String numbers = S.replaceAll(\"[^0-9]\", \"\");\n        int intNum = Integer.parseInt(numbers);\n        \n        if((intNum == 316) || (intNum >= 350)){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n          System.out.println(\"No\");\n        }else{\n          System.out.println(\"Yes\");\n        }\n        \n        scan.close();\n    }\n</original>\n<patched>\n    public static void main(String[] args){\n        Scanner scan = new Scanner(System.in);\n        String S = scan.nextLine();\n        \n        if (S.length() != 6 || !S.startsWith(\"ABC\")) {\n            System.out.println(\"No\");\n        } else {\n            String numbers = S.substring(3);\n            if (numbers.length() != 3) {\n                System.out.println(\"No\");\n            } else {\n                int intNum = Integer.parseInt(numbers);\n                if (intNum == 316 || intNum < 1 || intNum > 349) {\n                    System.out.println(\"No\");\n                } else {\n                    System.out.println(\"Yes\");\n                }\n            }\n        }\n        \n        scan.close();\n    }\n</patched>\n```\n\nExplanation:\n1. We first check if the length of `S` is 6 and if it starts with \"ABC\". If not, we print \"No\".\n2. We extract the last three characters of `S`.\n3. We check if the length of the extracted substring is exactly 3 characters. If not, we print \"No\".\n4. We convert the last three characters to an integer.\n5. We check if the integer is 316, less than 1, or greater than 349. If any of these conditions are true, we print \"No\".\n6. Otherwise, we print \"Yes\".\n\nThis patch ensures that the input string `S` meets all the criteria specified in the problem statement, including the requirement that the last three characters are exactly three digits long.",
+  "patch_handle": "3",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 927,
+        "output_tokens": 440,
+        "estimated_cost_usd": 0.011235
+      },
+      {
+        "input_tokens": 1636,
+        "output_tokens": 476,
+        "estimated_cost_usd": 0.015320000000000002
+      },
+      {
+        "input_tokens": 1647,
+        "output_tokens": 475,
+        "estimated_cost_usd": 0.015360000000000002
+      },
+      {
+        "input_tokens": 1649,
+        "output_tokens": 544,
+        "estimated_cost_usd": 0.016405000000000003
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.05832000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

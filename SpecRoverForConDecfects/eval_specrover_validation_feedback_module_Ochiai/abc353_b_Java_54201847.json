@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54201847",
+  "task_name": "abc353_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T08:43:33.288536",
+  "finished_at": "2026-06-15T08:43:48.772997",
+  "elapsed_seconds": 15.48,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 15.48,
+      "estimated_cost": {
+        "total": 0.01054
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\tScanner s = new Scanner(System.in);\n\t\tint n, k;\n\t\tn = s.nextInt();\n\t\tk = s.nextInt();\n\t\tint a[] = new int[n];\n\t\tint i;\n\t\tfor(i = 0; i < n; i++) {\n\t\t\ta[i] = s.nextInt();\n\t\t}\n\t\t\n//\t\tfor(i = 0; i < n; i++) {\n//\t\t\tSystem.out.println(a[i]);\n//\t\t}\n\t\t\n\t\tint count = 0, result = k;\n\t\tfor(i = 0; i < n; i++) {\n\t\t\tif(result > a[i]) {\n\t\t\t\tresult -= a[i];\n\t\t\t}else if(result == a[i]) {\n\t\t\t\tresult = k;\n\t\t\t\tcount++;\n\t\t\t}else {\n\t\t\t\tcount++;\n\t\t\t\tresult = k - a[i];\n\t\t\t}\n//\t\t\tif(i == n-1 && k > result) {\n//\t\t\t\tcount++;\n//\t\t\t}\n\t\t}\n\t\tif(result > 0) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\tcount++;\n\t\t}\n\t\tSystem.out.println(count);\n\t\ts.close();\n\t}",
+  "fix_code": "\tpublic static void main(String[] args) {\n\t\tScanner s = new Scanner(System.in);\n\t\tint n, k;\n\t\tn = s.nextInt();\n\t\tk = s.nextInt();\n\t\tint a[] = new int[n];\n\t\tint i;\n\t\tfor(i = 0; i < n; i++) {\n\t\t\ta[i] = s.nextInt();\n\t\t}\n\t\t\n//\t\tfor(i = 0; i < n; i++) {\n//\t\t\tSystem.out.println(a[i]);\n//\t\t}\n\t\t\n\t\tint count = 0, result = k;\n\t\tfor(i = 0; i < n; i++) {\n\t\t\tif(result > a[i]) {\n\t\t\t\tresult -= a[i];\n\t\t\t}else if(result == a[i]) {\n\t\t\t\tresult = k;\n\t\t\t\tcount++;\n\t\t\t}else {\n\t\t\t\tcount++;\n\t\t\t\tresult = k - a[i];\n\t\t\t}\n//\t\t\tif(i == n-1 && k > result) {\n//\t\t\t\tcount++;\n//\t\t\t}\n\t\t}\n\t\tif(result < k) { // Check if there were any groups processed in the last round\n\t\t\tcount++;\n\t\t}\n\t\tSystem.out.println(count);\n\t\ts.close();\n\t}",
+  "fix_code_raw_response": "The issue in the code is that the final check `if(result > 0)` incorrectly increments the count even when there are no groups left to process. This leads to an extra increment in the count, resulting in an incorrect output.\n\nTo fix this, we need to ensure that the count is only incremented when there are groups left to process and the remaining seats are not enough to accommodate the next group.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\t\tif(result > 0) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\tcount++;\n\t\t}\n</original>\n<patched>\n\t\tif(result < k) { // Check if there were any groups processed in the last round\n\t\t\tcount++;\n\t\t}\n</patched>\n```\n\nThis change ensures that the count is only incremented if there were groups processed in the last round, which correctly reflects the number of times the attraction is started.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1454,
+        "output_tokens": 218,
+        "estimated_cost_usd": 0.01054
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.01054
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

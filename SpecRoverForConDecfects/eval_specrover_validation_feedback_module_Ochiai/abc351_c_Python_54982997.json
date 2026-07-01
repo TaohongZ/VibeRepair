@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54982997",
+  "task_name": "abc351_c",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T17:36:44.774760",
+  "finished_at": "2026-06-15T17:37:03.123431",
+  "elapsed_seconds": 18.35,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 18.35,
+      "estimated_cost": {
+        "total": 0.024380000000000002
+      }
+    }
+  ],
+  "faulty_function": "from collections import deque\n\nn = int(input())\ninput_list = [int(x) for x in input().split(' ')]\n\n\ntfe = deque()\n\ntemp = None\nfor x in input_list:\n    temp = x\n    if tfe and tfe[-1] == temp:\n        while tfe and tfe[-1] == temp:\n            temp += 1\n            tfe.pop()\n    else:\n        tfe.append(temp) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "from collections import deque\n\nn = int(input())\ninput_list = [int(x) for x in input().split(' ')]\n\n\ntfe = deque()\n\nfor x in input_list:\n    temp = x\n    while tfe and tfe[-1] == temp:\n        temp += 1\n        tfe.pop()\n    tfe.append(temp)\n\nprint(len(tfe))",
+  "fix_code_raw_response": "To resolve the issue, we need to correctly implement the logic for combining balls of the same size. Specifically, when two balls of the same size are found, they should be removed and a new ball with double the size should be added to the sequence. This process should be repeated until no more combinations can be made.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nfrom collections import deque\n\nn = int(input())\ninput_list = [int(x) for x in input().split(' ')]\n\n\ntfe = deque()\n\ntemp = None\nfor x in input_list:\n    temp = x\n    if tfe and tfe[-1] == temp:\n        while tfe and tfe[-1] == temp:\n            temp += 1\n            tfe.pop()\n    else:\n        tfe.append(temp)\n</original>\n<patched>\nfrom collections import deque\n\nn = int(input())\ninput_list = [int(x) for x in input().split(' ')]\n\n\ntfe = deque()\n\nfor x in input_list:\n    temp = x\n    while tfe and tfe[-1] == temp:\n        temp += 1\n        tfe.pop()\n    tfe.append(temp)\n\nprint(len(tfe))\n</patched>\n```\n\nExplanation:\n- The original code was missing the step to append the new merged ball back to the sequence after popping the two balls of the same size.\n- The patched code correctly implements the logic for combining balls of the same size by using a while loop to repeatedly merge balls of the same size until no more combinations can be made.\n- The final length of the sequence is printed as the result.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1011,
+        "output_tokens": 386,
+        "estimated_cost_usd": 0.010845
+      },
+      {
+        "input_tokens": 1657,
+        "output_tokens": 350,
+        "estimated_cost_usd": 0.013535000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.024380000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

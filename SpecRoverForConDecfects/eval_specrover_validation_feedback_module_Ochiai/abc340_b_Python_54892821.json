@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54892821",
+  "task_name": "abc340_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:34:00.201598",
+  "finished_at": "2026-06-15T10:34:07.806928",
+  "elapsed_seconds": 7.61,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 7.61,
+      "estimated_cost": {
+        "total": 0.014930000000000002
+      }
+    }
+  ],
+  "faulty_function": "Q=int(input())\nA=[list(map(int,input().split())) for i in range(Q)]\nB=[]\n\nfor i in range(Q):\n    if A[i][0] == 1:\n        B.append(A[i][0])\n    else:\n        print(B[-A[i][1]]) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "Q=int(input())\nA=[list(map(int,input().split())) for i in range(Q)]\nB=[]\n\nfor i in range(Q):\n    if A[i][0] == 1:\n        B.append(A[i][1])\n    else:\n        print(B[-A[i][1]])",
+  "fix_code_raw_response": "The issue in the provided code is that when appending elements to the list `B`, the code is appending the operation type `A[i][0]` instead of the value `A[i][1]`. This causes the list `B` to contain incorrect values, leading to incorrect outputs when querying the k-th value from the end of the list.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nQ=int(input())\nA=[list(map(int,input().split())) for i in range(Q)]\nB=[]\n\nfor i in range(Q):\n    if A[i][0] == 1:\n        B.append(A[i][0])\n    else:\n        print(B[-A[i][1]]) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n</original>\n<patched>\nQ=int(input())\nA=[list(map(int,input().split())) for i in range(Q)]\nB=[]\n\nfor i in range(Q):\n    if A[i][0] == 1:\n        B.append(A[i][1])\n    else:\n        print(B[-A[i][1]])\n</patched>\n```\n\nExplanation:\n- The original code incorrectly appends `A[i][0]` (which is the operation type) to the list `B` when the operation type is `1`.\n- The patched code correctly appends `A[i][1]` (which is the value to be appended) to the list `B` when the operation type is `1`.\n- No changes are needed for the query operation (operation type `2`), as it is already correctly implemented.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1876,
+        "output_tokens": 370,
+        "estimated_cost_usd": 0.014930000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.014930000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

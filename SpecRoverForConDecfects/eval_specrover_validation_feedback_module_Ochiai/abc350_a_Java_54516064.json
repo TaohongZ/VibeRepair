@@ -1,0 +1,83 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54516064",
+  "task_name": "abc350_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:30:33.381006",
+  "finished_at": "2026-06-15T09:30:58.018647",
+  "elapsed_seconds": 24.64,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 24.64,
+      "estimated_cost": {
+        "total": 0.06319000000000001
+      }
+    }
+  ],
+  "faulty_function": "  public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    String S = sc.next();\n    if(S.substring(3).equals(\"316\")){\n      System.out.print(\"No\");\n    }else{\n      if(Integer.parseInt(S.substring(3))<350){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n        System.out.print(\"Yes\");  \n      }else{\n        System.out.print(\"No\");\n      }\n    }\n    sc.close();\n  }",
+  "fix_code": "  public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    String S = sc.next();\n    int number = Integer.parseInt(S.substring(3));\n    if(number == 316 || number < 1 || number > 349){\n      System.out.print(\"No\");\n    }else{\n      System.out.print(\"Yes\");\n    }\n    sc.close();\n  }",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the program correctly identifies invalid contest abbreviations, including \"ABC000\" and \"ABC316\". The previous patch did not handle the case where the number is exactly \"000\" correctly. We will update the condition to check for this case as well.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n  public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    String S = sc.next();\n    if(S.substring(3).equals(\"316\")){\n      System.out.print(\"No\");\n    }else{\n      if(Integer.parseInt(S.substring(3))<350){\n        System.out.print(\"Yes\");  \n      }else{\n        System.out.print(\"No\");\n      }\n    }\n    sc.close();\n  }\n</original>\n<patched>\n  public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    String S = sc.next();\n    int number = Integer.parseInt(S.substring(3));\n    if(number == 316 || number < 1 || number > 349){\n      System.out.print(\"No\");\n    }else{\n      System.out.print(\"Yes\");\n    }\n    sc.close();\n  }\n</patched>\n```\n\nExplanation:\n1. We parse the last three characters of the string `S` to an integer `number`.\n2. We check if the number is exactly 316, if the number is less than 1, or if the number is greater than 349. If any of these conditions are true, we print \"No\".\n3. Otherwise, we print \"Yes\".\n\nThis patch ensures that the program correctly handles all edge cases as described in the problem statement and the additional context provided by the test case.",
+  "patch_handle": "4",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 908,
+        "output_tokens": 357,
+        "estimated_cost_usd": 0.009895000000000001
+      },
+      {
+        "input_tokens": 1513,
+        "output_tokens": 385,
+        "estimated_cost_usd": 0.013340000000000001
+      },
+      {
+        "input_tokens": 1541,
+        "output_tokens": 371,
+        "estimated_cost_usd": 0.01327
+      },
+      {
+        "input_tokens": 1522,
+        "output_tokens": 387,
+        "estimated_cost_usd": 0.013415
+      },
+      {
+        "input_tokens": 1553,
+        "output_tokens": 367,
+        "estimated_cost_usd": 0.01327
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.06319000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

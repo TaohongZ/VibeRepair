@@ -1,0 +1,83 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54257485",
+  "task_name": "abc355_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T08:44:43.925491",
+  "finished_at": "2026-06-15T08:45:18.204152",
+  "elapsed_seconds": 34.28,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 34.28,
+      "estimated_cost": {
+        "total": 0.08861000000000001
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n        try (Scanner sc = new Scanner(System.in)) {\n            int N = sc.nextInt();\n            int M = sc.nextInt();\n\n            ArrayList<Integer> listA = new ArrayList<>();\n            ArrayList<Integer> listB = new ArrayList<>();\n\n            for (int i = 0; i < N; i++) {\n                listA.add(sc.nextInt());\n            }\n\n                for (int i = 0; i < M; i++) {\n                    listB.add(sc.nextInt());\n                }\n\n                ArrayList<Integer> combinedList = new ArrayList<>(listA);\n                combinedList.addAll(listB);\n\n                Collections.sort(combinedList);\n\n                for (int i = 0; i < combinedList.size() - 1; i++) {\n                    if (listA.contains(combinedList.get(i)) && listA.contains(combinedList.get(i + 1))) {\n                        System.out.println(\"Yes\");\n                        break; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                    }\n                }\n\n                System.out.println(\"No\");\n            }\n        }",
+  "fix_code": "    public static void main(String[] args) {\n        try (Scanner sc = new Scanner(System.in)) {\n            int N = sc.nextInt();\n            int M = sc.nextInt();\n\n            ArrayList<Integer> listA = new ArrayList<>();\n            ArrayList<Integer> listB = new ArrayList<>();\n\n            for (int i = 0; i < N; i++) {\n                listA.add(sc.nextInt());\n            }\n\n                for (int i = 0; i < M; i++) {\n                    listB.add(sc.nextInt());\n                }\n\n                ArrayList<Integer> combinedList = new ArrayList<>(listA);\n                combinedList.addAll(listB);\n\n                Collections.sort(combinedList);\n\n                for (int i = 0; i < combinedList.size() - 1; i++) {\n                    if (listA.contains(combinedList.get(i)) && listA.contains(combinedList.get(i + 1))) {\n                        System.out.println(\"Yes\");\n                        return; // Exit the program after printing \"Yes\"\n                    }\n                }\n\n                System.out.println(\"No\");\n            }\n        }",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the program correctly identifies if there are two consecutive elements in the sorted combined list that both belong to listA. The previous patch incorrectly included a check for listB, which is not required according to the problem statement.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    public static void main(String[] args) {\n        try (Scanner sc = new Scanner(System.in)) {\n            int N = sc.nextInt();\n            int M = sc.nextInt();\n\n            ArrayList<Integer> listA = new ArrayList<>();\n            ArrayList<Integer> listB = new ArrayList<>();\n\n            for (int i = 0; i < N; i++) {\n                listA.add(sc.nextInt());\n            }\n\n                for (int i = 0; i < M; i++) {\n                    listB.add(sc.nextInt());\n                }\n\n                ArrayList<Integer> combinedList = new ArrayList<>(listA);\n                combinedList.addAll(listB);\n\n                Collections.sort(combinedList);\n\n                for (int i = 0; i < combinedList.size() - 1; i++) {\n                    if (listA.contains(combinedList.get(i)) && listA.contains(combinedList.get(i + 1))) {\n                        System.out.println(\"Yes\");\n                        break; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                    }\n                }\n\n                System.out.println(\"No\");\n            }\n        }\n</original>\n<patched>\n    public static void main(String[] args) {\n        try (Scanner sc = new Scanner(System.in)) {\n            int N = sc.nextInt();\n            int M = sc.nextInt();\n\n            ArrayList<Integer> listA = new ArrayList<>();\n            ArrayList<Integer> listB = new ArrayList<>();\n\n            for (int i = 0; i < N; i++) {\n                listA.add(sc.nextInt());\n            }\n\n                for (int i = 0; i < M; i++) {\n                    listB.add(sc.nextInt());\n                }\n\n                ArrayList<Integer> combinedList = new ArrayList<>(listA);\n                combinedList.addAll(listB);\n\n                Collections.sort(combinedList);\n\n                for (int i = 0; i < combinedList.size() - 1; i++) {\n                    if (listA.contains(combinedList.get(i)) && listA.contains(combinedList.get(i + 1))) {\n                        System.out.println(\"Yes\");\n                        return; // Exit the program after printing \"Yes\"\n                    }\n                }\n\n                System.out.println(\"No\");\n            }\n        }\n</patched>\n```\n\nIn this patch, the condition to check if two consecutive elements in the sorted combined list both belong to listA is retained, and the unnecessary check for listB is removed. Additionally, the `break` statement is replaced with `return` to ensure the program exits after printing \"Yes\". This ensures that the program does not print \"No\" after printing \"Yes\".",
+  "patch_handle": "4",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1059,
+        "output_tokens": 598,
+        "estimated_cost_usd": 0.014265
+      },
+      {
+        "input_tokens": 1937,
+        "output_tokens": 625,
+        "estimated_cost_usd": 0.01906
+      },
+      {
+        "input_tokens": 1948,
+        "output_tokens": 557,
+        "estimated_cost_usd": 0.018095
+      },
+      {
+        "input_tokens": 1878,
+        "output_tokens": 581,
+        "estimated_cost_usd": 0.018105000000000003
+      },
+      {
+        "input_tokens": 1927,
+        "output_tokens": 630,
+        "estimated_cost_usd": 0.019085
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.08861000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

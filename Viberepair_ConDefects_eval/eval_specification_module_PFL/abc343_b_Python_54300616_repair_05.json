@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "54300616",
+  "repair_index": 5,
+  "task_name": "abc343_b",
+  "language": "Python",
+  "flawed_specification": "[\n  Function: processMatrix\n  Purpose: To process a square matrix of integers and print the column indices of elements equal to 1 for each row.\n  Signature: processMatrix(N: int) -> None\n  Input: \n    - N: An integer representing the number of rows and columns in the square matrix.\n    - matrix: A list of lists, where each inner list contains integers representing a row of the matrix.\n  Output: \n    - None: The function prints the column indices of elements equal to 1 for each row.\n  Behavior:\n    1. Read an integer N from input, which determines the size of the square matrix.\n    2. Initialize an empty list called `matrix`.\n    3. For each of the N rows, read a line of input, split it into integers, and append it as a list to `matrix`.\n    4. For each row index `i` from 0 to N-1, perform the following:\n       a. Initialize an empty list `ans`.\n       b. For each column index `j` from 0 to N-1, check if the element at `matrix[i][j]` is equal to 1.\n       c. If the element is equal to 1, append the column index `j` to the list `ans` (bug is here).\n    5. Print the elements of the list `ans` for each row, separated by spaces.\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should process an adjacency matrix of an undirected graph and print the vertex numbers directly connected to each vertex. For each vertex i, it should list the vertices j that are directly connected to i, in ascending order. The adjacency matrix is symmetric, and diagonal elements are zero, indicating no self-loops.",
+    "diagnosis_and_repair_directions": "The flawed specification incorrectly appends the column index `j` to the list `ans` when `matrix[i][j]` is 1. However, the problem statement requires printing vertex numbers, which are 1-based indices, not 0-based. Therefore, the function should append `j + 1` to `ans` instead of `j`. Additionally, the specification should clarify that the input matrix is provided as a parameter, not read from input.",
+    "raw_response": "Intended Behavior:\nThe function should process an adjacency matrix of an undirected graph and print the vertex numbers directly connected to each vertex. For each vertex i, it should list the vertices j that are directly connected to i, in ascending order. The adjacency matrix is symmetric, and diagonal elements are zero, indicating no self-loops.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly appends the column index `j` to the list `ans` when `matrix[i][j]` is 1. However, the problem statement requires printing vertex numbers, which are 1-based indices, not 0-based. Therefore, the function should append `j + 1` to `ans` instead of `j`. Additionally, the specification should clarify that the input matrix is provided as a parameter, not read from input.\n\nFixed Specification:\nFunction: processMatrix\nPurpose: To process an adjacency matrix of an undirected graph and print the vertex numbers directly connected to each vertex.\nSignature: processMatrix(N: int, matrix: List[List[int]]) -> None\nInput:\n  - N: An integer representing the number of vertices in the graph.\n  - matrix: A list of lists, where each inner list contains integers representing a row of the adjacency matrix.\nOutput:\n  - None: The function prints the vertex numbers directly connected to each vertex, in ascending order.\nBehavior:\n  1. For each row index `i` from 0 to N-1, perform the following:\n     a. Initialize an empty list `ans`.\n     b. For each column index `j` from 0 to N-1, check if the element at `matrix[i][j]` is equal to 1.\n     c. If the element is equal to 1, append `j + 1` to the list `ans`.\n  2. Print the elements of the list `ans` for each row, separated by spaces."
+  },
+  "fixed_specification": "Function: processMatrix\nPurpose: To process an adjacency matrix of an undirected graph and print the vertex numbers directly connected to each vertex.\nSignature: processMatrix(N: int, matrix: List[List[int]]) -> None\nInput:\n  - N: An integer representing the number of vertices in the graph.\n  - matrix: A list of lists, where each inner list contains integers representing a row of the adjacency matrix.\nOutput:\n  - None: The function prints the vertex numbers directly connected to each vertex, in ascending order.\nBehavior:\n  1. For each row index `i` from 0 to N-1, perform the following:\n     a. Initialize an empty list `ans`.\n     b. For each column index `j` from 0 to N-1, check if the element at `matrix[i][j]` is equal to 1.\n     c. If the element is equal to 1, append `j + 1` to the list `ans`.\n  2. Print the elements of the list `ans` for each row, separated by spaces.",
+  "fix_code": "N = int(input())\n\nmatrix = []\nfor _ in range(N):\n    row = list(map(int, input().strip().split()))\n    matrix.append(row)\n    \nfor i in range(N):\n    ans = []\n    for j in range(N):\n        if matrix[i][j] == 1:\n            ans.append(j + 1)\n    print(*ans)\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.0041225,
+    "fix_specification": 0.0059775,
+    "fix_specification_and_buggy_code_to_fix_code": 0.00201,
+    "total": 0.012110000000000001
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 449,
+      "output_tokens": 300,
+      "total_tokens": 749
+    },
+    "fix_specification": {
+      "input_tokens": 819,
+      "output_tokens": 393,
+      "total_tokens": 1212
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 492,
+      "output_tokens": 78,
+      "total_tokens": 570
+    }
+  }
+}

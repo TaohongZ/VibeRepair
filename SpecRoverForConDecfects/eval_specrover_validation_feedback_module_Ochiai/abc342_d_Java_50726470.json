@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "50726470",
+  "task_name": "abc342_d",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T16:17:21.275586",
+  "finished_at": "2026-06-15T16:17:34.850226",
+  "elapsed_seconds": 13.57,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 13.57,
+      "estimated_cost": {
+        "total": 0.017015000000000002
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) throws IOException {\n\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        PrintWriter pw = new PrintWriter(System.out);\n        StreamTokenizer in = new StreamTokenizer(br);\n        in.nextToken();\n        int n  = (int)in.nval;\n        int ans = 0;\n        int cnt0 = 0;\n        int[] count = new int[200001];\n        for (int i = 0; i < n; i++) {\n            in.nextToken();\n            int num  = (int)in.nval;\n            if(num == 0){\n                ans += i;\n                cnt0++;\n                continue; // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n            }\n            //分解质因数，消掉偶数的质因子，留下质因子是奇数的\n            for(long j=2;j*j <= num;j++){\n                long k = j*j;\n                //分解质因数\n                while(num % k == 0){\n                    num /= k;\n                }\n            }\n            //1 num >= 1\n            // num == 1,表示num本身就是 一个平方数，它可以和之前的平方数结合,之前的平方数分解后 num == 1\n            // num > 1 需要和 num 类型的结合。\n            //2.任何一个数可以和 0 相乘 结果 为 0\n            ans += count[num] + cnt0;\n            count[num]++;\n        }\n        pw.println(ans);\n        pw.flush();\n        pw.close();\n    }",
+  "fix_code": "    public static void main(String[] args) throws IOException {\n\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        PrintWriter pw = new PrintWriter(System.out);\n        StreamTokenizer in = new StreamTokenizer(br);\n        in.nextToken();\n        int n  = (int)in.nval;\n        long ans = 0;\n        int cnt0 = 0;\n        int[] count = new int[200001];\n        for (int i = 0; i < n; i++) {\n            in.nextToken();\n            int num  = (int)in.nval;\n            if(num == 0){\n                ans += i;\n                cnt0++;\n                continue;\n            }\n            //分解质因数，消掉偶数的质因子，留下质因子是奇数的\n            for(long j=2;j*j <= num;j++){\n                long k = j*j;\n                //分解质因数\n                while(num % k == 0){\n                    num /= k;\n                }\n            }\n            //1 num >= 1\n            // num == 1,表示num本身就是 一个平方数，它可以和之前的平方数结合,之前的平方数分解后 num == 1\n            // num > 1 需要和 num 类型的结合。\n            //2.任何一个数可以和 0 相乘 结果 为 0\n            ans += count[num] + cnt0;\n            count[num]++;\n        }\n        pw.println(ans);\n        pw.flush();\n        pw.close();\n    }",
+  "fix_code_raw_response": "The issue in the provided code is related to integer overflow when calculating the number of valid pairs. The variable `ans` is an `int`, which can overflow given the constraints. We need to change the type of `ans` to `long` to handle large values correctly.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n        int ans = 0;\n</original>\n<patched>\n        long ans = 0;\n</patched>\n```\n\n# modification 2\n```\n<file>faultyVersion.java</file>\n<original>\n        pw.println(ans);\n</original>\n<patched>\n        pw.println(ans);\n</patched>\n```\n\nThis change ensures that the variable `ans` can hold larger values without overflowing, which is necessary given the constraints of the problem.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2872,
+        "output_tokens": 177,
+        "estimated_cost_usd": 0.017015000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.017015000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "programId": "54784722",
+  "repair_index": 1,
+  "task_name": "abc355_c",
+  "language": "Java",
+  "root_cause": "The secondary diagonal in an NxN grid should be checked when the sum of indices `i` and `j` equals `N-1`, not `N+1`. The condition `if (x+y == N+1)` is incorrect, leading to logical errors.",
+  "suggestion": "Suggestion 1. Correct the off-by-one error in the diagonal check - Locate the line `if (x+y == N+1)` in the code.\n- Modify the condition to `if (x+y == N-1)` instead.\n- This change ensures the correct identification of the secondary diagonal in the grid, avoiding logical errors.\n",
+  "fix_code": "public static void main(String[] args) {\n\n        InputStream source = System.in;\n        Scanner sc = new Scanner(source);\n\n        int N = sc.nextInt();\n        int T = sc.nextInt();\n\n        int [] yoko = new int[N];\n        int [] tate = new int[N];\n        int naname_左上から右下 = 0;\n        int naname_右上から左下 = 0;\n\n        int[][] grid = new int[N][N];\n        int count = 1;\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                grid[i][j] = count;\n                yoko[i] += count;\n                tate[j] += count;\n                if (i == j) {\n                    naname_左上から右下 += count;\n                }\n\n                count++;\n            }\n        }\n        naname_右上から左下 = naname_左上から右下;\n\n        for (int i = 0; i < T; i++) {\n            int t = sc.nextInt();\n            int x = (t - 1) % N;\n            int y = (t - 1) / N;\n\n            yoko[y] -= t;\n            tate[x] -= t;\n            if (x == y) {\n                naname_左上から右下 -= t;\n            }\n            if (x + y == N - 1) { // fixed the condition here\n                naname_右上から左下 -= t;\n            }\n\n            for (int j = 0; j < N; j++) {\n                if (yoko[j] == 0) {\n                    System.out.println(i + 1);\n                    return;\n                }\n                if (tate[j] == 0) {\n                    System.out.println(i + 1);\n                    return;\n                }\n                if (naname_左上から右下 == 0) {\n                    System.out.println(i + 1);\n                    return;\n                }\n                if (naname_右上から左下 == 0) {\n                    System.out.println(i + 1);\n                    return;\n                }\n            }\n        }\n        System.out.println(\"-1\");\n    }",
+  "repair_run": 1,
+  "source_repair_index": 1,
+  "discarded_patch_count_in_same_run": 1,
+  "batch_attempt_work_dir": "/home/taohongzhu/VibeRepair/ReinFixForConDecfects/output/batch_repair_dataset_2024_work/attempts/54784722/repair_01",
+  "batch_generated_at": "2026-06-14T11:36:26.529295"
+}

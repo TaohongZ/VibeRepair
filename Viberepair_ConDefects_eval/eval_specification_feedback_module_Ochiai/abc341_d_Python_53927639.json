@@ -1,0 +1,466 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53927639",
+  "repair_index": 2,
+  "task_name": "abc341_d",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_loops": 5,
+  "test_timeout_seconds": 300.0,
+  "validated_attempt_index": 4,
+  "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233",
+  "generated_at": "2026-06-10T03:08:41.779243+00:00",
+  "elapsed_seconds": 368.212,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "failed",
+      "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_01/53927639_20260610_030105",
+      "elapsed_seconds": 87.759,
+      "attempts": 5
+    },
+    {
+      "outer_run_index": 2,
+      "status": "success",
+      "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233",
+      "elapsed_seconds": 368.212,
+      "attempts": 4
+    }
+  ],
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "status": "fail",
+      "pass": false,
+      "pass_rate": 0.05714285714285714,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_01",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_01/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_01/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_01/dataset/abc341_d/Python/53927639",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_01/dataset/abc341_d/Python/53927639/faultyVersion.py",
+      "test_records": [
+        {
+          "task": "abc341_d",
+          "language": "Python",
+          "program_id": "53927639",
+          "pass_rate": 0.05714285714285714,
+          "tests_run": 35,
+          "failed_tests": [],
+          "error_tests": [
+            "abc341_d/example_02.txt"
+          ]
+        }
+      ],
+      "test_error": "Python execution timed out before the validation attempt 300-second budget was exhausted.",
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function should determine the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. This means the integer should be divisible by either N or M, but not both. The task is to find the K-th such integer.",
+        "diagnosis_and_repair_directions": "The current specification is focused on counting integers up to a given number x that are divisible by either n or m, which is not aligned with the task of finding the K-th smallest integer divisible by exactly one of N or M. The flawed specification incorrectly includes numbers divisible by both N and M, which should be excluded. The correct approach involves:\n1. Calculating the number of integers divisible by N but not M.\n2. Calculating the number of integers divisible by M but not N.\n3. Using these calculations to find the K-th smallest integer that meets the criteria.",
+        "raw_response": "Intended Behavior:\nThe function should determine the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. This means the integer should be divisible by either N or M, but not both. The task is to find the K-th such integer.\n\nDiagnosis and Repair Directions:\nThe current specification is focused on counting integers up to a given number x that are divisible by either n or m, which is not aligned with the task of finding the K-th smallest integer divisible by exactly one of N or M. The flawed specification incorrectly includes numbers divisible by both N and M, which should be excluded. The correct approach involves:\n1. Calculating the number of integers divisible by N but not M.\n2. Calculating the number of integers divisible by M but not N.\n3. Using these calculations to find the K-th smallest integer that meets the criteria.\n\nFixed Specification:\nFunction: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Initialize a counter to track the number of integers found that are divisible by exactly one of N or M.\n  2. Iterate through positive integers, checking divisibility by N and M.\n  3. For each integer, check if it is divisible by N or M, but not both.\n  4. Increment the counter each time an integer meets the criteria.\n  5. Stop when the counter reaches K, and return the current integer as the result."
+      },
+      "fixed_specification": "Function: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Initialize a counter to track the number of integers found that are divisible by exactly one of N or M.\n  2. Iterate through positive integers, checking divisibility by N and M.\n  3. For each integer, check if it is divisible by N or M, but not both.\n  4. Increment the counter each time an integer meets the criteria.\n  5. Stop when the counter reaches K, and return the current integer as the result.",
+      "fix_specification_usage": {
+        "input_tokens": 636,
+        "output_tokens": 386,
+        "total_tokens": 1022
+      },
+      "fix_specification_estimated_cost": 0.00545,
+      "fix_code": "n, m, k = map(int, input().split())\n\ndef find_kth_smallest_divisible(N, M, K):\n    def is_divisible_by_exactly_one(x, n, m):\n        return (x % n == 0) ^ (x % m == 0)\n\n    count = 0\n    num = 1\n    while count < K:\n        if is_divisible_by_exactly_one(num, N, M):\n            count += 1\n        if count < K:\n            num += 1\n    return num\n\nprint(find_kth_smallest_divisible(n, m, k))\n",
+      "fix_code_raw_response": "```python\nn, m, k = map(int, input().split())\n\ndef find_kth_smallest_divisible(N, M, K):\n    def is_divisible_by_exactly_one(x, n, m):\n        return (x % n == 0) ^ (x % m == 0)\n\n    count = 0\n    num = 1\n    while count < K:\n        if is_divisible_by_exactly_one(num, N, M):\n            count += 1\n        if count < K:\n            num += 1\n    return num\n\nprint(find_kth_smallest_divisible(n, m, k))\n```",
+      "fix_code_usage": {
+        "input_tokens": 748,
+        "output_tokens": 134,
+        "total_tokens": 882
+      },
+      "fix_code_estimated_cost": 0.00321
+    },
+    {
+      "attempt_index": 2,
+      "status": "fail",
+      "pass": false,
+      "pass_rate": 0.9714285714285714,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_02",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_02/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_02/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_02/dataset/abc341_d/Python/53927639",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_02/dataset/abc341_d/Python/53927639/faultyVersion.py",
+      "test_records": [
+        {
+          "task": "abc341_d",
+          "language": "Python",
+          "program_id": "53927639",
+          "pass_rate": 0.9714285714285714,
+          "tests_run": 35,
+          "failed_tests": [
+            "hand_00.txt"
+          ],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function should efficiently find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. The function needs to handle large values of K efficiently, given the constraints, and should avoid unnecessary computations that lead to timeouts.",
+        "diagnosis_and_repair_directions": "The feedback indicates a performance issue, as the function times out, suggesting that the current approach is inefficient. The problem likely lies in the naive iteration through integers, which is not feasible for large values of K. The function should be optimized to avoid iterating through every integer. Instead, it should use mathematical properties to directly compute the position of the K-th integer that meets the criteria. This can be achieved by:\n1. Using the inclusion-exclusion principle to calculate the number of integers divisible by exactly one of N or M up to a certain point.\n2. Implementing a binary search to efficiently find the K-th integer, leveraging the count function to determine how many integers up to a midpoint meet the criteria.\n3. Ensuring that the function efficiently handles large values of K by minimizing unnecessary computations.",
+        "raw_response": "Intended Behavior:\nThe function should efficiently find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. The function needs to handle large values of K efficiently, given the constraints, and should avoid unnecessary computations that lead to timeouts.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a performance issue, as the function times out, suggesting that the current approach is inefficient. The problem likely lies in the naive iteration through integers, which is not feasible for large values of K. The function should be optimized to avoid iterating through every integer. Instead, it should use mathematical properties to directly compute the position of the K-th integer that meets the criteria. This can be achieved by:\n1. Using the inclusion-exclusion principle to calculate the number of integers divisible by exactly one of N or M up to a certain point.\n2. Implementing a binary search to efficiently find the K-th integer, leveraging the count function to determine how many integers up to a midpoint meet the criteria.\n3. Ensuring that the function efficiently handles large values of K by minimizing unnecessary computations.\n\nFixed Specification:\nFunction: find_kth_smallest_divisible\nPurpose: To efficiently find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M using the inclusion-exclusion principle.\n  2. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  3. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  4. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  5. Return the integer found by the binary search as the result."
+      },
+      "fixed_specification": "Function: find_kth_smallest_divisible\nPurpose: To efficiently find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M using the inclusion-exclusion principle.\n  2. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  3. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  4. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  5. Return the integer found by the binary search as the result.",
+      "fix_specification_usage": {
+        "input_tokens": 1450,
+        "output_tokens": 459,
+        "total_tokens": 1909
+      },
+      "fix_specification_estimated_cost": 0.008215,
+      "fix_code": "from math import lcm\n\ndef count_divisible_by_either(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\ndef find_kth_smallest_divisible(N: int, M: int, K: int) -> int:\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_either(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n",
+      "fix_code_raw_response": "```python\nfrom math import lcm\n\ndef count_divisible_by_either(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\ndef find_kth_smallest_divisible(N: int, M: int, K: int) -> int:\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_either(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n```",
+      "fix_code_usage": {
+        "input_tokens": 777,
+        "output_tokens": 188,
+        "total_tokens": 965
+      },
+      "fix_code_estimated_cost": 0.0038225
+    },
+    {
+      "attempt_index": 3,
+      "status": "fail",
+      "pass": false,
+      "pass_rate": 0.9714285714285714,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_03",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_03/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_03/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_03/dataset/abc341_d/Python/53927639",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_03/dataset/abc341_d/Python/53927639/faultyVersion.py",
+      "test_records": [
+        {
+          "task": "abc341_d",
+          "language": "Python",
+          "program_id": "53927639",
+          "pass_rate": 0.9714285714285714,
+          "tests_run": 35,
+          "failed_tests": [
+            "hand_00.txt"
+          ],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function should correctly identify the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. For the input `2 1 1`, the function should return `1`, as it is the smallest integer divisible by either 2 or 1, but not both.",
+        "diagnosis_and_repair_directions": "The feedback indicates a semantic behavior error where the function fails to correctly identify the smallest integer that meets the criteria. The issue arises from the incorrect handling of the inclusion-exclusion principle, particularly in cases where one of the divisors is `1`, which should include `1` itself as a valid result. The function must:\n1. Correctly handle edge cases where one of the divisors is `1`, ensuring that `1` is considered as a valid integer divisible by `1`.\n2. Adjust the logic to ensure that the smallest integer meeting the criteria is correctly identified, especially when K is `1`.\n3. Verify that the binary search and counting logic accurately reflect the inclusion-exclusion principle, particularly for small values of N and M.",
+        "raw_response": "Intended Behavior:\nThe function should correctly identify the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. For the input `2 1 1`, the function should return `1`, as it is the smallest integer divisible by either 2 or 1, but not both.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a semantic behavior error where the function fails to correctly identify the smallest integer that meets the criteria. The issue arises from the incorrect handling of the inclusion-exclusion principle, particularly in cases where one of the divisors is `1`, which should include `1` itself as a valid result. The function must:\n1. Correctly handle edge cases where one of the divisors is `1`, ensuring that `1` is considered as a valid integer divisible by `1`.\n2. Adjust the logic to ensure that the smallest integer meeting the criteria is correctly identified, especially when K is `1`.\n3. Verify that the binary search and counting logic accurately reflect the inclusion-exclusion principle, particularly for small values of N and M.\n\nFixed Specification:\nFunction: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M, including handling edge cases correctly.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M, considering edge cases like when one of the divisors is `1`.\n  2. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  3. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  4. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  5. Ensure that the function correctly identifies the smallest integer when K is `1`, especially when one of the divisors is `1`.\n  6. Return the integer found by the binary search as the result."
+      },
+      "fixed_specification": "Function: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M, including handling edge cases correctly.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M, considering edge cases like when one of the divisors is `1`.\n  2. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  3. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  4. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  5. Ensure that the function correctly identifies the smallest integer when K is `1`, especially when one of the divisors is `1`.\n  6. Return the integer found by the binary search as the result.",
+      "fix_specification_usage": {
+        "input_tokens": 2338,
+        "output_tokens": 501,
+        "total_tokens": 2839
+      },
+      "fix_specification_estimated_cost": 0.010855,
+      "fix_code": "from math import gcd\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_both = x // (n * m // gcd(n, m))\n    return cnt_n + cnt_m - 2 * cnt_both\n\ndef find_kth_smallest_divisible(N: int, M: int, K: int) -> int:\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_exactly_one(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n",
+      "fix_code_raw_response": "```python\nfrom math import gcd\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_both = x // (n * m // gcd(n, m))\n    return cnt_n + cnt_m - 2 * cnt_both\n\ndef find_kth_smallest_divisible(N: int, M: int, K: int) -> int:\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_exactly_one(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n```",
+      "fix_code_usage": {
+        "input_tokens": 820,
+        "output_tokens": 195,
+        "total_tokens": 1015
+      },
+      "fix_code_estimated_cost": 0.004
+    },
+    {
+      "attempt_index": 4,
+      "status": "pass",
+      "pass": true,
+      "pass_rate": 1.0,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_04",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_04/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_04/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_04/dataset/abc341_d/Python/53927639",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_04/dataset/abc341_d/Python/53927639/faultyVersion.py",
+      "test_records": [
+        {
+          "task": "abc341_d",
+          "language": "Python",
+          "program_id": "53927639",
+          "pass_rate": 1.0,
+          "tests_run": 35,
+          "failed_tests": [],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function should accurately find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. Specifically, when one of the divisors is `1`, the function should return `1` for K equal to `1`, since `1` is divisible by `1` and not by any other positive integer.",
+        "diagnosis_and_repair_directions": "The feedback indicates a semantic behavior error, particularly in handling edge cases where one of the divisors is `1`. The function incorrectly returns `2` instead of `1` for the input `2 1 1`. This suggests a flaw in the logic that determines the smallest integer meeting the criteria. The function must:\n1. Explicitly handle cases where one of the divisors is `1`, ensuring that `1` is considered as a valid result when K is `1`.\n2. Adjust the counting logic to correctly identify integers divisible by exactly one of the divisors, especially in edge cases.\n3. Ensure that the binary search logic accounts for these edge cases, particularly when determining the smallest integer.",
+        "raw_response": "Intended Behavior:\nThe function should accurately find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. Specifically, when one of the divisors is `1`, the function should return `1` for K equal to `1`, since `1` is divisible by `1` and not by any other positive integer.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a semantic behavior error, particularly in handling edge cases where one of the divisors is `1`. The function incorrectly returns `2` instead of `1` for the input `2 1 1`. This suggests a flaw in the logic that determines the smallest integer meeting the criteria. The function must:\n1. Explicitly handle cases where one of the divisors is `1`, ensuring that `1` is considered as a valid result when K is `1`.\n2. Adjust the counting logic to correctly identify integers divisible by exactly one of the divisors, especially in edge cases.\n3. Ensure that the binary search logic accounts for these edge cases, particularly when determining the smallest integer.\n\nFixed Specification:\nFunction: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M, with special handling for edge cases.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Check if one of the divisors is `1`. If so, and K is `1`, immediately return `1` as it is the smallest integer divisible by `1`.\n  2. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M, considering edge cases.\n  3. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  4. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  5. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  6. Return the integer found by the binary search as the result."
+      },
+      "fixed_specification": "Function: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M, with special handling for edge cases.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Check if one of the divisors is `1`. If so, and K is `1`, immediately return `1` as it is the smallest integer divisible by `1`.\n  2. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M, considering edge cases.\n  3. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  4. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  5. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  6. Return the integer found by the binary search as the result.",
+      "fix_specification_usage": {
+        "input_tokens": 3260,
+        "output_tokens": 503,
+        "total_tokens": 3763
+      },
+      "fix_specification_estimated_cost": 0.01318,
+      "fix_code": "from math import lcm\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\ndef find_kth_smallest_divisible(N, M, K):\n    if N == 1 or M == 1:\n        if K == 1:\n            return 1\n\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_exactly_one(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n",
+      "fix_code_raw_response": "```python\nfrom math import lcm\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\ndef find_kth_smallest_divisible(N, M, K):\n    if N == 1 or M == 1:\n        if K == 1:\n            return 1\n\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_exactly_one(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n```",
+      "fix_code_usage": {
+        "input_tokens": 821,
+        "output_tokens": 205,
+        "total_tokens": 1026
+      },
+      "fix_code_estimated_cost": 0.0041025
+    }
+  ],
+  "last_chain_summary": {
+    "status": "success",
+    "generated_at": "2026-06-10T03:02:49.846939+00:00",
+    "programId": "53927639",
+    "task_name": "abc341_d",
+    "language": "Python",
+    "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233",
+    "max_loops": 5,
+    "use_structure_adapter": false,
+    "faulty_function": "from math import lcm\n\n\ndef count_divisible_by_either(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - cnt_d * 2\n\n\nn, m, k = map(int, input().split())\n\nl = 1\nr = 10**18\n\nwhile r - l > 1:\n    mid = (l + r) // 2\n    cnt = count_divisible_by_either(mid, n, m)\n    # print(l, r, mid, cnt)\n    if cnt >= k:\n        r = mid\n    else:\n        l = mid\n\n\nprint(r) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+    "flawed_specification": "[\n  Function: count_divisible_by_either\n  Purpose: To calculate the number of integers up to a given number x that are divisible by either of two numbers n or m.\n  Signature: count_divisible_by_either(x: int, n: int, m: int) -> int\n  Input: Three integer parameters: x, n, and m. x is the upper limit of the range to check for divisibility, n and m are the divisors.\n  Output: An integer representing the count of numbers up to x that are divisible by either n or m.\n  Behavior:\n    1. Calculate the number of integers up to x that are divisible by n and store it in cnt_n.\n    2. Calculate the number of integers up to x that are divisible by m and store it in cnt_m.\n    3. Calculate the number of integers up to x that are divisible by the least common multiple of n and m and store it in cnt_d.\n    4. Return the sum of cnt_n and cnt_m, subtracting twice the value of cnt_d.\n]",
+    "flawed_specification_usage": {
+      "input_tokens": 663,
+      "output_tokens": 226,
+      "total_tokens": 889
+    },
+    "flawed_specification_estimated_cost": 0.0039175,
+    "validated_attempt_index": 4,
+    "final_fix_code": "from math import lcm\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\ndef find_kth_smallest_divisible(N, M, K):\n    if N == 1 or M == 1:\n        if K == 1:\n            return 1\n\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_exactly_one(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n",
+    "outer_run_index": 2,
+    "elapsed_seconds": 368.212,
+    "attempts": [
+      {
+        "attempt_index": 1,
+        "status": "fail",
+        "pass": false,
+        "pass_rate": 0.05714285714285714,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_01",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_01/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_01/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_01/dataset/abc341_d/Python/53927639",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_01/dataset/abc341_d/Python/53927639/faultyVersion.py",
+        "test_records": [
+          {
+            "task": "abc341_d",
+            "language": "Python",
+            "program_id": "53927639",
+            "pass_rate": 0.05714285714285714,
+            "tests_run": 35,
+            "failed_tests": [],
+            "error_tests": [
+              "abc341_d/example_02.txt"
+            ]
+          }
+        ],
+        "test_error": "Python execution timed out before the validation attempt 300-second budget was exhausted.",
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function should determine the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. This means the integer should be divisible by either N or M, but not both. The task is to find the K-th such integer.",
+          "diagnosis_and_repair_directions": "The current specification is focused on counting integers up to a given number x that are divisible by either n or m, which is not aligned with the task of finding the K-th smallest integer divisible by exactly one of N or M. The flawed specification incorrectly includes numbers divisible by both N and M, which should be excluded. The correct approach involves:\n1. Calculating the number of integers divisible by N but not M.\n2. Calculating the number of integers divisible by M but not N.\n3. Using these calculations to find the K-th smallest integer that meets the criteria.",
+          "raw_response": "Intended Behavior:\nThe function should determine the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. This means the integer should be divisible by either N or M, but not both. The task is to find the K-th such integer.\n\nDiagnosis and Repair Directions:\nThe current specification is focused on counting integers up to a given number x that are divisible by either n or m, which is not aligned with the task of finding the K-th smallest integer divisible by exactly one of N or M. The flawed specification incorrectly includes numbers divisible by both N and M, which should be excluded. The correct approach involves:\n1. Calculating the number of integers divisible by N but not M.\n2. Calculating the number of integers divisible by M but not N.\n3. Using these calculations to find the K-th smallest integer that meets the criteria.\n\nFixed Specification:\nFunction: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Initialize a counter to track the number of integers found that are divisible by exactly one of N or M.\n  2. Iterate through positive integers, checking divisibility by N and M.\n  3. For each integer, check if it is divisible by N or M, but not both.\n  4. Increment the counter each time an integer meets the criteria.\n  5. Stop when the counter reaches K, and return the current integer as the result."
+        },
+        "fixed_specification": "Function: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Initialize a counter to track the number of integers found that are divisible by exactly one of N or M.\n  2. Iterate through positive integers, checking divisibility by N and M.\n  3. For each integer, check if it is divisible by N or M, but not both.\n  4. Increment the counter each time an integer meets the criteria.\n  5. Stop when the counter reaches K, and return the current integer as the result.",
+        "fix_specification_usage": {
+          "input_tokens": 636,
+          "output_tokens": 386,
+          "total_tokens": 1022
+        },
+        "fix_specification_estimated_cost": 0.00545,
+        "fix_code": "n, m, k = map(int, input().split())\n\ndef find_kth_smallest_divisible(N, M, K):\n    def is_divisible_by_exactly_one(x, n, m):\n        return (x % n == 0) ^ (x % m == 0)\n\n    count = 0\n    num = 1\n    while count < K:\n        if is_divisible_by_exactly_one(num, N, M):\n            count += 1\n        if count < K:\n            num += 1\n    return num\n\nprint(find_kth_smallest_divisible(n, m, k))\n",
+        "fix_code_raw_response": "```python\nn, m, k = map(int, input().split())\n\ndef find_kth_smallest_divisible(N, M, K):\n    def is_divisible_by_exactly_one(x, n, m):\n        return (x % n == 0) ^ (x % m == 0)\n\n    count = 0\n    num = 1\n    while count < K:\n        if is_divisible_by_exactly_one(num, N, M):\n            count += 1\n        if count < K:\n            num += 1\n    return num\n\nprint(find_kth_smallest_divisible(n, m, k))\n```",
+        "fix_code_usage": {
+          "input_tokens": 748,
+          "output_tokens": 134,
+          "total_tokens": 882
+        },
+        "fix_code_estimated_cost": 0.00321
+      },
+      {
+        "attempt_index": 2,
+        "status": "fail",
+        "pass": false,
+        "pass_rate": 0.9714285714285714,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_02",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_02/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_02/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_02/dataset/abc341_d/Python/53927639",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_02/dataset/abc341_d/Python/53927639/faultyVersion.py",
+        "test_records": [
+          {
+            "task": "abc341_d",
+            "language": "Python",
+            "program_id": "53927639",
+            "pass_rate": 0.9714285714285714,
+            "tests_run": 35,
+            "failed_tests": [
+              "hand_00.txt"
+            ],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function should efficiently find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. The function needs to handle large values of K efficiently, given the constraints, and should avoid unnecessary computations that lead to timeouts.",
+          "diagnosis_and_repair_directions": "The feedback indicates a performance issue, as the function times out, suggesting that the current approach is inefficient. The problem likely lies in the naive iteration through integers, which is not feasible for large values of K. The function should be optimized to avoid iterating through every integer. Instead, it should use mathematical properties to directly compute the position of the K-th integer that meets the criteria. This can be achieved by:\n1. Using the inclusion-exclusion principle to calculate the number of integers divisible by exactly one of N or M up to a certain point.\n2. Implementing a binary search to efficiently find the K-th integer, leveraging the count function to determine how many integers up to a midpoint meet the criteria.\n3. Ensuring that the function efficiently handles large values of K by minimizing unnecessary computations.",
+          "raw_response": "Intended Behavior:\nThe function should efficiently find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. The function needs to handle large values of K efficiently, given the constraints, and should avoid unnecessary computations that lead to timeouts.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a performance issue, as the function times out, suggesting that the current approach is inefficient. The problem likely lies in the naive iteration through integers, which is not feasible for large values of K. The function should be optimized to avoid iterating through every integer. Instead, it should use mathematical properties to directly compute the position of the K-th integer that meets the criteria. This can be achieved by:\n1. Using the inclusion-exclusion principle to calculate the number of integers divisible by exactly one of N or M up to a certain point.\n2. Implementing a binary search to efficiently find the K-th integer, leveraging the count function to determine how many integers up to a midpoint meet the criteria.\n3. Ensuring that the function efficiently handles large values of K by minimizing unnecessary computations.\n\nFixed Specification:\nFunction: find_kth_smallest_divisible\nPurpose: To efficiently find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M using the inclusion-exclusion principle.\n  2. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  3. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  4. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  5. Return the integer found by the binary search as the result."
+        },
+        "fixed_specification": "Function: find_kth_smallest_divisible\nPurpose: To efficiently find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M using the inclusion-exclusion principle.\n  2. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  3. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  4. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  5. Return the integer found by the binary search as the result.",
+        "fix_specification_usage": {
+          "input_tokens": 1450,
+          "output_tokens": 459,
+          "total_tokens": 1909
+        },
+        "fix_specification_estimated_cost": 0.008215,
+        "fix_code": "from math import lcm\n\ndef count_divisible_by_either(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\ndef find_kth_smallest_divisible(N: int, M: int, K: int) -> int:\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_either(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n",
+        "fix_code_raw_response": "```python\nfrom math import lcm\n\ndef count_divisible_by_either(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\ndef find_kth_smallest_divisible(N: int, M: int, K: int) -> int:\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_either(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n```",
+        "fix_code_usage": {
+          "input_tokens": 777,
+          "output_tokens": 188,
+          "total_tokens": 965
+        },
+        "fix_code_estimated_cost": 0.0038225
+      },
+      {
+        "attempt_index": 3,
+        "status": "fail",
+        "pass": false,
+        "pass_rate": 0.9714285714285714,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_03",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_03/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_03/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_03/dataset/abc341_d/Python/53927639",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_03/dataset/abc341_d/Python/53927639/faultyVersion.py",
+        "test_records": [
+          {
+            "task": "abc341_d",
+            "language": "Python",
+            "program_id": "53927639",
+            "pass_rate": 0.9714285714285714,
+            "tests_run": 35,
+            "failed_tests": [
+              "hand_00.txt"
+            ],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function should correctly identify the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. For the input `2 1 1`, the function should return `1`, as it is the smallest integer divisible by either 2 or 1, but not both.",
+          "diagnosis_and_repair_directions": "The feedback indicates a semantic behavior error where the function fails to correctly identify the smallest integer that meets the criteria. The issue arises from the incorrect handling of the inclusion-exclusion principle, particularly in cases where one of the divisors is `1`, which should include `1` itself as a valid result. The function must:\n1. Correctly handle edge cases where one of the divisors is `1`, ensuring that `1` is considered as a valid integer divisible by `1`.\n2. Adjust the logic to ensure that the smallest integer meeting the criteria is correctly identified, especially when K is `1`.\n3. Verify that the binary search and counting logic accurately reflect the inclusion-exclusion principle, particularly for small values of N and M.",
+          "raw_response": "Intended Behavior:\nThe function should correctly identify the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. For the input `2 1 1`, the function should return `1`, as it is the smallest integer divisible by either 2 or 1, but not both.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a semantic behavior error where the function fails to correctly identify the smallest integer that meets the criteria. The issue arises from the incorrect handling of the inclusion-exclusion principle, particularly in cases where one of the divisors is `1`, which should include `1` itself as a valid result. The function must:\n1. Correctly handle edge cases where one of the divisors is `1`, ensuring that `1` is considered as a valid integer divisible by `1`.\n2. Adjust the logic to ensure that the smallest integer meeting the criteria is correctly identified, especially when K is `1`.\n3. Verify that the binary search and counting logic accurately reflect the inclusion-exclusion principle, particularly for small values of N and M.\n\nFixed Specification:\nFunction: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M, including handling edge cases correctly.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M, considering edge cases like when one of the divisors is `1`.\n  2. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  3. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  4. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  5. Ensure that the function correctly identifies the smallest integer when K is `1`, especially when one of the divisors is `1`.\n  6. Return the integer found by the binary search as the result."
+        },
+        "fixed_specification": "Function: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M, including handling edge cases correctly.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M, considering edge cases like when one of the divisors is `1`.\n  2. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  3. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  4. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  5. Ensure that the function correctly identifies the smallest integer when K is `1`, especially when one of the divisors is `1`.\n  6. Return the integer found by the binary search as the result.",
+        "fix_specification_usage": {
+          "input_tokens": 2338,
+          "output_tokens": 501,
+          "total_tokens": 2839
+        },
+        "fix_specification_estimated_cost": 0.010855,
+        "fix_code": "from math import gcd\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_both = x // (n * m // gcd(n, m))\n    return cnt_n + cnt_m - 2 * cnt_both\n\ndef find_kth_smallest_divisible(N: int, M: int, K: int) -> int:\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_exactly_one(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n",
+        "fix_code_raw_response": "```python\nfrom math import gcd\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_both = x // (n * m // gcd(n, m))\n    return cnt_n + cnt_m - 2 * cnt_both\n\ndef find_kth_smallest_divisible(N: int, M: int, K: int) -> int:\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_exactly_one(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n```",
+        "fix_code_usage": {
+          "input_tokens": 820,
+          "output_tokens": 195,
+          "total_tokens": 1015
+        },
+        "fix_code_estimated_cost": 0.004
+      },
+      {
+        "attempt_index": 4,
+        "status": "pass",
+        "pass": true,
+        "pass_rate": 1.0,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_04",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_04/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_04/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_04/dataset/abc341_d/Python/53927639",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/53927639/outer_run_02/53927639_20260610_030233/attempt_04/dataset/abc341_d/Python/53927639/faultyVersion.py",
+        "test_records": [
+          {
+            "task": "abc341_d",
+            "language": "Python",
+            "program_id": "53927639",
+            "pass_rate": 1.0,
+            "tests_run": 35,
+            "failed_tests": [],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function should accurately find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. Specifically, when one of the divisors is `1`, the function should return `1` for K equal to `1`, since `1` is divisible by `1` and not by any other positive integer.",
+          "diagnosis_and_repair_directions": "The feedback indicates a semantic behavior error, particularly in handling edge cases where one of the divisors is `1`. The function incorrectly returns `2` instead of `1` for the input `2 1 1`. This suggests a flaw in the logic that determines the smallest integer meeting the criteria. The function must:\n1. Explicitly handle cases where one of the divisors is `1`, ensuring that `1` is considered as a valid result when K is `1`.\n2. Adjust the counting logic to correctly identify integers divisible by exactly one of the divisors, especially in edge cases.\n3. Ensure that the binary search logic accounts for these edge cases, particularly when determining the smallest integer.",
+          "raw_response": "Intended Behavior:\nThe function should accurately find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. Specifically, when one of the divisors is `1`, the function should return `1` for K equal to `1`, since `1` is divisible by `1` and not by any other positive integer.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a semantic behavior error, particularly in handling edge cases where one of the divisors is `1`. The function incorrectly returns `2` instead of `1` for the input `2 1 1`. This suggests a flaw in the logic that determines the smallest integer meeting the criteria. The function must:\n1. Explicitly handle cases where one of the divisors is `1`, ensuring that `1` is considered as a valid result when K is `1`.\n2. Adjust the counting logic to correctly identify integers divisible by exactly one of the divisors, especially in edge cases.\n3. Ensure that the binary search logic accounts for these edge cases, particularly when determining the smallest integer.\n\nFixed Specification:\nFunction: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M, with special handling for edge cases.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Check if one of the divisors is `1`. If so, and K is `1`, immediately return `1` as it is the smallest integer divisible by `1`.\n  2. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M, considering edge cases.\n  3. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  4. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  5. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  6. Return the integer found by the binary search as the result."
+        },
+        "fixed_specification": "Function: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M, with special handling for edge cases.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Check if one of the divisors is `1`. If so, and K is `1`, immediately return `1` as it is the smallest integer divisible by `1`.\n  2. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M, considering edge cases.\n  3. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  4. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  5. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  6. Return the integer found by the binary search as the result.",
+        "fix_specification_usage": {
+          "input_tokens": 3260,
+          "output_tokens": 503,
+          "total_tokens": 3763
+        },
+        "fix_specification_estimated_cost": 0.01318,
+        "fix_code": "from math import lcm\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\ndef find_kth_smallest_divisible(N, M, K):\n    if N == 1 or M == 1:\n        if K == 1:\n            return 1\n\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_exactly_one(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n",
+        "fix_code_raw_response": "```python\nfrom math import lcm\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\ndef find_kth_smallest_divisible(N, M, K):\n    if N == 1 or M == 1:\n        if K == 1:\n            return 1\n\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_exactly_one(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n```",
+        "fix_code_usage": {
+          "input_tokens": 821,
+          "output_tokens": 205,
+          "total_tokens": 1026
+        },
+        "fix_code_estimated_cost": 0.0041025
+      }
+    ]
+  },
+  "faulty_function": "from math import lcm\n\n\ndef count_divisible_by_either(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - cnt_d * 2\n\n\nn, m, k = map(int, input().split())\n\nl = 1\nr = 10**18\n\nwhile r - l > 1:\n    mid = (l + r) // 2\n    cnt = count_divisible_by_either(mid, n, m)\n    # print(l, r, mid, cnt)\n    if cnt >= k:\n        r = mid\n    else:\n        l = mid\n\n\nprint(r) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "flawed_specification": "[\n  Function: count_divisible_by_either\n  Purpose: To calculate the number of integers up to a given number x that are divisible by either of two numbers n or m.\n  Signature: count_divisible_by_either(x: int, n: int, m: int) -> int\n  Input: Three integer parameters: x, n, and m. x is the upper limit of the range to check for divisibility, n and m are the divisors.\n  Output: An integer representing the count of numbers up to x that are divisible by either n or m.\n  Behavior:\n    1. Calculate the number of integers up to x that are divisible by n and store it in cnt_n.\n    2. Calculate the number of integers up to x that are divisible by m and store it in cnt_m.\n    3. Calculate the number of integers up to x that are divisible by the least common multiple of n and m and store it in cnt_d.\n    4. Return the sum of cnt_n and cnt_m, subtracting twice the value of cnt_d.\n]",
+  "flawed_specification_usage": {
+    "input_tokens": 663,
+    "output_tokens": 226,
+    "total_tokens": 889
+  },
+  "flawed_specification_estimated_cost": 0.0039175,
+  "selected_inner_attempt_index": 4,
+  "selected_inner_attempt_status": "pass",
+  "pass_rate": 1.0,
+  "test_records": [
+    {
+      "task": "abc341_d",
+      "language": "Python",
+      "program_id": "53927639",
+      "pass_rate": 1.0,
+      "tests_run": 35,
+      "failed_tests": [],
+      "error_tests": []
+    }
+  ],
+  "test_error": null,
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should accurately find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. Specifically, when one of the divisors is `1`, the function should return `1` for K equal to `1`, since `1` is divisible by `1` and not by any other positive integer.",
+    "diagnosis_and_repair_directions": "The feedback indicates a semantic behavior error, particularly in handling edge cases where one of the divisors is `1`. The function incorrectly returns `2` instead of `1` for the input `2 1 1`. This suggests a flaw in the logic that determines the smallest integer meeting the criteria. The function must:\n1. Explicitly handle cases where one of the divisors is `1`, ensuring that `1` is considered as a valid result when K is `1`.\n2. Adjust the counting logic to correctly identify integers divisible by exactly one of the divisors, especially in edge cases.\n3. Ensure that the binary search logic accounts for these edge cases, particularly when determining the smallest integer.",
+    "raw_response": "Intended Behavior:\nThe function should accurately find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. Specifically, when one of the divisors is `1`, the function should return `1` for K equal to `1`, since `1` is divisible by `1` and not by any other positive integer.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a semantic behavior error, particularly in handling edge cases where one of the divisors is `1`. The function incorrectly returns `2` instead of `1` for the input `2 1 1`. This suggests a flaw in the logic that determines the smallest integer meeting the criteria. The function must:\n1. Explicitly handle cases where one of the divisors is `1`, ensuring that `1` is considered as a valid result when K is `1`.\n2. Adjust the counting logic to correctly identify integers divisible by exactly one of the divisors, especially in edge cases.\n3. Ensure that the binary search logic accounts for these edge cases, particularly when determining the smallest integer.\n\nFixed Specification:\nFunction: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M, with special handling for edge cases.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Check if one of the divisors is `1`. If so, and K is `1`, immediately return `1` as it is the smallest integer divisible by `1`.\n  2. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M, considering edge cases.\n  3. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  4. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  5. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  6. Return the integer found by the binary search as the result."
+  },
+  "fixed_specification": "Function: find_kth_smallest_divisible\nPurpose: To find the K-th smallest positive integer that is divisible by exactly one of two given integers, N or M, with special handling for edge cases.\nSignature: find_kth_smallest_divisible(N: int, M: int, K: int) -> int\nInput: Three integer parameters: N and M are the divisors, and K is the position of the desired integer.\nOutput: An integer representing the K-th smallest positive integer divisible by exactly one of N or M.\nBehavior:\n  1. Check if one of the divisors is `1`. If so, and K is `1`, immediately return `1` as it is the smallest integer divisible by `1`.\n  2. Define a helper function to count integers up to a given number x that are divisible by exactly one of N or M, considering edge cases.\n  3. Implement a binary search over the range of possible integers to find the K-th integer that meets the criteria.\n  4. In each step of the binary search, use the helper function to determine the number of integers up to the midpoint that meet the criteria.\n  5. Adjust the search range based on the count to efficiently converge on the K-th integer.\n  6. Return the integer found by the binary search as the result.",
+  "fix_code": "from math import lcm\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\ndef find_kth_smallest_divisible(N, M, K):\n    if N == 1 or M == 1:\n        if K == 1:\n            return 1\n\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_exactly_one(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n",
+  "fix_code_raw_response": "```python\nfrom math import lcm\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\ndef find_kth_smallest_divisible(N, M, K):\n    if N == 1 or M == 1:\n        if K == 1:\n            return 1\n\n    l = 1\n    r = 10**18\n\n    while r - l > 1:\n        mid = (l + r) // 2\n        cnt = count_divisible_by_exactly_one(mid, N, M)\n        if cnt >= K:\n            r = mid\n        else:\n            l = mid\n\n    return r\n\nn, m, k = map(int, input().split())\nprint(find_kth_smallest_divisible(n, m, k))\n```",
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 663,
+      "output_tokens": 226,
+      "total_tokens": 889
+    },
+    "fix_specification": {
+      "input_tokens": 3260,
+      "output_tokens": 503,
+      "total_tokens": 3763
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 821,
+      "output_tokens": 205,
+      "total_tokens": 1026
+    }
+  },
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.0039175,
+    "fix_specification": 0.01318,
+    "fix_specification_and_buggy_code_to_fix_code": 0.0041025
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "53927639",
+  "repair_index": 5,
+  "task_name": "abc341_d",
+  "language": "Python",
+  "flawed_specification": "[\n  Function: count_divisible_by_either\n  Purpose: To calculate the number of integers up to a given number `x` that are divisible by either of two numbers `n` or `m`.\n  Signature: count_divisible_by_either(x: int, n: int, m: int) -> int\n  Input: \n    - `x`: An integer representing the upper limit of the range.\n    - `n`: An integer representing the first divisor.\n    - `m`: An integer representing the second divisor.\n  Output: \n    - An integer representing the count of numbers up to `x` that are divisible by either `n` or `m`.\n  Behavior:\n    1. Calculate the number of integers up to `x` that are divisible by `n` and store it in `cnt_n`.\n    2. Calculate the number of integers up to `x` that are divisible by `m` and store it in `cnt_m`.\n    3. Calculate the number of integers up to `x` that are divisible by the least common multiple of `n` and `m` and store it in `cnt_d`.\n    4. Return the result of `cnt_n + cnt_m - cnt_d * 2`.\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The task is to find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. This means the integer should be divisible by either N or M, but not both. The intended behavior is to correctly identify and count such integers up to a certain point until the K-th one is found.",
+    "diagnosis_and_repair_directions": "The flawed specification describes a function that counts integers divisible by either N or M, but it incorrectly calculates the overlap of numbers divisible by both N and M. The behavior described in the specification subtracts twice the count of numbers divisible by both N and M, which is incorrect for the intended task. Instead, the function should count numbers divisible by either N or M and then exclude those divisible by both (i.e., the least common multiple of N and M) only once. The correct formula should be `cnt_n + cnt_m - cnt_d`, where `cnt_d` is the count of numbers divisible by both N and M.",
+    "raw_response": "Intended Behavior:\nThe task is to find the K-th smallest positive integer that is divisible by exactly one of the two given integers, N or M. This means the integer should be divisible by either N or M, but not both. The intended behavior is to correctly identify and count such integers up to a certain point until the K-th one is found.\n\nDiagnosis and Repair Directions:\nThe flawed specification describes a function that counts integers divisible by either N or M, but it incorrectly calculates the overlap of numbers divisible by both N and M. The behavior described in the specification subtracts twice the count of numbers divisible by both N and M, which is incorrect for the intended task. Instead, the function should count numbers divisible by either N or M and then exclude those divisible by both (i.e., the least common multiple of N and M) only once. The correct formula should be `cnt_n + cnt_m - cnt_d`, where `cnt_d` is the count of numbers divisible by both N and M.\n\nFixed Specification:\nFunction: count_divisible_by_exactly_one\nPurpose: To calculate the number of integers up to a given number `x` that are divisible by exactly one of two numbers `n` or `m`.\nSignature: count_divisible_by_exactly_one(x: int, n: int, m: int) -> int\nInput:\n  - `x`: An integer representing the upper limit of the range.\n  - `n`: An integer representing the first divisor.\n  - `m`: An integer representing the second divisor.\nOutput:\n  - An integer representing the count of numbers up to `x` that are divisible by exactly one of `n` or `m`.\nBehavior:\n  1. Calculate the number of integers up to `x` that are divisible by `n` and store it in `cnt_n`.\n  2. Calculate the number of integers up to `x` that are divisible by `m` and store it in `cnt_m`.\n  3. Calculate the number of integers up to `x` that are divisible by the least common multiple of `n` and `m` and store it in `cnt_d`.\n  4. Return the result of `cnt_n + cnt_m - 2 * cnt_d`."
+  },
+  "fixed_specification": "Function: count_divisible_by_exactly_one\nPurpose: To calculate the number of integers up to a given number `x` that are divisible by exactly one of two numbers `n` or `m`.\nSignature: count_divisible_by_exactly_one(x: int, n: int, m: int) -> int\nInput:\n  - `x`: An integer representing the upper limit of the range.\n  - `n`: An integer representing the first divisor.\n  - `m`: An integer representing the second divisor.\nOutput:\n  - An integer representing the count of numbers up to `x` that are divisible by exactly one of `n` or `m`.\nBehavior:\n  1. Calculate the number of integers up to `x` that are divisible by `n` and store it in `cnt_n`.\n  2. Calculate the number of integers up to `x` that are divisible by `m` and store it in `cnt_m`.\n  3. Calculate the number of integers up to `x` that are divisible by the least common multiple of `n` and `m` and store it in `cnt_d`.\n  4. Return the result of `cnt_n + cnt_m - 2 * cnt_d`.",
+  "fix_code": "from math import lcm\n\ndef count_divisible_by_exactly_one(x, n, m):\n    cnt_n = x // n\n    cnt_m = x // m\n    cnt_d = x // lcm(n, m)\n\n    return cnt_n + cnt_m - 2 * cnt_d\n\nn, m, k = map(int, input().split())\n\nl = 1\nr = 10**18\n\nwhile r - l > 1:\n    mid = (l + r) // 2\n    cnt = count_divisible_by_exactly_one(mid, n, m)\n    if cnt >= k:\n        r = mid\n    else:\n        l = mid\n\nprint(r)\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.0040325,
+    "fix_specification": 0.0063325,
+    "fix_specification_and_buggy_code_to_fix_code": 0.0031,
+    "total": 0.013465
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 569,
+      "output_tokens": 261,
+      "total_tokens": 830
+    },
+    "fix_specification": {
+      "input_tokens": 681,
+      "output_tokens": 463,
+      "total_tokens": 1144
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 644,
+      "output_tokens": 149,
+      "total_tokens": 793
+    }
+  }
+}

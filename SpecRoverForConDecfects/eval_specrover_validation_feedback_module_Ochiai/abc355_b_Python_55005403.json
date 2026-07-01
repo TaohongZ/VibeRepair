@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55005403",
+  "task_name": "abc355_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:10:59.903822",
+  "finished_at": "2026-06-15T11:11:13.705475",
+  "elapsed_seconds": 13.8,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 13.8,
+      "estimated_cost": {
+        "total": 0.011165000000000001
+      }
+    }
+  ],
+  "faulty_function": "n, m = map(int, input().split())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nc = [(i, 0) for i in a] + [(i, 1) for i in b]\nc.sort()\n\nans = \"No\"\nfor i in range(n + m - 1):\n    if c[i][1] == c[i + 1][1]:\n        ans = \"Yes\" # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\nprint(ans)",
+  "fix_code": "n, m = map(int, input().split())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nc = [(i, 0) for i in a] + [(i, 1) for i in b]\nc.sort()\n\nans = \"No\"\nfor i in range(n + m - 1):\n    if c[i][1] == 0 and c[i + 1][1] == 0:\n        ans = \"Yes\"\n\nprint(ans)",
+  "fix_code_raw_response": "The issue in the provided code is that it checks if two consecutive elements in the sorted list `c` belong to the same sequence (either `A` or `B`). However, the problem statement requires checking if two consecutive elements in the sorted list `c` both belong to sequence `A`.\n\nTo fix this, we need to modify the condition inside the loop to check if both consecutive elements belong to sequence `A` (i.e., their second tuple element should be `0`).\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nn, m = map(int, input().split())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nc = [(i, 0) for i in a] + [(i, 1) for i in b]\nc.sort()\n\nans = \"No\"\nfor i in range(n + m - 1):\n    if c[i][1] == c[i + 1][1]:\n        ans = \"Yes\" # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\nprint(ans)\n</original>\n<patched>\nn, m = map(int, input().split())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nc = [(i, 0) for i in a] + [(i, 1) for i in b]\nc.sort()\n\nans = \"No\"\nfor i in range(n + m - 1):\n    if c[i][1] == 0 and c[i + 1][1] == 0:\n        ans = \"Yes\"\n\nprint(ans)\n</patched>\n```\n\nThis patch ensures that the program correctly identifies if there are two consecutive elements in the sorted list `c` that both belong to sequence `A`.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 994,
+        "output_tokens": 413,
+        "estimated_cost_usd": 0.011165000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.011165000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

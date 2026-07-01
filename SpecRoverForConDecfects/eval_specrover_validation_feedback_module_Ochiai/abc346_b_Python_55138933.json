@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55138933",
+  "task_name": "abc346_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T17:16:21.517476",
+  "finished_at": "2026-06-15T17:16:41.945173",
+  "elapsed_seconds": 20.43,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 20.43,
+      "estimated_cost": {
+        "total": 0.07341500000000001
+      }
+    }
+  ],
+  "faulty_function": "W,B=map(int,input().split())\n\ncan_l=[]\nAns=\"No\"\npiano=\"wbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbw\"\npiano=list(piano)\nfor i in range(len(piano)):#何文字とるか\n  i+=1\n  for j in range(len(piano)-i):#何文字目からとるか\n    A=[0,0]\n    for k in range(i):#i文字のうち何文字目をとるか\n      k+=1\n      if piano[j+k]==\"w\":\n        A[0]+=1\n      if piano[j+k]==\"b\":\n        A[1]+=1\n      #print(i,j,k)\n    if A not in can_l:\n      can_l.append(A)\n\nprint(can_l)\ntest_l=[W,B]\n\nif test_l in can_l:\n  Ans=\"Yes\"\n  \nprint(Ans) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "W, B = map(int, input().split())\n\nAns = \"No\"\npiano = \"wbwbwwbwbwbw\"\nn = len(piano)\n\n# Use a sliding window approach to check for the required number of 'w' and 'b'\nfor start in range(n):\n    w_count = 0\n    b_count = 0\n    for length in range(W + B):\n        if piano[(start + length) % n] == 'w':\n            w_count += 1\n        elif piano[(start + length) % n] == 'b':\n            b_count += 1\n        if w_count == W and b_count == B:\n            Ans = \"Yes\"\n            break\n    if Ans == \"Yes\":\n        break\n\nprint(Ans)",
+  "fix_code_raw_response": "The issue with the original code is that it attempts to generate all possible substrings of a very long string formed by repeating the pattern 'wbwbwwbwbwbw'. This approach is inefficient and does not handle the infinite nature of the problem correctly. Instead, we can use a sliding window approach to check for the required number of 'w' and 'b' in a segment of the repeating pattern.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nW,B=map(int,input().split())\n\ncan_l=[]\nAns=\"No\"\npiano=\"wbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbwwbwbwwbwbwbw\"\npiano=list(piano)\nfor i in range(len(piano)):#何文字とるか\n  i+=1\n  for j in range(len(piano)-i):#何文字目からとるか\n    A=[0,0]\n    for k in range(i):#i文字のうち何文字目をとるか\n      k+=1\n      if piano[j+k]==\"w\":\n        A[0]+=1\n      if piano[j+k]==\"b\":\n        A[1]+=1\n      #print(i,j,k)\n    if A not in can_l:\n      can_l.append(A)\n\nprint(can_l)\ntest_l=[W,B]\n\nif test_l in can_l:\n  Ans=\"Yes\"\n  \nprint(Ans)\n</original>\n<patched>\nW, B = map(int, input().split())\n\nAns = \"No\"\npiano = \"wbwbwwbwbwbw\"\nn = len(piano)\n\n# Use a sliding window approach to check for the required number of 'w' and 'b'\nfor start in range(n):\n    w_count = 0\n    b_count = 0\n    for length in range(W + B):\n        if piano[(start + length) % n] == 'w':\n            w_count += 1\n        elif piano[(start + length) % n] == 'b':\n            b_count += 1\n        if w_count == W and b_count == B:\n            Ans = \"Yes\"\n            break\n    if Ans == \"Yes\":\n        break\n\nprint(Ans)\n</patched>\n```\n\nThis patch uses a sliding window approach to check for the required number of 'w' and 'b' in a segment of the repeating pattern. This approach is more efficient and handles the infinite nature of the problem correctly.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 3503,
+        "output_tokens": 779,
+        "estimated_cost_usd": 0.029200000000000004
+      },
+      {
+        "input_tokens": 6899,
+        "output_tokens": 648,
+        "estimated_cost_usd": 0.044215000000000004
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.07341500000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

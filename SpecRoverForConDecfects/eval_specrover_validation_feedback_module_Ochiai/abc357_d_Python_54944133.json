@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54944133",
+  "task_name": "abc357_d",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:50:37.650914",
+  "finished_at": "2026-06-15T10:50:51.762062",
+  "elapsed_seconds": 14.11,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 14.11,
+      "estimated_cost": {
+        "total": 0.012115
+      }
+    }
+  ],
+  "faulty_function": "import math\n\nMOD = 998244353\n\n\ndef main():\n    n = int(input())\n    k = math.floor(math.log10(n)) + 1\n    y = pow(10**k - 1, MOD - 2, MOD)\n    ans = ((n % MOD) * (pow(10, n * k, MOD) - 1) * y) % MOD\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main() # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "MOD = 998244353\n\ndef main():\n    n = int(input())\n    n_str = str(n)\n    k = len(n_str)\n    \n    # Calculate the geometric series sum\n    term = (pow(10, k * n, MOD) - 1) * pow(pow(10, k, MOD) - 1, MOD - 2, MOD) % MOD\n    ans = n * term % MOD\n    \n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+  "fix_code_raw_response": "The issue with the current implementation is that it does not correctly handle the large value of \\( N \\) and its concatenation. The current approach tries to compute the concatenated number directly, which is infeasible for very large \\( N \\) due to memory and computational constraints.\n\nInstead, we can use properties of modular arithmetic to solve the problem without explicitly constructing the large number. Specifically, we can use the formula for the sum of a geometric series to compute the result efficiently.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nimport math\n\nMOD = 998244353\n\n\ndef main():\n    n = int(input())\n    k = math.floor(math.log10(n)) + 1\n    y = pow(10**k - 1, MOD - 2, MOD)\n    ans = ((n % MOD) * (pow(10, n * k, MOD) - 1) * y) % MOD\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main() # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n</original>\n<patched>\nMOD = 998244353\n\ndef main():\n    n = int(input())\n    n_str = str(n)\n    k = len(n_str)\n    \n    # Calculate the geometric series sum\n    term = (pow(10, k * n, MOD) - 1) * pow(pow(10, k, MOD) - 1, MOD - 2, MOD) % MOD\n    ans = n * term % MOD\n    \n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n</patched>\n```\n\nExplanation:\n1. We calculate the length `k` of the number `n` as a string.\n2. We use the formula for the sum of a geometric series to compute the result efficiently:\n   - `term` is calculated as \\((10^{kn} - 1) \\times (10^k - 1)^{-1} \\mod 998244353\\).\n   - `ans` is then calculated as \\(n \\times \\text{term} \\mod 998244353\\).\n3. This avoids the need to explicitly construct the large concatenated number and works efficiently even for very large values of `N`.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 890,
+        "output_tokens": 511,
+        "estimated_cost_usd": 0.012115
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.012115
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

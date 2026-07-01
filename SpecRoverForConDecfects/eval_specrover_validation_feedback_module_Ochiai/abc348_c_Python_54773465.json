@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54773465",
+  "task_name": "abc348_c",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T17:26:39.093705",
+  "finished_at": "2026-06-15T17:26:55.760626",
+  "elapsed_seconds": 16.67,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 16.67,
+      "estimated_cost": {
+        "total": 0.010925
+      }
+    }
+  ],
+  "faulty_function": "import collections\nN = int(input())\nAC = [list(map(int, input().split())) for _ in range(N)]\nAC = sorted(AC)\nAC = sorted(AC, key=lambda x:x[1])\nprint(AC)\nnum = AC[0][1]\n_min = AC[0][0]\nfor i in AC[1:]:\n    if num != i[1]:\n        num = i[1]\n        if _min < i[0]: # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n            _min = i[0]",
+  "fix_code": "import collections\nN = int(input())\nAC = [list(map(int, input().split())) for _ in range(N)]\n\n# Group beans by color and find the minimum deliciousness for each color\ncolor_to_min_deliciousness = collections.defaultdict(lambda: float('inf'))\nfor deliciousness, color in AC:\n    if deliciousness < color_to_min_deliciousness[color]:\n        color_to_min_deliciousness[color] = deliciousness\n\n# Find the maximum of these minimum deliciousness values\nmax_min_deliciousness = max(color_to_min_deliciousness.values())\nprint(max_min_deliciousness)",
+  "fix_code_raw_response": "The issue in the provided code is that it does not correctly identify the maximum of the minimum deliciousness for each color. The current logic sorts the beans by deliciousness and then by color, but it does not correctly track the minimum deliciousness for each color.\n\nTo fix this, we need to:\n1. Group the beans by their color.\n2. Find the minimum deliciousness for each color.\n3. Identify the maximum value among these minimum deliciousness values.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nimport collections\nN = int(input())\nAC = [list(map(int, input().split())) for _ in range(N)]\nAC = sorted(AC)\nAC = sorted(AC, key=lambda x:x[1])\nprint(AC)\nnum = AC[0][1]\n_min = AC[0][0]\nfor i in AC[1:]:\n    if num != i[1]:\n        num = i[1]\n        if _min < i[0]:\n            _min = i[0]\n</original>\n<patched>\nimport collections\nN = int(input())\nAC = [list(map(int, input().split())) for _ in range(N)]\n\n# Group beans by color and find the minimum deliciousness for each color\ncolor_to_min_deliciousness = collections.defaultdict(lambda: float('inf'))\nfor deliciousness, color in AC:\n    if deliciousness < color_to_min_deliciousness[color]:\n        color_to_min_deliciousness[color] = deliciousness\n\n# Find the maximum of these minimum deliciousness values\nmax_min_deliciousness = max(color_to_min_deliciousness.values())\nprint(max_min_deliciousness)\n</patched>\n```\n\nThis patch ensures that we correctly group the beans by their color, find the minimum deliciousness for each color, and then determine the maximum of these minimum deliciousness values. This approach adheres to the problem constraints and provides the correct output.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 961,
+        "output_tokens": 408,
+        "estimated_cost_usd": 0.010925
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.010925
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

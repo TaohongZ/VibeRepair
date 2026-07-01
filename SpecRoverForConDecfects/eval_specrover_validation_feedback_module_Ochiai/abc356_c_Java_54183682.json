@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54183682",
+  "task_name": "abc356_c",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T08:42:23.108482",
+  "finished_at": "2026-06-15T08:42:51.775136",
+  "elapsed_seconds": 28.67,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 28.67,
+      "estimated_cost": {
+        "total": 0.010570000000000001
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\tFastScanner fs=new FastScanner();\n        PrintWriter out = new PrintWriter(System.out);\n        // int T = fs.nextInt();\n        // for (int tt=0; tt<T; tt++) {\n            \n        // }\n\t\tint n = fs.nextInt();\n\t\tint m = fs.nextInt();\n\t\tint k = fs.nextInt();\n\n\t\tint[] result = new int[m];\n\t\tint[][] test = new int[m][n];\n\t\tfor(int i=0; i<m; i++) {\n\t\t\tint c = fs.nextInt();\n\t\t\tfor(int j=0; j<c; j++) {\n\t\t\t\tint x = fs.nextInt();\n\t\t\t\ttest[i][x-1] = 1;\n\t\t\t}\n\t\t\tString res = fs.next();\n\t\t\tif (res.equals(\"o\")) {\n\t\t\t\tresult[i] = 1;\n\t\t\t} else {\n\t\t\t\tresult[i] = 0;\n\t\t\t}\n\t\t}\n\t\tint ans = 0;\n\t\tfor(int i=0; i<(1<<n); i++) {\n\t\t\tint[] currentPerm = new int[n];\n\t\t\tfor(int j=0; j<n; j++) {\n\t\t\t\tif ((i & (1<<j)) > 0) {\n\t\t\t\t\tcurrentPerm[j] = 1;\n\t\t\t\t}\n\t\t\t}\n\t\t\tboolean flag = true;\n\t\t\tfor(int j=0; j<m; j++) {\n\t\t\t\tint goodKeys = 0;\n\t\t\t\tfor(int l=0; l<n; l++) {\n\t\t\t\t\tif (currentPerm[l] == test[j][l]) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\t\t\t\tgoodKeys++;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\tif(goodKeys>=k && result[j]==0) {\n\t\t\t\t\tflag = false;\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t\tif(goodKeys<k && result[j]==1) {\n\t\t\t\t\tflag = false;\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t}\n\t\t\tif (flag) {\n\t\t\t\tans++;\n\t\t\t}\n\t\t}\n\t\tout.println(ans);\n\n        out.close();\n\t}",
+  "fix_code": "\tpublic static void main(String[] args) {\n\t\tFastScanner fs=new FastScanner();\n        PrintWriter out = new PrintWriter(System.out);\n        // int T = fs.nextInt();\n        // for (int tt=0; tt<T; tt++) {\n            \n        // }\n\t\tint n = fs.nextInt();\n\t\tint m = fs.nextInt();\n\t\tint k = fs.nextInt();\n\n\t\tint[] result = new int[m];\n\t\tint[][] test = new int[m][n];\n\t\tfor(int i=0; i<m; i++) {\n\t\t\tint c = fs.nextInt();\n\t\t\tfor(int j=0; j<c; j++) {\n\t\t\t\tint x = fs.nextInt();\n\t\t\t\ttest[i][x-1] = 1;\n\t\t\t}\n\t\t\tString res = fs.next();\n\t\t\tif (res.equals(\"o\")) {\n\t\t\t\tresult[i] = 1;\n\t\t\t} else {\n\t\t\t\tresult[i] = 0;\n\t\t\t}\n\t\t}\n\t\tint ans = 0;\n\t\tfor(int i=0; i<(1<<n); i++) {\n\t\t\tint[] currentPerm = new int[n];\n\t\t\tfor(int j=0; j<n; j++) {\n\t\t\t\tif ((i & (1<<j)) > 0) {\n\t\t\t\t\tcurrentPerm[j] = 1;\n\t\t\t\t}\n\t\t\t}\n\t\t\tboolean flag = true;\n\t\t\tfor(int j=0; j<m; j++) {\n\t\t\t\tint goodKeys = 0;\n\t\t\t\tfor(int l=0; l<n; l++) {\n\t\t\t\t\tif (currentPerm[l] == 1 && test[j][l] == 1) {\n\t\t\t\t\t\tgoodKeys++;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\tif(goodKeys>=k && result[j]==0) {\n\t\t\t\t\tflag = false;\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t\tif(goodKeys<k && result[j]==1) {\n\t\t\t\t\tflag = false;\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t}\n\t\t\tif (flag) {\n\t\t\t\tans++;\n\t\t\t}\n\t\t}\n\t\tout.println(ans);\n\n        out.close();\n\t}",
+  "fix_code_raw_response": "The issue in the code is that the condition to count the number of good keys is incorrect. Specifically, the line `if (currentPerm[l] == test[j][l])` is not correctly checking if the key is real and was used in the test. Instead, it should check if the key is real and was used in the test, and then count it as a good key.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\t\t\t\t\tif (currentPerm[l] == test[j][l]) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n</original>\n<patched>\n\t\t\t\t\tif (currentPerm[l] == 1 && test[j][l] == 1) {\n</patched>\n```\n\nThis change ensures that we only count keys that are real (i.e., `currentPerm[l] == 1`) and were used in the test (i.e., `test[j][l] == 1`). This should resolve the issue and produce the correct output.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1415,
+        "output_tokens": 233,
+        "estimated_cost_usd": 0.010570000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.010570000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

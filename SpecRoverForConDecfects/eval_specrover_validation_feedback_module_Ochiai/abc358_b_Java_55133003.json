@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55133003",
+  "task_name": "abc358_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:22:13.383195",
+  "finished_at": "2026-06-15T11:22:25.690607",
+  "elapsed_seconds": 12.31,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 12.31,
+      "estimated_cost": {
+        "total": 0.013065
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n=sc.nextInt();\n        int a=sc.nextInt();\n        int[] t = new int[n];\n        int t1=0;\n        for(int i=0;i<n;i++){\n            t[i]=sc.nextInt();\n        }\n        for(int i=0;i<n;i++){\n            if(i>=1 && t[i]<a+t[i-1]){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                t[i]=t[i-1]+a;\n                System.out.println(t[i]);\n            }\n            else{\n                t[i]=t[i]+a;\n                System.out.println(t[i]);\n            }\n        }\n    }",
+  "fix_code": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int a = sc.nextInt();\n        int[] t = new int[n];\n        for (int i = 0; i < n; i++) {\n            t[i] = sc.nextInt();\n        }\n        \n        int currentTime = 0;\n        for (int i = 0; i < n; i++) {\n            if (t[i] < currentTime) {\n                currentTime += a;\n            } else {\n                currentTime = t[i] + a;\n            }\n            System.out.println(currentTime);\n        }\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that it incorrectly calculates the time when the i-th person finishes purchasing their ticket. Specifically, the code does not correctly handle the case when a person arrives after the previous person has finished purchasing their ticket. The correct approach is to keep track of the time when the ticket booth becomes available and compare it with the arrival time of the next person.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n=sc.nextInt();\n        int a=sc.nextInt();\n        int[] t = new int[n];\n        int t1=0;\n        for(int i=0;i<n;i++){\n            t[i]=sc.nextInt();\n        }\n        for(int i=0;i<n;i++){\n            if(i>=1 && t[i]<a+t[i-1]){\n                t[i]=t[i-1]+a;\n                System.out.println(t[i]);\n            }\n            else{\n                t[i]=t[i]+a;\n                System.out.println(t[i]);\n            }\n        }\n    }\n</original>\n<patched>\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int a = sc.nextInt();\n        int[] t = new int[n];\n        for (int i = 0; i < n; i++) {\n            t[i] = sc.nextInt();\n        }\n        \n        int currentTime = 0;\n        for (int i = 0; i < n; i++) {\n            if (t[i] < currentTime) {\n                currentTime += a;\n            } else {\n                currentTime = t[i] + a;\n            }\n            System.out.println(currentTime);\n        }\n    }\n</patched>\n```\n\nExplanation:\n- We introduce a variable `currentTime` to keep track of when the ticket booth will be available.\n- For each person, if their arrival time `t[i]` is less than `currentTime`, it means they have to wait until the booth is available, so we increment `currentTime` by `a`.\n- If their arrival time `t[i]` is greater than or equal to `currentTime`, they can start purchasing immediately, so we set `currentTime` to `t[i] + a`.\n- This ensures that the correct finish time for each person is calculated and printed.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1059,
+        "output_tokens": 518,
+        "estimated_cost_usd": 0.013065
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.013065
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

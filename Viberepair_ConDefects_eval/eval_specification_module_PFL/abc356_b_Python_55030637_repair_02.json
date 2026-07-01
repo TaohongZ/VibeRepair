@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "55030637",
+  "repair_index": 2,
+  "task_name": "abc356_b",
+  "language": "Python",
+  "flawed_specification": "[\n  Function: main\n  Purpose: To determine if the sum of each column in a DataFrame exceeds the corresponding target value in a list.\n  Signature: main()\n  Input: \n    - Two integers, `n` and `m`, representing the number of rows and columns, respectively.\n    - A list of integers, `aim_am_lis`, with `m` elements, representing target values for each column.\n    - A list of lists, `am_lis`, where each inner list contains `m` integers, representing the data for each row.\n  Output: \n    - A string, either \"Yes\" or \"No\", indicating whether the sum of each column in the DataFrame exceeds the corresponding target value in `aim_am_lis`.\n  Behavior:\n    1. Read two integers from input, `n` and `m`.\n    2. Read a list of `m` integers from input, `aim_am_lis`.\n    3. Initialize an empty list, `am_lis`.\n    4. For each of the `n` rows, read a list of `m` integers from input and append it to `am_lis`.\n    5. Create a DataFrame `df` using `am_lis` and calculate the sum of each column.\n    6. Initialize a counter `cnt` to 0.\n    7. For each column index `i` from 0 to `m-1`, check if the sum of the column `df[i]` is greater than the corresponding value in `aim_am_lis[i]` (bug is here).\n    8. If the condition in step 7 is true, increment `cnt` by 1.\n    9. If `cnt` is equal to `m`, print \"Yes\".\n    10. Otherwise, print \"No\".\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should determine if Takahashi has met his daily nutrient goals. Specifically, it should check if the total intake of each nutrient type across all foods meets or exceeds the specified target for that nutrient. If all nutrient targets are met, the function should return \"Yes\"; otherwise, it should return \"No\".",
+    "diagnosis_and_repair_directions": "The flawed specification incorrectly checks if the sum of each nutrient intake exceeds the target value, rather than meeting or exceeding it. The condition in step 7 should be adjusted to check for equality or greater than the target value, not strictly greater. Additionally, the specification mentions using a DataFrame, which is unnecessary for this task and complicates the implementation. Instead, a simple list-based approach is sufficient.",
+    "raw_response": "Intended Behavior:\nThe function should determine if Takahashi has met his daily nutrient goals. Specifically, it should check if the total intake of each nutrient type across all foods meets or exceeds the specified target for that nutrient. If all nutrient targets are met, the function should return \"Yes\"; otherwise, it should return \"No\".\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly checks if the sum of each nutrient intake exceeds the target value, rather than meeting or exceeding it. The condition in step 7 should be adjusted to check for equality or greater than the target value, not strictly greater. Additionally, the specification mentions using a DataFrame, which is unnecessary for this task and complicates the implementation. Instead, a simple list-based approach is sufficient.\n\nFixed Specification:\nFunction: main\nPurpose: To determine if the total intake of each nutrient meets or exceeds the target values.\nSignature: main()\nInput: \n  - Two integers, `n` and `m`, representing the number of foods and types of nutrients, respectively.\n  - A list of integers, `aim_am_lis`, with `m` elements, representing target values for each nutrient.\n  - A list of lists, `am_lis`, where each inner list contains `m` integers, representing the nutrient intake from each food.\nOutput: \n  - A string, either \"Yes\" or \"No\", indicating whether the total intake of each nutrient meets or exceeds the corresponding target value in `aim_am_lis`.\nBehavior:\n  1. Read two integers from input, `n` and `m`.\n  2. Read a list of `m` integers from input, `aim_am_lis`.\n  3. Initialize a list, `total_intake`, with `m` zeros to track the total intake for each nutrient.\n  4. For each of the `n` foods, read a list of `m` integers from input and add each value to the corresponding element in `total_intake`.\n  5. For each nutrient index `i` from 0 to `m-1`, check if `total_intake[i]` is greater than or equal to `aim_am_lis[i]`.\n  6. If all nutrient targets are met, print \"Yes\".\n  7. Otherwise, print \"No\"."
+  },
+  "fixed_specification": "Function: main\nPurpose: To determine if the total intake of each nutrient meets or exceeds the target values.\nSignature: main()\nInput: \n  - Two integers, `n` and `m`, representing the number of foods and types of nutrients, respectively.\n  - A list of integers, `aim_am_lis`, with `m` elements, representing target values for each nutrient.\n  - A list of lists, `am_lis`, where each inner list contains `m` integers, representing the nutrient intake from each food.\nOutput: \n  - A string, either \"Yes\" or \"No\", indicating whether the total intake of each nutrient meets or exceeds the corresponding target value in `aim_am_lis`.\nBehavior:\n  1. Read two integers from input, `n` and `m`.\n  2. Read a list of `m` integers from input, `aim_am_lis`.\n  3. Initialize a list, `total_intake`, with `m` zeros to track the total intake for each nutrient.\n  4. For each of the `n` foods, read a list of `m` integers from input and add each value to the corresponding element in `total_intake`.\n  5. For each nutrient index `i` from 0 to `m-1`, check if `total_intake[i]` is greater than or equal to `aim_am_lis[i]`.\n  6. If all nutrient targets are met, print \"Yes\".\n  7. Otherwise, print \"No\".",
+  "fix_code": "n, m = map(int, input().split())\naim_am_lis = list(map(int, input().split()))\ntotal_intake = [0] * m\n\nfor _ in range(n):\n    food_intake = list(map(int, input().split()))\n    for i in range(m):\n        total_intake[i] += food_intake[i]\n\nfor i in range(m):\n    if total_intake[i] < aim_am_lis[i]:\n        print(\"No\")\n        break\nelse:\n    print(\"Yes\")\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.00507,
+    "fix_specification": 0.0068825,
+    "fix_specification_and_buggy_code_to_fix_code": 0.002675,
+    "total": 0.0146275
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 488,
+      "output_tokens": 385,
+      "total_tokens": 873
+    },
+    "fix_specification": {
+      "input_tokens": 857,
+      "output_tokens": 474,
+      "total_tokens": 1331
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 626,
+      "output_tokens": 111,
+      "total_tokens": 737
+    }
+  }
+}

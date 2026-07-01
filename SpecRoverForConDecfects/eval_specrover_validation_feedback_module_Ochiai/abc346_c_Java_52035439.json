@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "52035439",
+  "task_name": "abc346_c",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T06:33:07.514663",
+  "finished_at": "2026-06-15T06:33:34.114658",
+  "elapsed_seconds": 26.6,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 26.6,
+      "estimated_cost": {
+        "total": 0.01771
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n        MyScanner sc = new MyScanner();\n        out = new PrintWriter(new BufferedOutputStream(System.out));\n\n        int n = sc.nextInt();\n        long k = sc.nextInt();\n        HashSet<Long> set = new HashSet<>();\n        for(int i = 0; i < n; i++)\n        {\n            long data = sc.nextLong();\n            set.add(data);\n        }\n        long sum1 = 0;\n        for(long i : set)\n        {\n            if(i < k) // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                sum1 += i;\n        }\n        long sum2 = (k * (k + 1)) / 2;\n        out.println(sum2 - sum1);\n        out.close();\n    }",
+  "fix_code": "    public static void main(String[] args) {\n        MyScanner sc = new MyScanner();\n        out = new PrintWriter(new BufferedOutputStream(System.out));\n\n        int n = sc.nextInt();\n        long k = sc.nextInt();\n        HashSet<Long> set = new HashSet<>();\n        for(int i = 0; i < n; i++)\n        {\n            long data = sc.nextLong();\n            set.add(data);\n        }\n        long sum1 = 0;\n        for(long i : set)\n        {\n            if(i <= k) // Include elements that are less than or equal to K\n                sum1 += i;\n        }\n        long sum2 = (k * (k + 1)) / 2;\n        out.println(sum2 - sum1);\n        out.close();\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that it incorrectly sums the elements of the set that are less than `K`. Instead, it should sum the elements of the set that are less than or equal to `K`. Additionally, the sum of the integers between 1 and `K` should exclude the elements present in the set.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n        long sum1 = 0;\n        for(long i : set)\n        {\n            if(i < k) // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                sum1 += i;\n        }\n</original>\n<patched>\n        long sum1 = 0;\n        for(long i : set)\n        {\n            if(i <= k) // Include elements that are less than or equal to K\n                sum1 += i;\n        }\n</patched>\n```\n\nThis change ensures that the sum `sum1` includes all elements in the set that are less than or equal to `K`, which is necessary to correctly compute the sum of integers between 1 and `K` that do not appear in the sequence `A`.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2771,
+        "output_tokens": 257,
+        "estimated_cost_usd": 0.01771
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.01771
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

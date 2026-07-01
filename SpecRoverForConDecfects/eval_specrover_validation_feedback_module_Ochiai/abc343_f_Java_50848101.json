@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "50848101",
+  "task_name": "abc343_f",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T05:48:58.896787",
+  "finished_at": "2026-06-15T05:49:27.825796",
+  "elapsed_seconds": 28.93,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 28.93,
+      "estimated_cost": {
+        "total": 0.009665
+      }
+    }
+  ],
+  "faulty_function": "    public static void add(Node t, Node l, Node r){\n        t.maxCnt = 0;\n        t.secCnt = 0;\n\n        if (l.max == r.max){\n            t.max = l.max;\n            t.maxCnt = l.maxCnt + r.maxCnt;\n            t.sec = Math.max(l.sec, r.sec);\n            if (t.sec == l.sec) t.secCnt += l.secCnt;\n            if (t.sec == r.sec) t.secCnt += r.secCnt;\n        } else if (l.max > r.max) {\n            t.max = l.max;\n            t.maxCnt = l.maxCnt;\n            if (l.sec == r.max){\n                t.sec = l.sec;\n                t.secCnt = l.secCnt + r.maxCnt;\n            } else if (l.sec > r.max) {\n                t.sec = l.sec;\n                t.secCnt = l.secCnt;\n            }else {\n                t.sec = r.max;\n                t.secCnt = t.maxCnt; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n            }\n        }else {\n            t.max = r.max;\n            t.maxCnt = r.maxCnt;\n            if (l.max == r.sec){\n                t.sec = l.max;\n                t.secCnt = l.maxCnt + r.secCnt;\n            } else if (l.max > r.sec) {\n                t.sec = l.max;\n                t.secCnt = l.maxCnt;\n            }else {\n                t.sec = r.sec;\n                t.secCnt = r.secCnt;\n            }\n        }\n    }",
+  "fix_code": "    public static void add(Node t, Node l, Node r){\n        t.maxCnt = 0;\n        t.secCnt = 0;\n\n        if (l.max == r.max){\n            t.max = l.max;\n            t.maxCnt = l.maxCnt + r.maxCnt;\n            t.sec = Math.max(l.sec, r.sec);\n            if (t.sec == l.sec) t.secCnt += l.secCnt;\n            if (t.sec == r.sec) t.secCnt += r.secCnt;\n        } else if (l.max > r.max) {\n            t.max = l.max;\n            t.maxCnt = l.maxCnt;\n            if (l.sec == r.max){\n                t.sec = l.sec;\n                t.secCnt = l.secCnt + r.maxCnt;\n            } else if (l.sec > r.max) {\n                t.sec = l.sec;\n                t.secCnt = l.secCnt;\n            }else {\n                t.sec = r.max;\n                t.secCnt = r.maxCnt;\n            }\n        }else {\n            t.max = r.max;\n            t.maxCnt = r.maxCnt;\n            if (l.max == r.sec){\n                t.sec = l.max;\n                t.secCnt = l.maxCnt + r.secCnt;\n            } else if (l.max > r.sec) {\n                t.sec = l.max;\n                t.secCnt = l.maxCnt;\n            }else {\n                t.sec = r.sec;\n                t.secCnt = r.secCnt;\n            }\n        }\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that the `secCnt` is incorrectly set in one of the conditions. Specifically, when `l.sec <= r.max`, the `secCnt` should be set to `r.maxCnt` instead of `t.maxCnt`. This is because `t.maxCnt` represents the count of the maximum value, not the second maximum value.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n                t.secCnt = t.maxCnt; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n</original>\n<patched>\n                t.secCnt = r.maxCnt;\n</patched>\n```\n\nThis change ensures that the count of the second maximum value is correctly set to the count of the maximum value from the right node when the second maximum value is less than or equal to the maximum value from the right node. This should resolve the issue and produce the expected output.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1297,
+        "output_tokens": 212,
+        "estimated_cost_usd": 0.009665
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.009665
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

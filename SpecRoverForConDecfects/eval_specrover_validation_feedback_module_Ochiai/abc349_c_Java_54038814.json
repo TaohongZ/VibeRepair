@@ -1,0 +1,98 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54038814",
+  "task_name": "abc349_c",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T08:37:59.471626",
+  "finished_at": "2026-06-15T08:39:14.148777",
+  "elapsed_seconds": 74.68,
+  "selected_outer_run_index": 3,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 39.94,
+      "estimated_cost": {
+        "total": 0.13132
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 10.31,
+      "estimated_cost": {
+        "total": 0.03692
+      }
+    },
+    {
+      "outer_run_index": 3,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 24.43,
+      "estimated_cost": {
+        "total": 0.035295
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\tString S = sc.next();\n\t\tString T = sc.next();\n\t\tString ans = \"No\";\n\t\tint n = 0;\n\t\tint limit = 3;\n\n\t\tif (T.charAt(2) != 'X') { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\tlimit = 2;\n\t\t}\n\n\t\tfor (int i = 0; i < S.length(); i++) {\n\t\t\tchar chS = S.charAt(i); //文字をchar型で抜き出し\n\t\t\tint numS = chS - 'a'; // 'a'が0に対応するように調整\n\n\t\t\tchar chT = T.charAt(n); //文字をchar型で抜き出し\n\t\t\tint numT = chT - 'A'; // 'a'が0に対応するように調整\n\n\t\t\tif (numS == numT) {\n\t\t\t\tn++;\n\t\t\t}\n\t\t\tif (n >= limit) {\n\t\t\t\tans = \"Yes\";\n\t\t\t\tbreak;\n\t\t\t}\n\t\t}\n\n\t\tSystem.out.println(ans);\n\t\tsc.close();\n\t}",
+  "fix_code": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\tString S = sc.next();\n\t\tString T = sc.next();\n\t\tString ans = \"No\";\n\t\tint n = 0;\n\t\tint limit = 3;\n\n\t\tif (T.charAt(2) == 'X') { // Check if the third character of T is 'X'\n\t\t\tlimit = 2;\n\t\t} else {\n\t\t\tlimit = 3;\n\t\t}\n\n\t\tfor (int i = 0; i < S.length(); i++) {\n\t\t\tchar chS = S.charAt(i); //文字をchar型で抜き出し\n\t\t\tint numS = chS - 'a'; // 'a'が0に対応するように調整\n\n\t\t\tchar chT = T.charAt(n); //文字をchar型で抜き出し\n\t\t\tint numT = chT - 'A'; // 'a'が0に対応するように調整\n\n\t\t\tif (numS == numT) {\n\t\t\t\tn++;\n\t\t\t}\n\t\t\tif (n >= limit) {\n\t\t\t\tif (limit == 2 && T.charAt(2) == 'X') {\n\t\t\t\t\tans = \"Yes\";\n\t\t\t\t} else if (limit == 3) {\n\t\t\t\t\tans = \"Yes\";\n\t\t\t\t}\n\t\t\t\tbreak;\n\t\t\t}\n\t\t}\n\n\t\tSystem.out.println(ans);\n\t\tsc.close();\n\t}",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the program correctly identifies subsequences of length 2 followed by 'X' and subsequences of length 3. Specifically, the program should check for both conditions separately and ensure that the third character is 'X' when required.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\t\tif (T.charAt(2) != 'X') { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\tlimit = 2;\n\t\t}\n</original>\n<patched>\n\t\tif (T.charAt(2) == 'X') { // Check if the third character of T is 'X'\n\t\t\tlimit = 2;\n\t\t} else {\n\t\t\tlimit = 3;\n\t\t}\n</patched>\n```\n\n# modification 2\n```\n<file>faultyVersion.java</file>\n<original>\n\t\tfor (int i = 0; i < S.length(); i++) {\n\t\t\tchar chS = S.charAt(i); //文字をchar型で抜き出し\n\t\t\tint numS = chS - 'a'; // 'a'が0に対応するように調整\n\n\t\t\tchar chT = T.charAt(n); //文字をchar型で抜き出し\n\t\t\tint numT = chT - 'A'; // 'a'が0に対応するように調整\n\n\t\t\tif (numS == numT) {\n\t\t\t\tn++;\n\t\t\t}\n\t\t\tif (n >= limit) {\n\t\t\t\tans = \"Yes\";\n\t\t\t\tbreak;\n\t\t\t}\n\t\t}\n</original>\n<patched>\n\t\tfor (int i = 0; i < S.length(); i++) {\n\t\t\tchar chS = S.charAt(i); //文字をchar型で抜き出し\n\t\t\tint numS = chS - 'a'; // 'a'が0に対応するように調整\n\n\t\t\tchar chT = T.charAt(n); //文字をchar型で抜き出し\n\t\t\tint numT = chT - 'A'; // 'a'が0に対応するように調整\n\n\t\t\tif (numS == numT) {\n\t\t\t\tn++;\n\t\t\t}\n\t\t\tif (n >= limit) {\n\t\t\t\tif (limit == 2 && T.charAt(2) == 'X') {\n\t\t\t\t\tans = \"Yes\";\n\t\t\t\t} else if (limit == 3) {\n\t\t\t\t\tans = \"Yes\";\n\t\t\t\t}\n\t\t\t\tbreak;\n\t\t\t}\n\t\t}\n</patched>\n```\n\n# modification 3\n```\n<file>faultyVersion.java</file>\n<original>\n\t\tif (n >= limit) {\n\t\t\tans = \"Yes\";\n\t\t\tbreak;\n\t\t}\n</original>\n<patched>\n\t\tif (n >= limit) {\n\t\t\tif (limit == 2 && T.charAt(2) == 'X') {\n\t\t\t\tans = \"Yes\";\n\t\t\t} else if (limit == 3) {\n\t\t\t\tans = \"Yes\";\n\t\t\t}\n\t\t\tbreak;\n\t\t}\n</patched>\n```\n\nThis patch ensures that the program correctly handles the case where the third character of T is 'X' by setting the limit to 2 and checking for the 'X' character separately. This way, the program can correctly determine if T is an airport code for S.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1060,
+        "output_tokens": 626,
+        "estimated_cost_usd": 0.014690000000000002
+      },
+      {
+        "input_tokens": 1949,
+        "output_tokens": 724,
+        "estimated_cost_usd": 0.020605
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.035295
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

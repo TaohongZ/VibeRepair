@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53683202",
+  "task_name": "abc353_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T07:39:59.476124",
+  "finished_at": "2026-06-15T07:40:11.114514",
+  "elapsed_seconds": 11.64,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 11.64,
+      "estimated_cost": {
+        "total": 0.015620000000000002
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String args[])  {\n        Scanner ans = new Scanner(System.in);\n        int n = ans.nextInt(); int k = ans.nextInt();\n        int[] arr = new int[n];\n        for (int i = 0; i <n; i++) {\n            arr[i] = ans.nextInt();\n        }\n        int kco = k; int sum = 0; int ans1 =0;\n        for (int i = 0; i < n; i++) {\n            kco = kco -arr[i];\n            if(kco<0){\n                ans1 = ans1+1;\n                kco = k-arr[i];\n                if(kco==0 && i ==n-1){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                    ans1 = ans1+1;\n                    kco = k;\n                }\n            }\n            else if (kco==0 || i ==n-1) {\n                kco = k;\n                ans1 = ans1+1;\n            }\n        }\n        System.out.println(ans1);\n    }",
+  "fix_code": "    public static void main(String args[])  {\n        Scanner ans = new Scanner(System.in);\n        int n = ans.nextInt(); int k = ans.nextInt();\n        int[] arr = new int[n];\n        for (int i = 0; i <n; i++) {\n            arr[i] = ans.nextInt();\n        }\n        int kco = k; int ans1 = 0;\n        for (int i = 0; i < n; i++) {\n            if (kco < arr[i]) {\n                ans1++;\n                kco = k;\n            }\n            kco -= arr[i];\n            if (kco == 0) {\n                ans1++;\n                kco = k;\n            }\n        }\n        if (kco < k) {\n            ans1++;\n        }\n        System.out.println(ans1);\n    }",
+  "fix_code_raw_response": "The issue in the code is that the condition for starting the attraction when the number of empty seats is zero or when it's the last group is not handled correctly. Specifically, the condition `if(kco==0 && i ==n-1)` is incorrect and unnecessary. The correct approach is to start the attraction whenever the number of empty seats is less than the number of people in the current group or when the number of empty seats is zero.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    public static void main(String args[])  {\n        Scanner ans = new Scanner(System.in);\n        int n = ans.nextInt(); int k = ans.nextInt();\n        int[] arr = new int[n];\n        for (int i = 0; i <n; i++) {\n            arr[i] = ans.nextInt();\n        }\n        int kco = k; int sum = 0; int ans1 =0;\n        for (int i = 0; i < n; i++) {\n            kco = kco -arr[i];\n            if(kco<0){\n                ans1 = ans1+1;\n                kco = k-arr[i];\n                if(kco==0 && i ==n-1){\n                    ans1 = ans1+1;\n                    kco = k;\n                }\n            }\n            else if (kco==0 || i ==n-1) {\n                kco = k;\n                ans1 = ans1+1;\n            }\n        }\n        System.out.println(ans1);\n    }\n</original>\n<patched>\n    public static void main(String args[])  {\n        Scanner ans = new Scanner(System.in);\n        int n = ans.nextInt(); int k = ans.nextInt();\n        int[] arr = new int[n];\n        for (int i = 0; i <n; i++) {\n            arr[i] = ans.nextInt();\n        }\n        int kco = k; int ans1 = 0;\n        for (int i = 0; i < n; i++) {\n            if (kco < arr[i]) {\n                ans1++;\n                kco = k;\n            }\n            kco -= arr[i];\n            if (kco == 0) {\n                ans1++;\n                kco = k;\n            }\n        }\n        if (kco < k) {\n            ans1++;\n        }\n        System.out.println(ans1);\n    }\n</patched>\n```\n\nExplanation:\n1. Removed the unnecessary `sum` variable.\n2. Simplified the logic to check if the number of empty seats is less than the number of people in the current group. If so, start the attraction and reset the number of empty seats.\n3. After guiding a group, if the number of empty seats is zero, start the attraction and reset the number of empty seats.\n4. After the loop, if there are still some people in the attraction, start the attraction one last time.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1255,
+        "output_tokens": 623,
+        "estimated_cost_usd": 0.015620000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.015620000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

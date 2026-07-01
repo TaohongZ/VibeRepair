@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "54300616",
+  "repair_index": 2,
+  "task_name": "abc343_b",
+  "language": "Python",
+  "flawed_specification": "[\n  Function: processMatrix\n  Purpose: To read an integer N and then read a matrix of size N x N, and for each row, print the indices of elements that are equal to 1.\n  Signature: processMatrix()\n  Input: \n    - An integer N, representing the number of rows and columns of the matrix.\n    - A matrix of integers, where each row is input as a space-separated string of integers.\n  Output: \n    - For each row in the matrix, the function outputs the indices of elements that are equal to 1, printed as a space-separated string.\n  Behavior:\n    1. Read an integer N from input, which determines the size of the matrix.\n    2. Initialize an empty list called `matrix`.\n    3. For each of the next N lines, read a line of input, split it into integers, and append it as a row to the `matrix`.\n    4. Iterate over each row index `i` from 0 to N-1.\n    5. Initialize an empty list called `ans`.\n    6. For each column index `j` from 0 to N-1, check if the element at `matrix[i][j]` is equal to 1.\n    7. If `matrix[i][j]` is equal to 1, append `j` to the list `ans` (bug is here).\n    8. Print the contents of `ans` as a space-separated string.\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should process an adjacency matrix of an undirected graph and, for each vertex, print the numbers of the vertices directly connected to it. The vertex numbers should be printed in ascending order and should be 1-based, not 0-based, as the vertices are labeled from 1 to N.",
+    "diagnosis_and_repair_directions": "The flawed specification incorrectly appends the 0-based index `j` to the list `ans` when `matrix[i][j]` is equal to 1. This results in the output being 0-based indices instead of the required 1-based vertex numbers. Additionally, the specification does not explicitly state that the output should be in ascending order, although it is implied by the problem statement. The repair involves adjusting the index by adding 1 before appending it to `ans` and ensuring the output is in ascending order, which is naturally handled by iterating over `j` from 0 to N-1.",
+    "raw_response": "Intended Behavior:\nThe function should process an adjacency matrix of an undirected graph and, for each vertex, print the numbers of the vertices directly connected to it. The vertex numbers should be printed in ascending order and should be 1-based, not 0-based, as the vertices are labeled from 1 to N.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly appends the 0-based index `j` to the list `ans` when `matrix[i][j]` is equal to 1. This results in the output being 0-based indices instead of the required 1-based vertex numbers. Additionally, the specification does not explicitly state that the output should be in ascending order, although it is implied by the problem statement. The repair involves adjusting the index by adding 1 before appending it to `ans` and ensuring the output is in ascending order, which is naturally handled by iterating over `j` from 0 to N-1.\n\nFixed Specification:\nFunction: processMatrix\nPurpose: To read an integer N and then read a matrix of size N x N, and for each vertex, print the numbers of the vertices directly connected to it in ascending order.\nSignature: processMatrix()\nInput: \n  - An integer N, representing the number of vertices in the graph.\n  - A matrix of integers, where each row is input as a space-separated string of integers, representing the adjacency matrix of the graph.\nOutput: \n  - For each vertex in the graph, the function outputs the numbers of vertices directly connected to it, printed as a space-separated string in ascending order.\nBehavior:\n  1. Read an integer N from input, which determines the size of the matrix.\n  2. Initialize an empty list called `matrix`.\n  3. For each of the next N lines, read a line of input, split it into integers, and append it as a row to the `matrix`.\n  4. Iterate over each row index `i` from 0 to N-1.\n  5. Initialize an empty list called `ans`.\n  6. For each column index `j` from 0 to N-1, check if the element at `matrix[i][j]` is equal to 1.\n  7. If `matrix[i][j]` is equal to 1, append `j + 1` to the list `ans` to convert to 1-based index.\n  8. Print the contents of `ans` as a space-separated string."
+  },
+  "fixed_specification": "Function: processMatrix\nPurpose: To read an integer N and then read a matrix of size N x N, and for each vertex, print the numbers of the vertices directly connected to it in ascending order.\nSignature: processMatrix()\nInput: \n  - An integer N, representing the number of vertices in the graph.\n  - A matrix of integers, where each row is input as a space-separated string of integers, representing the adjacency matrix of the graph.\nOutput: \n  - For each vertex in the graph, the function outputs the numbers of vertices directly connected to it, printed as a space-separated string in ascending order.\nBehavior:\n  1. Read an integer N from input, which determines the size of the matrix.\n  2. Initialize an empty list called `matrix`.\n  3. For each of the next N lines, read a line of input, split it into integers, and append it as a row to the `matrix`.\n  4. Iterate over each row index `i` from 0 to N-1.\n  5. Initialize an empty list called `ans`.\n  6. For each column index `j` from 0 to N-1, check if the element at `matrix[i][j]` is equal to 1.\n  7. If `matrix[i][j]` is equal to 1, append `j + 1` to the list `ans` to convert to 1-based index.\n  8. Print the contents of `ans` as a space-separated string.",
+  "fix_code": "def processMatrix():\n    N = int(input())\n\n    matrix = []\n    for _ in range(N):\n        row = list(map(int, input().strip().split()))\n        matrix.append(row)\n        \n    for i in range(N):\n        ans = []\n        for j in range(N):\n            if matrix[i][j] == 1:\n                ans.append(j + 1)  # Convert to 1-based index\n        print(*ans)\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.004335,
+    "fix_specification": 0.0072575,
+    "fix_specification_and_buggy_code_to_fix_code": 0.00251,
+    "total": 0.0141025
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 486,
+      "output_tokens": 312,
+      "total_tokens": 798
+    },
+    "fix_specification": {
+      "input_tokens": 831,
+      "output_tokens": 518,
+      "total_tokens": 1349
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 624,
+      "output_tokens": 95,
+      "total_tokens": 719
+    }
+  }
+}

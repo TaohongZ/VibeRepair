@@ -1,0 +1,128 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54533166",
+  "task_name": "abc354_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:31:14.827032",
+  "finished_at": "2026-06-15T09:33:31.132270",
+  "elapsed_seconds": 136.31,
+  "selected_outer_run_index": 5,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 30.69,
+      "estimated_cost": {
+        "total": 0.12546500000000002
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 29.92,
+      "estimated_cost": {
+        "total": 0.12542
+      }
+    },
+    {
+      "outer_run_index": 3,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 29.05,
+      "estimated_cost": {
+        "total": 0.12011000000000002
+      }
+    },
+    {
+      "outer_run_index": 4,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 30.2,
+      "estimated_cost": {
+        "total": 0.11976000000000002
+      }
+    },
+    {
+      "outer_run_index": 5,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 16.43,
+      "estimated_cost": {
+        "total": 0.02882
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\n\t\tScanner scanner = new Scanner(System.in);\n\t\tint N = scanner.nextInt();\n\t\tString s[] = new String[N];\n\t\tint T=0;\n\t\tfor(int i=0;i<N;i++) {\n\t\t\ts[i] = scanner.next();\n\t\t\tT+=scanner.nextInt();\n\t\t\t\n\t\t}\n\t\t\n\t\tArrays.sort(s);\n\t\t\n\t\tSystem.out.println(s[T%3]); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\n\t\t\n\t\t\n\t\tscanner.close();\n}",
+  "fix_code": "\tpublic static void main(String[] args) {\n\n\t\tScanner scanner = new Scanner(System.in);\n\t\tint N = scanner.nextInt();\n\t\tclass User implements Comparable<User> {\n\t\t\tString name;\n\t\t\tint rating;\n\n\t\t\tUser(String name, int rating) {\n\t\t\t\tthis.name = name;\n\t\t\t\tthis.rating = rating;\n\t\t\t}\n\n\t\t\t@Override\n\t\t\tpublic int compareTo(User other) {\n\t\t\t\treturn this.name.compareTo(other.name);\n\t\t\t}\n\t\t}\n\n\t\tUser[] users = new User[N];\n\t\tint T = 0;\n\t\tfor (int i = 0; i < N; i++) {\n\t\t\tString name = scanner.next();\n\t\t\tint rating = scanner.nextInt();\n\t\t\tusers[i] = new User(name, rating);\n\t\t\tT += rating;\n\t\t}\n\n\t\tArrays.sort(users);\n\n\t\tSystem.out.println(users[T % N].name);\n\t\t\n\t\t\n\t\t\n\t\tscanner.close();\n}",
+  "fix_code_raw_response": "To resolve the issue, we need to maintain the association between usernames and their ratings after sorting the usernames lexicographically. We can achieve this by creating a list of objects that store both the username and the rating, sorting this list based on the username, and then finding the username at the index `T % N`.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\t\tString s[] = new String[N];\n\t\tint T=0;\n\t\tfor(int i=0;i<N;i++) {\n\t\t\ts[i] = scanner.next();\n\t\t\tT+=scanner.nextInt();\n\t\t\t\n\t\t}\n\t\t\n\t\tArrays.sort(s);\n\t\t\n\t\tSystem.out.println(s[T%3]); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n</original>\n<patched>\n\t\tclass User implements Comparable<User> {\n\t\t\tString name;\n\t\t\tint rating;\n\n\t\t\tUser(String name, int rating) {\n\t\t\t\tthis.name = name;\n\t\t\t\tthis.rating = rating;\n\t\t\t}\n\n\t\t\t@Override\n\t\t\tpublic int compareTo(User other) {\n\t\t\t\treturn this.name.compareTo(other.name);\n\t\t\t}\n\t\t}\n\n\t\tUser[] users = new User[N];\n\t\tint T = 0;\n\t\tfor (int i = 0; i < N; i++) {\n\t\t\tString name = scanner.next();\n\t\t\tint rating = scanner.nextInt();\n\t\t\tusers[i] = new User(name, rating);\n\t\t\tT += rating;\n\t\t}\n\n\t\tArrays.sort(users);\n\n\t\tSystem.out.println(users[T % N].name); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n</patched>\n```\n\nThis patch introduces a `User` class to store both the username and the rating. It then creates an array of `User` objects, sorts this array based on the usernames, and finally prints the username at the index `T % N`. This ensures that the association between usernames and their ratings is maintained after sorting.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1534,
+        "output_tokens": 203,
+        "estimated_cost_usd": 0.010715
+      },
+      {
+        "input_tokens": 2340,
+        "output_tokens": 427,
+        "estimated_cost_usd": 0.018105
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.02882
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

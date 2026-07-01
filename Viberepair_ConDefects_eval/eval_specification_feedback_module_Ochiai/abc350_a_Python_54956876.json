@@ -1,0 +1,405 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54956876",
+  "repair_index": 1,
+  "task_name": "abc350_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_loops": 5,
+  "test_timeout_seconds": 300.0,
+  "validated_attempt_index": 3,
+  "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609",
+  "generated_at": "2026-06-10T06:26:50.201147+00:00",
+  "elapsed_seconds": 41.076,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609",
+      "elapsed_seconds": 41.076,
+      "attempts": 3
+    }
+  ],
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "status": "fail",
+      "pass": false,
+      "pass_rate": 0.0,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_01",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_01/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_01/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_01/dataset/abc350_a/Python/54956876",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_01/dataset/abc350_a/Python/54956876/faultyVersion.py",
+      "test_records": [
+        {
+          "task": "abc350_a",
+          "language": "Python",
+          "program_id": "54956876",
+          "pass_rate": 0.0,
+          "tests_run": 10,
+          "failed_tests": [
+            "random_01.txt",
+            "random_02.txt",
+            "random_03.txt",
+            "random_04.txt",
+            "random_05.txt",
+            "random_06.txt",
+            "random_07.txt",
+            "sample_01.txt",
+            "sample_02.txt",
+            "sample_03.txt"
+          ],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.",
+        "diagnosis_and_repair_directions": "The flawed specification incorrectly checks if the integer derived from the last three characters of `S` is less than 350 and not equal to 316. While this condition is necessary, it is not sufficient. The specification fails to ensure that the integer is at least 1 (i.e., it should be between 1 and 349, excluding 316). Additionally, the specification does not explicitly check if the first three characters are \"ABC\", although this is implicitly assumed by the constraints. The repair directions are:\n1. Ensure the first three characters of `S` are \"ABC\".\n2. Convert the last three characters of `S` to an integer.\n3. Check if this integer is between 1 and 349, excluding 316.\n4. Output \"Yes\" if all conditions are met; otherwise, output \"No\".",
+        "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly checks if the integer derived from the last three characters of `S` is less than 350 and not equal to 316. While this condition is necessary, it is not sufficient. The specification fails to ensure that the integer is at least 1 (i.e., it should be between 1 and 349, excluding 316). Additionally, the specification does not explicitly check if the first three characters are \"ABC\", although this is implicitly assumed by the constraints. The repair directions are:\n1. Ensure the first three characters of `S` are \"ABC\".\n2. Convert the last three characters of `S` to an integer.\n3. Check if this integer is between 1 and 349, excluding 316.\n4. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n\nFixed Specification:\nFunction: check_string\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: check_string()\nInput: A single string `s` obtained from user input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Accepts a string `s` from user input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\"."
+      },
+      "fixed_specification": "Function: check_string\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: check_string()\nInput: A single string `s` obtained from user input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Accepts a string `s` from user input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\".",
+      "fix_specification_usage": {
+        "input_tokens": 692,
+        "output_tokens": 421,
+        "total_tokens": 1113
+      },
+      "fix_specification_estimated_cost": 0.00594,
+      "fix_code": "def check_string():\n    s = input()\n    if s.startswith(\"ABC\") and len(s) > 3:\n        try:\n            num = int(s[3:])\n            if 1 <= num < 350 and num != 316:\n                print(\"Yes\")\n                return\n        except ValueError:\n            pass\n    print(\"No\")\n",
+      "fix_code_raw_response": "```python\ndef check_string():\n    s = input()\n    if s.startswith(\"ABC\") and len(s) > 3:\n        try:\n            num = int(s[3:])\n            if 1 <= num < 350 and num != 316:\n                print(\"Yes\")\n                return\n        except ValueError:\n            pass\n    print(\"No\")\n```",
+      "fix_code_usage": {
+        "input_tokens": 591,
+        "output_tokens": 75,
+        "total_tokens": 666
+      },
+      "fix_code_estimated_cost": 0.0022275
+    },
+    {
+      "attempt_index": 2,
+      "status": "fail",
+      "pass": false,
+      "pass_rate": 0.0,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_02",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_02/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_02/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_02/dataset/abc350_a/Python/54956876",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_02/dataset/abc350_a/Python/54956876/faultyVersion.py",
+      "test_records": [
+        {
+          "task": "abc350_a",
+          "language": "Python",
+          "program_id": "54956876",
+          "pass_rate": 0.0,
+          "tests_run": 10,
+          "failed_tests": [
+            "random_01.txt",
+            "random_02.txt",
+            "random_03.txt",
+            "random_04.txt",
+            "random_05.txt",
+            "random_06.txt",
+            "random_07.txt",
+            "sample_01.txt",
+            "sample_02.txt",
+            "sample_03.txt"
+          ],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise. The function must handle all input cases correctly and maintain the original execution structure, using standard input and output without additional function wrapping.",
+        "diagnosis_and_repair_directions": "The verification feedback indicates both semantic behavior errors and a code-structure/entry-point incompatibility. The previous fix failed to execute correctly, resulting in empty outputs for all test cases. This suggests that the function did not handle input/output as expected, possibly due to incorrect handling of standard input/output or incorrect logic implementation. The repair directions are:\n1. Ensure the function reads input directly from standard input and outputs directly to standard output, preserving the original execution structure.\n2. Check if the first three characters of `S` are \"ABC\".\n3. Convert the last three characters of `S` to an integer.\n4. Check if this integer is between 1 and 349, excluding 316.\n5. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n6. Ensure the function processes all inputs correctly and outputs the expected results.",
+        "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise. The function must handle all input cases correctly and maintain the original execution structure, using standard input and output without additional function wrapping.\n\nDiagnosis and Repair Directions:\nThe verification feedback indicates both semantic behavior errors and a code-structure/entry-point incompatibility. The previous fix failed to execute correctly, resulting in empty outputs for all test cases. This suggests that the function did not handle input/output as expected, possibly due to incorrect handling of standard input/output or incorrect logic implementation. The repair directions are:\n1. Ensure the function reads input directly from standard input and outputs directly to standard output, preserving the original execution structure.\n2. Check if the first three characters of `S` are \"ABC\".\n3. Convert the last three characters of `S` to an integer.\n4. Check if this integer is between 1 and 349, excluding 316.\n5. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n6. Ensure the function processes all inputs correctly and outputs the expected results.\n\nFixed Specification:\nFunction: check_string\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: check_string()\nInput: A single string `s` obtained from user input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Accepts a string `s` from user input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\"."
+      },
+      "fixed_specification": "Function: check_string\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: check_string()\nInput: A single string `s` obtained from user input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Accepts a string `s` from user input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\".",
+      "fix_specification_usage": {
+        "input_tokens": 1625,
+        "output_tokens": 451,
+        "total_tokens": 2076
+      },
+      "fix_specification_estimated_cost": 0.0085725,
+      "fix_code": "def check_string():\n    s = input()\n    if s.startswith(\"ABC\"):\n        try:\n            num = int(s[3:])\n            if 1 <= num < 350 and num != 316:\n                print(\"Yes\")\n                return\n        except ValueError:\n            pass\n    print(\"No\")\n",
+      "fix_code_raw_response": "```python\ndef check_string():\n    s = input()\n    if s.startswith(\"ABC\"):\n        try:\n            num = int(s[3:])\n            if 1 <= num < 350 and num != 316:\n                print(\"Yes\")\n                return\n        except ValueError:\n            pass\n    print(\"No\")\n```",
+      "fix_code_usage": {
+        "input_tokens": 591,
+        "output_tokens": 67,
+        "total_tokens": 658
+      },
+      "fix_code_estimated_cost": 0.0021475
+    },
+    {
+      "attempt_index": 3,
+      "status": "pass",
+      "pass": true,
+      "pass_rate": 1.0,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_03",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_03/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_03/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_03/dataset/abc350_a/Python/54956876",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_03/dataset/abc350_a/Python/54956876/faultyVersion.py",
+      "test_records": [
+        {
+          "task": "abc350_a",
+          "language": "Python",
+          "program_id": "54956876",
+          "pass_rate": 1.0,
+          "tests_run": 10,
+          "failed_tests": [],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise. The logic must execute at the top level, using standard input and output without being wrapped in a function or entry guard.",
+        "diagnosis_and_repair_directions": "The feedback indicates a code-structure/entry-point incompatibility. The previous fix wrapped the logic in a function, which altered the execution context and prevented the script from running as intended. The repair directions are:\n1. Ensure the logic executes at the top level without being encapsulated in a function.\n2. Directly read input from standard input and output results to standard output.\n3. Check if the first three characters of `S` are \"ABC\".\n4. Convert the last three characters of `S` to an integer.\n5. Check if this integer is between 1 and 349, excluding 316.\n6. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n7. Maintain the original stdin/stdout behavior and ensure the script runs correctly upon execution.",
+        "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise. The logic must execute at the top level, using standard input and output without being wrapped in a function or entry guard.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a code-structure/entry-point incompatibility. The previous fix wrapped the logic in a function, which altered the execution context and prevented the script from running as intended. The repair directions are:\n1. Ensure the logic executes at the top level without being encapsulated in a function.\n2. Directly read input from standard input and output results to standard output.\n3. Check if the first three characters of `S` are \"ABC\".\n4. Convert the last three characters of `S` to an integer.\n5. Check if this integer is between 1 and 349, excluding 316.\n6. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n7. Maintain the original stdin/stdout behavior and ensure the script runs correctly upon execution.\n\nFixed Specification:\nFunction: N/A (Top-level script execution)\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: N/A (Top-level script execution)\nInput: A single string `s` obtained from standard input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Reads a string `s` from standard input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\"."
+      },
+      "fixed_specification": "Function: N/A (Top-level script execution)\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: N/A (Top-level script execution)\nInput: A single string `s` obtained from standard input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Reads a string `s` from standard input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\".",
+      "fix_specification_usage": {
+        "input_tokens": 2749,
+        "output_tokens": 446,
+        "total_tokens": 3195
+      },
+      "fix_specification_estimated_cost": 0.0113325,
+      "fix_code": "s = input()\nif s.startswith(\"ABC\") and len(s) > 3:\n    num = int(s[3:])\n    if 1 <= num < 350 and num != 316:\n        print(\"Yes\")\n    else:\n        print(\"No\")\nelse:\n    print(\"No\")\n",
+      "fix_code_raw_response": "```python\ns = input()\nif s.startswith(\"ABC\") and len(s) > 3:\n    num = int(s[3:])\n    if 1 <= num < 350 and num != 316:\n        print(\"Yes\")\n    else:\n        print(\"No\")\nelse:\n    print(\"No\")\n```",
+      "fix_code_usage": {
+        "input_tokens": 600,
+        "output_tokens": 65,
+        "total_tokens": 665
+      },
+      "fix_code_estimated_cost": 0.00215
+    }
+  ],
+  "last_chain_summary": {
+    "status": "success",
+    "generated_at": "2026-06-10T06:26:17.252752+00:00",
+    "programId": "54956876",
+    "task_name": "abc350_a",
+    "language": "Python",
+    "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609",
+    "max_loops": 5,
+    "use_structure_adapter": false,
+    "faulty_function": "s = input()\nif len(s)== 6 and int(s[3:]) < 350 and int(s[3:]) != 316 :\n  print(\"Yes\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nelse :\n  print(\"No\")",
+    "flawed_specification": "[\n  Function: check_string\n  Purpose: To determine if a given string meets specific length and numeric conditions.\n  Signature: check_string()\n  Input: A single string `s` obtained from user input.\n  Output: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\n  Behavior:\n    1. Accepts a string `s` from user input.\n    2. Checks if the length of `s` is exactly 6 characters.\n    3. Converts the substring from the 4th character to the end of the string into an integer.\n    4. Checks if this integer is less than 350.\n    5. Checks if this integer is not equal to 316.\n    6. If both conditions (steps 4 and 5) are satisfied, prints \"Yes\" (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n    7. If any of the conditions are not satisfied, prints \"No\".\n]",
+    "flawed_specification_usage": {
+      "input_tokens": 552,
+      "output_tokens": 211,
+      "total_tokens": 763
+    },
+    "flawed_specification_estimated_cost": 0.00349,
+    "validated_attempt_index": 3,
+    "final_fix_code": "s = input()\nif s.startswith(\"ABC\") and len(s) > 3:\n    num = int(s[3:])\n    if 1 <= num < 350 and num != 316:\n        print(\"Yes\")\n    else:\n        print(\"No\")\nelse:\n    print(\"No\")\n",
+    "outer_run_index": 1,
+    "elapsed_seconds": 41.076,
+    "attempts": [
+      {
+        "attempt_index": 1,
+        "status": "fail",
+        "pass": false,
+        "pass_rate": 0.0,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_01",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_01/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_01/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_01/dataset/abc350_a/Python/54956876",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_01/dataset/abc350_a/Python/54956876/faultyVersion.py",
+        "test_records": [
+          {
+            "task": "abc350_a",
+            "language": "Python",
+            "program_id": "54956876",
+            "pass_rate": 0.0,
+            "tests_run": 10,
+            "failed_tests": [
+              "random_01.txt",
+              "random_02.txt",
+              "random_03.txt",
+              "random_04.txt",
+              "random_05.txt",
+              "random_06.txt",
+              "random_07.txt",
+              "sample_01.txt",
+              "sample_02.txt",
+              "sample_03.txt"
+            ],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.",
+          "diagnosis_and_repair_directions": "The flawed specification incorrectly checks if the integer derived from the last three characters of `S` is less than 350 and not equal to 316. While this condition is necessary, it is not sufficient. The specification fails to ensure that the integer is at least 1 (i.e., it should be between 1 and 349, excluding 316). Additionally, the specification does not explicitly check if the first three characters are \"ABC\", although this is implicitly assumed by the constraints. The repair directions are:\n1. Ensure the first three characters of `S` are \"ABC\".\n2. Convert the last three characters of `S` to an integer.\n3. Check if this integer is between 1 and 349, excluding 316.\n4. Output \"Yes\" if all conditions are met; otherwise, output \"No\".",
+          "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly checks if the integer derived from the last three characters of `S` is less than 350 and not equal to 316. While this condition is necessary, it is not sufficient. The specification fails to ensure that the integer is at least 1 (i.e., it should be between 1 and 349, excluding 316). Additionally, the specification does not explicitly check if the first three characters are \"ABC\", although this is implicitly assumed by the constraints. The repair directions are:\n1. Ensure the first three characters of `S` are \"ABC\".\n2. Convert the last three characters of `S` to an integer.\n3. Check if this integer is between 1 and 349, excluding 316.\n4. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n\nFixed Specification:\nFunction: check_string\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: check_string()\nInput: A single string `s` obtained from user input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Accepts a string `s` from user input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\"."
+        },
+        "fixed_specification": "Function: check_string\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: check_string()\nInput: A single string `s` obtained from user input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Accepts a string `s` from user input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\".",
+        "fix_specification_usage": {
+          "input_tokens": 692,
+          "output_tokens": 421,
+          "total_tokens": 1113
+        },
+        "fix_specification_estimated_cost": 0.00594,
+        "fix_code": "def check_string():\n    s = input()\n    if s.startswith(\"ABC\") and len(s) > 3:\n        try:\n            num = int(s[3:])\n            if 1 <= num < 350 and num != 316:\n                print(\"Yes\")\n                return\n        except ValueError:\n            pass\n    print(\"No\")\n",
+        "fix_code_raw_response": "```python\ndef check_string():\n    s = input()\n    if s.startswith(\"ABC\") and len(s) > 3:\n        try:\n            num = int(s[3:])\n            if 1 <= num < 350 and num != 316:\n                print(\"Yes\")\n                return\n        except ValueError:\n            pass\n    print(\"No\")\n```",
+        "fix_code_usage": {
+          "input_tokens": 591,
+          "output_tokens": 75,
+          "total_tokens": 666
+        },
+        "fix_code_estimated_cost": 0.0022275
+      },
+      {
+        "attempt_index": 2,
+        "status": "fail",
+        "pass": false,
+        "pass_rate": 0.0,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_02",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_02/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_02/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_02/dataset/abc350_a/Python/54956876",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_02/dataset/abc350_a/Python/54956876/faultyVersion.py",
+        "test_records": [
+          {
+            "task": "abc350_a",
+            "language": "Python",
+            "program_id": "54956876",
+            "pass_rate": 0.0,
+            "tests_run": 10,
+            "failed_tests": [
+              "random_01.txt",
+              "random_02.txt",
+              "random_03.txt",
+              "random_04.txt",
+              "random_05.txt",
+              "random_06.txt",
+              "random_07.txt",
+              "sample_01.txt",
+              "sample_02.txt",
+              "sample_03.txt"
+            ],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise. The function must handle all input cases correctly and maintain the original execution structure, using standard input and output without additional function wrapping.",
+          "diagnosis_and_repair_directions": "The verification feedback indicates both semantic behavior errors and a code-structure/entry-point incompatibility. The previous fix failed to execute correctly, resulting in empty outputs for all test cases. This suggests that the function did not handle input/output as expected, possibly due to incorrect handling of standard input/output or incorrect logic implementation. The repair directions are:\n1. Ensure the function reads input directly from standard input and outputs directly to standard output, preserving the original execution structure.\n2. Check if the first three characters of `S` are \"ABC\".\n3. Convert the last three characters of `S` to an integer.\n4. Check if this integer is between 1 and 349, excluding 316.\n5. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n6. Ensure the function processes all inputs correctly and outputs the expected results.",
+          "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise. The function must handle all input cases correctly and maintain the original execution structure, using standard input and output without additional function wrapping.\n\nDiagnosis and Repair Directions:\nThe verification feedback indicates both semantic behavior errors and a code-structure/entry-point incompatibility. The previous fix failed to execute correctly, resulting in empty outputs for all test cases. This suggests that the function did not handle input/output as expected, possibly due to incorrect handling of standard input/output or incorrect logic implementation. The repair directions are:\n1. Ensure the function reads input directly from standard input and outputs directly to standard output, preserving the original execution structure.\n2. Check if the first three characters of `S` are \"ABC\".\n3. Convert the last three characters of `S` to an integer.\n4. Check if this integer is between 1 and 349, excluding 316.\n5. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n6. Ensure the function processes all inputs correctly and outputs the expected results.\n\nFixed Specification:\nFunction: check_string\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: check_string()\nInput: A single string `s` obtained from user input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Accepts a string `s` from user input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\"."
+        },
+        "fixed_specification": "Function: check_string\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: check_string()\nInput: A single string `s` obtained from user input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Accepts a string `s` from user input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\".",
+        "fix_specification_usage": {
+          "input_tokens": 1625,
+          "output_tokens": 451,
+          "total_tokens": 2076
+        },
+        "fix_specification_estimated_cost": 0.0085725,
+        "fix_code": "def check_string():\n    s = input()\n    if s.startswith(\"ABC\"):\n        try:\n            num = int(s[3:])\n            if 1 <= num < 350 and num != 316:\n                print(\"Yes\")\n                return\n        except ValueError:\n            pass\n    print(\"No\")\n",
+        "fix_code_raw_response": "```python\ndef check_string():\n    s = input()\n    if s.startswith(\"ABC\"):\n        try:\n            num = int(s[3:])\n            if 1 <= num < 350 and num != 316:\n                print(\"Yes\")\n                return\n        except ValueError:\n            pass\n    print(\"No\")\n```",
+        "fix_code_usage": {
+          "input_tokens": 591,
+          "output_tokens": 67,
+          "total_tokens": 658
+        },
+        "fix_code_estimated_cost": 0.0021475
+      },
+      {
+        "attempt_index": 3,
+        "status": "pass",
+        "pass": true,
+        "pass_rate": 1.0,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_03",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_03/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_03/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_03/dataset/abc350_a/Python/54956876",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54956876/outer_run_01/54956876_20260610_062609/attempt_03/dataset/abc350_a/Python/54956876/faultyVersion.py",
+        "test_records": [
+          {
+            "task": "abc350_a",
+            "language": "Python",
+            "program_id": "54956876",
+            "pass_rate": 1.0,
+            "tests_run": 10,
+            "failed_tests": [],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise. The logic must execute at the top level, using standard input and output without being wrapped in a function or entry guard.",
+          "diagnosis_and_repair_directions": "The feedback indicates a code-structure/entry-point incompatibility. The previous fix wrapped the logic in a function, which altered the execution context and prevented the script from running as intended. The repair directions are:\n1. Ensure the logic executes at the top level without being encapsulated in a function.\n2. Directly read input from standard input and output results to standard output.\n3. Check if the first three characters of `S` are \"ABC\".\n4. Convert the last three characters of `S` to an integer.\n5. Check if this integer is between 1 and 349, excluding 316.\n6. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n7. Maintain the original stdin/stdout behavior and ensure the script runs correctly upon execution.",
+          "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise. The logic must execute at the top level, using standard input and output without being wrapped in a function or entry guard.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a code-structure/entry-point incompatibility. The previous fix wrapped the logic in a function, which altered the execution context and prevented the script from running as intended. The repair directions are:\n1. Ensure the logic executes at the top level without being encapsulated in a function.\n2. Directly read input from standard input and output results to standard output.\n3. Check if the first three characters of `S` are \"ABC\".\n4. Convert the last three characters of `S` to an integer.\n5. Check if this integer is between 1 and 349, excluding 316.\n6. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n7. Maintain the original stdin/stdout behavior and ensure the script runs correctly upon execution.\n\nFixed Specification:\nFunction: N/A (Top-level script execution)\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: N/A (Top-level script execution)\nInput: A single string `s` obtained from standard input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Reads a string `s` from standard input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\"."
+        },
+        "fixed_specification": "Function: N/A (Top-level script execution)\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: N/A (Top-level script execution)\nInput: A single string `s` obtained from standard input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Reads a string `s` from standard input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\".",
+        "fix_specification_usage": {
+          "input_tokens": 2749,
+          "output_tokens": 446,
+          "total_tokens": 3195
+        },
+        "fix_specification_estimated_cost": 0.0113325,
+        "fix_code": "s = input()\nif s.startswith(\"ABC\") and len(s) > 3:\n    num = int(s[3:])\n    if 1 <= num < 350 and num != 316:\n        print(\"Yes\")\n    else:\n        print(\"No\")\nelse:\n    print(\"No\")\n",
+        "fix_code_raw_response": "```python\ns = input()\nif s.startswith(\"ABC\") and len(s) > 3:\n    num = int(s[3:])\n    if 1 <= num < 350 and num != 316:\n        print(\"Yes\")\n    else:\n        print(\"No\")\nelse:\n    print(\"No\")\n```",
+        "fix_code_usage": {
+          "input_tokens": 600,
+          "output_tokens": 65,
+          "total_tokens": 665
+        },
+        "fix_code_estimated_cost": 0.00215
+      }
+    ]
+  },
+  "faulty_function": "s = input()\nif len(s)== 6 and int(s[3:]) < 350 and int(s[3:]) != 316 :\n  print(\"Yes\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nelse :\n  print(\"No\")",
+  "flawed_specification": "[\n  Function: check_string\n  Purpose: To determine if a given string meets specific length and numeric conditions.\n  Signature: check_string()\n  Input: A single string `s` obtained from user input.\n  Output: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\n  Behavior:\n    1. Accepts a string `s` from user input.\n    2. Checks if the length of `s` is exactly 6 characters.\n    3. Converts the substring from the 4th character to the end of the string into an integer.\n    4. Checks if this integer is less than 350.\n    5. Checks if this integer is not equal to 316.\n    6. If both conditions (steps 4 and 5) are satisfied, prints \"Yes\" (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n    7. If any of the conditions are not satisfied, prints \"No\".\n]",
+  "flawed_specification_usage": {
+    "input_tokens": 552,
+    "output_tokens": 211,
+    "total_tokens": 763
+  },
+  "flawed_specification_estimated_cost": 0.00349,
+  "selected_inner_attempt_index": 3,
+  "selected_inner_attempt_status": "pass",
+  "pass_rate": 1.0,
+  "test_records": [
+    {
+      "task": "abc350_a",
+      "language": "Python",
+      "program_id": "54956876",
+      "pass_rate": 1.0,
+      "tests_run": 10,
+      "failed_tests": [],
+      "error_tests": []
+    }
+  ],
+  "test_error": null,
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise. The logic must execute at the top level, using standard input and output without being wrapped in a function or entry guard.",
+    "diagnosis_and_repair_directions": "The feedback indicates a code-structure/entry-point incompatibility. The previous fix wrapped the logic in a function, which altered the execution context and prevented the script from running as intended. The repair directions are:\n1. Ensure the logic executes at the top level without being encapsulated in a function.\n2. Directly read input from standard input and output results to standard output.\n3. Check if the first three characters of `S` are \"ABC\".\n4. Convert the last three characters of `S` to an integer.\n5. Check if this integer is between 1 and 349, excluding 316.\n6. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n7. Maintain the original stdin/stdout behavior and ensure the script runs correctly upon execution.",
+    "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` is a valid abbreviation of a contest held on AtCoder. The string `S` must start with \"ABC\" and be followed by a three-digit number. This number must be within the range of 001 to 349, excluding 316. The function should output \"Yes\" if `S` is a valid abbreviation and \"No\" otherwise. The logic must execute at the top level, using standard input and output without being wrapped in a function or entry guard.\n\nDiagnosis and Repair Directions:\nThe feedback indicates a code-structure/entry-point incompatibility. The previous fix wrapped the logic in a function, which altered the execution context and prevented the script from running as intended. The repair directions are:\n1. Ensure the logic executes at the top level without being encapsulated in a function.\n2. Directly read input from standard input and output results to standard output.\n3. Check if the first three characters of `S` are \"ABC\".\n4. Convert the last three characters of `S` to an integer.\n5. Check if this integer is between 1 and 349, excluding 316.\n6. Output \"Yes\" if all conditions are met; otherwise, output \"No\".\n7. Maintain the original stdin/stdout behavior and ensure the script runs correctly upon execution.\n\nFixed Specification:\nFunction: N/A (Top-level script execution)\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: N/A (Top-level script execution)\nInput: A single string `s` obtained from standard input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Reads a string `s` from standard input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\"."
+  },
+  "fixed_specification": "Function: N/A (Top-level script execution)\nPurpose: To determine if a given string is a valid abbreviation of a contest held on AtCoder.\nSignature: N/A (Top-level script execution)\nInput: A single string `s` obtained from standard input.\nOutput: Prints \"Yes\" or \"No\" based on the conditions evaluated on the input string.\nBehavior:\n1. Reads a string `s` from standard input.\n2. Checks if the first three characters of `s` are \"ABC\".\n3. Converts the substring from the 4th character to the end of the string into an integer.\n4. Checks if this integer is between 1 and 349, excluding 316.\n5. If all conditions are satisfied, prints \"Yes\".\n6. If any condition is not satisfied, prints \"No\".",
+  "fix_code": "s = input()\nif s.startswith(\"ABC\") and len(s) > 3:\n    num = int(s[3:])\n    if 1 <= num < 350 and num != 316:\n        print(\"Yes\")\n    else:\n        print(\"No\")\nelse:\n    print(\"No\")\n",
+  "fix_code_raw_response": "```python\ns = input()\nif s.startswith(\"ABC\") and len(s) > 3:\n    num = int(s[3:])\n    if 1 <= num < 350 and num != 316:\n        print(\"Yes\")\n    else:\n        print(\"No\")\nelse:\n    print(\"No\")\n```",
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 552,
+      "output_tokens": 211,
+      "total_tokens": 763
+    },
+    "fix_specification": {
+      "input_tokens": 2749,
+      "output_tokens": 446,
+      "total_tokens": 3195
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 600,
+      "output_tokens": 65,
+      "total_tokens": 665
+    }
+  },
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.00349,
+    "fix_specification": 0.0113325,
+    "fix_specification_and_buggy_code_to_fix_code": 0.00215
+  }
+}

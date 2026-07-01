@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54214149",
+  "task_name": "abc354_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T08:43:48.775780",
+  "finished_at": "2026-06-15T08:44:02.234348",
+  "elapsed_seconds": 13.46,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 13.46,
+      "estimated_cost": {
+        "total": 0.00999
+      }
+    }
+  ],
+  "faulty_function": "  public static void main(String[] args){\n    \n    Scanner sc = new Scanner(System.in);\n    \n    int h = sc.nextInt();\n    int syo = 0;\n    int day;\n    \n    for(day=0; syo<h; day++){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      syo += Math.pow(2, day);\n    }\n    System.out.println(day);\n  }",
+  "fix_code": "  public static void main(String[] args){\n    \n    Scanner sc = new Scanner(System.in);\n    \n    int h = sc.nextInt();\n    int syo = 0;\n    int day;\n    \n    for(day=0; syo<=h; day++){ // Change the condition to syo<=h to find the first day the plant's height is strictly greater than Takahashi's height\n      syo += Math.pow(2, day);\n    }\n    System.out.println(day);\n  }",
+  "fix_code_raw_response": "The issue in the provided code is that the height of the plant is being calculated incorrectly. The plant's height increases by \\(2^i\\) cm each night, but the current code sums these heights directly, which does not match the problem's requirement. Instead, we need to keep track of the plant's height incrementally and check each morning if it exceeds Takahashi's height.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n  public static void main(String[] args){\n    \n    Scanner sc = new Scanner(System.in);\n    \n    int h = sc.nextInt();\n    int syo = 0;\n    int day;\n    \n    for(day=0; syo<h; day++){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      syo += Math.pow(2, day);\n    }\n    System.out.println(day);\n  }\n</original>\n<patched>\n  public static void main(String[] args){\n    \n    Scanner sc = new Scanner(System.in);\n    \n    int h = sc.nextInt();\n    int syo = 0;\n    int day;\n    \n    for(day=0; syo<=h; day++){ // Change the condition to syo<=h to find the first day the plant's height is strictly greater than Takahashi's height\n      syo += Math.pow(2, day);\n    }\n    System.out.println(day);\n  }\n</patched>\n```\n\nExplanation:\n- The condition in the `for` loop has been changed from `syo < h` to `syo <= h`. This ensures that the loop continues until the plant's height is strictly greater than Takahashi's height, which matches the problem's requirement.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 870,
+        "output_tokens": 376,
+        "estimated_cost_usd": 0.00999
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.00999
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

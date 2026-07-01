@@ -1,0 +1,98 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "51503806",
+  "task_name": "abc338_c",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T12:28:34.979008",
+  "finished_at": "2026-06-15T12:35:31.424703",
+  "elapsed_seconds": 416.45,
+  "selected_outer_run_index": 2,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": false,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 0.7777777777777778,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 53.31,
+      "estimated_cost": {
+        "total": 0.08276499999999999
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 363.14,
+      "estimated_cost": {
+        "total": 0.088395
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n        try (Scanner sc = new Scanner(System.in)) {\n            number = sc.nextInt();\n\n            stock = new int[number];\n            food1 = new int[number];\n            food2 = new int[number];\n\n            for (int i = 0; i < number; i++) {\n                stock[i] = sc.nextInt();\n            }\n            for (int i = 0; i < number; i++) {\n                food1[i] = sc.nextInt();\n            }\n            for (int i = 0; i < number; i++) {\n                food2[i] = sc.nextInt();\n            }\n\n            int max = 0;\n\n            while (checkStock(max, 0)) {\n                max++;\n            }\n\n            max--;\n            \n            int maxA = max;\n            int maxB = 0;\n\n            for (int i = 0; i < max; i++) {\n                while (checkStock(maxA, maxB)) {\n                    if (max < maxA + maxB)\n                        max = maxA + maxB;\n                    maxB++;\n                }\n                maxA--; // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n            }\n\n            System.out.println(max);\n        }\n    }",
+  "fix_code": "    public static void main(String[] args) {\n        try (Scanner sc = new Scanner(System.in)) {\n            number = sc.nextInt();\n\n            stock = new int[number];\n            food1 = new int[number];\n            food2 = new int[number];\n\n            for (int i = 0; i < number; i++) {\n                stock[i] = sc.nextInt();\n            }\n            for (int i = 0; i < number; i++) {\n                food1[i] = sc.nextInt();\n            }\n            for (int i = 0; i < number; i++) {\n                food2[i] = sc.nextInt();\n            }\n\n            int maxServings = 0;\n\n            for (int servingsA = 0; servingsA <= 1000000; servingsA++) {\n                int maxB = Integer.MAX_VALUE;\n\n                for (int i = 0; i < number; i++) {\n                    if (food1[i] * servingsA > stock[i]) {\n                        maxB = -1;\n                        break;\n                    }\n                    if (food2[i] > 0) {\n                        maxB = Math.min(maxB, (stock[i] - servingsA * food1[i]) / food2[i]);\n                    }\n                }\n\n                if (maxB < 0) {\n                    break;\n                }\n\n                maxServings = Math.max(maxServings, servingsA + maxB);\n            }\n\n            System.out.println(maxServings);\n        }\n    }",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the program correctly handles cases where `food2[i]` is zero and where `servingsA * food1[i]` exceeds `stock[i]`. Additionally, we should use a more efficient algorithm to find the maximum number of servings, such as binary search.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n            int max = 0;\n\n            while (checkStock(max, 0)) {\n                max++;\n            }\n\n            max--;\n            \n            int maxA = max;\n            int maxB = 0;\n\n            for (int i = 0; i < max; i++) {\n                while (checkStock(maxA, maxB)) {\n                    if (max < maxA + maxB)\n                        max = maxA + maxB;\n                    maxB++;\n                }\n                maxA--; // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n            }\n\n            System.out.println(max);\n</original>\n<patched>\n            int maxServings = 0;\n\n            for (int servingsA = 0; servingsA <= 1000000; servingsA++) {\n                int maxB = Integer.MAX_VALUE;\n\n                for (int i = 0; i < number; i++) {\n                    if (food1[i] * servingsA > stock[i]) {\n                        maxB = -1;\n                        break;\n                    }\n                    if (food2[i] > 0) {\n                        maxB = Math.min(maxB, (stock[i] - servingsA * food1[i]) / food2[i]);\n                    }\n                }\n\n                if (maxB < 0) {\n                    break;\n                }\n\n                maxServings = Math.max(maxServings, servingsA + maxB);\n            }\n\n            System.out.println(maxServings);\n</patched>\n```\n\n# modification 2\n```\n<file>faultyVersion.java</file>\n<original>\n            // No checkStock function provided in the original context\n</original>\n<patched>\n            private static boolean checkStock(int servingsA, int servingsB) {\n                for (int i = 0; i < number; i++) {\n                    if (stock[i] < servingsA * food1[i] + servingsB * food2[i]) {\n                        return false;\n                    }\n                }\n                return true;\n            }\n</patched>\n```\n\nExplanation:\n1. We iterate over possible servings of dish A from 0 to 1,000,000.\n2. For each possible serving of dish A, we calculate the maximum possible servings of dish B that can be made without exceeding the available stock.\n3. We handle cases where `food2[i]` is zero by skipping the division and ensuring that `servingsA * food1[i]` does not exceed `stock[i]`.\n4. We update the maximum number of servings found.\n5. Finally, we print the maximum number of servings.\n\nThis approach ensures that we consider different combinations of servings for dish A and dish B and find the optimal solution efficiently.",
+  "patch_handle": "4",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1157,
+        "output_tokens": 514,
+        "estimated_cost_usd": 0.013495
+      },
+      {
+        "input_tokens": 1697,
+        "output_tokens": 499,
+        "estimated_cost_usd": 0.01597
+      },
+      {
+        "input_tokens": 1927,
+        "output_tokens": 647,
+        "estimated_cost_usd": 0.019340000000000003
+      },
+      {
+        "input_tokens": 2066,
+        "output_tokens": 606,
+        "estimated_cost_usd": 0.01942
+      },
+      {
+        "input_tokens": 2039,
+        "output_tokens": 665,
+        "estimated_cost_usd": 0.02017
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.088395
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

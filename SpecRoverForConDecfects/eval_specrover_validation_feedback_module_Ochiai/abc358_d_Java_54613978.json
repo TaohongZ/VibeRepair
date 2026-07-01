@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54613978",
+  "task_name": "abc358_d",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:33:55.903584",
+  "finished_at": "2026-06-15T09:34:19.692875",
+  "elapsed_seconds": 23.79,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 23.79,
+      "estimated_cost": {
+        "total": 0.04997000000000001
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\t\n\t\tFastScanner sc = new FastScanner();\n\t\tPrintWriter out = new PrintWriter(System.out);\n\t\t\n\t\tint n = Integer.parseInt(sc.next());\n\t\tint m = Integer.parseInt(sc.next());\n\t\tlong[] a = new long[n];\n\t\tfor (int i = 0; i < n; i++) {\n\t\t\ta[i] = Long.parseLong(sc.next());\n\t\t}\n\t\tArrays.sort(a);\n\t\t\n\t\tlong[] b = new long[m];\n\t\tfor (int i = 0; i < m; i++) {\n\t\t\tb[i] = Long.parseLong(sc.next());\n\t\t}\n\t\tArrays.sort(b);\n\t\t\n\t\tint j = 0;\n\t\tlong ans = 0L;\n\t\tfor (int i = 0; i < m; i++) {\n\t\t\tfor (; j < n; j++) {\n\t\t\t\tif (a[j] >= b[i]) {\n\t\t\t\t\tans += a[j];\n\t\t\t\t\tj++;\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t\tif (j == n - 1) {\n\t\t\t\t\tout.println(-1);\n\t\t\t\t\tout.flush();\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t}\n\t\t\tif (j == n && i < m) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\t\tout.println(-1);\n\t\t\t\tout.flush();\n\t\t\t\treturn;\n\t\t\t}\n\t\t}\n\t\tout.println(ans);\n\t\t\n\t\tout.flush();\n\n\t}",
+  "fix_code": "\tpublic static void main(String[] args) {\n\t\t\n\t\tFastScanner sc = new FastScanner();\n\t\tPrintWriter out = new PrintWriter(System.out);\n\t\t\n\t\tint n = Integer.parseInt(sc.next());\n\t\tint m = Integer.parseInt(sc.next());\n\t\tlong[] a = new long[n];\n\t\tfor (int i = 0; i < n; i++) {\n\t\t\ta[i] = Long.parseLong(sc.next());\n\t\t}\n\t\tArrays.sort(a);\n\t\t\n\t\tlong[] b = new long[m];\n\t\tfor (int i = 0; i < m; i++) {\n\t\t\tb[i] = Long.parseLong(sc.next());\n\t\t}\n\t\tArrays.sort(b);\n\t\t\n\t\tint j = 0;\n\t\tlong ans = 0L;\n\t\tfor (int i = 0; i < m; i++) {\n\t\t\twhile (j < n && a[j] < b[i]) {\n\t\t\t\tj++;\n\t\t\t}\n\t\t\tif (j == n) {\n\t\t\t\tout.println(-1);\n\t\t\t\tout.flush();\n\t\t\t\treturn;\n\t\t\t}\n\t\t\tans += a[j];\n\t\t\tj++;\n\t\t}\n\t\tout.println(ans);\n\t\t\n\t\tout.flush();\n\n\t}",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the program correctly identifies when there are not enough boxes to satisfy the requirements for all M people. The current logic does not handle this correctly, especially when the number of boxes is large.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\t\tint j = 0;\n\t\tlong ans = 0L;\n\t\tfor (int i = 0; i < m; i++) {\n\t\t\tfor (; j < n; j++) {\n\t\t\t\tif (a[j] >= b[i]) {\n\t\t\t\t\tans += a[j];\n\t\t\t\t\tj++;\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t\tif (j == n - 1) {\n\t\t\t\t\tout.println(-1);\n\t\t\t\t\tout.flush();\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t}\n\t\t\tif (j == n && i < m) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\t\tout.println(-1);\n\t\t\t\tout.flush();\n\t\t\t\treturn;\n\t\t\t}\n\t\t}\n\t\tout.println(ans);\n</original>\n<patched>\n\t\tint j = 0;\n\t\tlong ans = 0L;\n\t\tfor (int i = 0; i < m; i++) {\n\t\t\twhile (j < n && a[j] < b[i]) {\n\t\t\t\tj++;\n\t\t\t}\n\t\t\tif (j == n) {\n\t\t\t\tout.println(-1);\n\t\t\t\tout.flush();\n\t\t\t\treturn;\n\t\t\t}\n\t\t\tans += a[j];\n\t\t\tj++;\n\t\t}\n\t\tout.println(ans);\n</patched>\n```\n\n### Explanation:\n1. **Inner Loop Change**: The inner loop is changed from a `for` loop to a `while` loop to continue incrementing `j` until a suitable box is found or all boxes are exhausted.\n2. **Condition Check**: The condition `if (j == n)` is checked immediately after the `while` loop to determine if all boxes have been exhausted without finding a suitable box for the current person.\n3. **Accumulate Cost**: If a suitable box is found, its cost is added to `ans`, and `j` is incremented to move to the next box.\n\nThis patch ensures that the program correctly handles the case where there are not enough boxes to satisfy the requirements for all M people and returns the correct result.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2779,
+        "output_tokens": 270,
+        "estimated_cost_usd": 0.017945000000000003
+      },
+      {
+        "input_tokens": 4935,
+        "output_tokens": 490,
+        "estimated_cost_usd": 0.032025000000000005
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.04997000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

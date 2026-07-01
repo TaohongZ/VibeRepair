@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "52961519",
+  "task_name": "abc346_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T17:15:14.253611",
+  "finished_at": "2026-06-15T17:15:34.179568",
+  "elapsed_seconds": 19.93,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 19.93,
+      "estimated_cost": {
+        "total": 0.029560000000000003
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args){\n\t\tScanner scanner = new Scanner(System.in);\n    int w = scanner.nextInt();\n    int b = scanner.nextInt();\n    if ( 0 == b )\n    {\n      if ( 0 <= w && w <= 2)\n      {\n        System.out.println( \"Yes\" );\n      }\n      else\n      {\n        System.out.println( \"No\" );\n      }\n    }\n    else\n    {\n      int odd = b % 5;\n      int base = 7 * (b / 5); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      switch (odd) {\n        case 0:\n            if ( 5 + base <= w && w <= 9 + base )\n            {\n              System.out.println( \"Yes\" );\n            }\n            else\n            {\n              System.out.println( \"No\" );\n            }\n            break;\n        case 1:\n            if ( base <= w && w <= 3 + base )\n            {\n              System.out.println( \"Yes\" );\n            }\n            else\n            {\n              System.out.println( \"No\" );\n            }\n            break;\n        case 2:\n            if ( 1 + base <= w && w <= 5 + base )\n            {\n              System.out.println( \"Yes\" );\n            }\n            else\n            {\n              System.out.println( \"No\" );\n            }\n            break;\n        case 3:\n            if ( 2 + base <= w && w <= 6 + base )\n            {\n              System.out.println( \"Yes\" );\n            }\n            else\n            {\n              System.out.println( \"No\" );\n            }\n            break;\n        case 4:\n            if ( 4 + base <= w && w <= 7 + base )\n            {\n              System.out.println( \"Yes\" );\n            }\n            else\n            {\n              System.out.println( \"No\" );\n            }\n            break;\n      }\n    }\n\t}",
+  "fix_code": "\tpublic static void main(String[] args){\n\t\tScanner scanner = new Scanner(System.in);\n    int w = scanner.nextInt();\n    int b = scanner.nextInt();\n    String pattern = \"wbwbwwbwbwbw\";\n    StringBuilder sb = new StringBuilder();\n    while (sb.length() < 200) {\n        sb.append(pattern);\n    }\n    String extendedPattern = sb.toString();\n    \n    boolean found = false;\n    for (int i = 0; i <= extendedPattern.length() - (w + b); i++) {\n        String substring = extendedPattern.substring(i, i + w + b);\n        long countW = substring.chars().filter(ch -> ch == 'w').count();\n        long countB = substring.chars().filter(ch -> ch == 'b').count();\n        if (countW == w && countB == b) {\n            found = true;\n            break;\n        }\n    }\n    \n    if (found) {\n        System.out.println(\"Yes\");\n    } else {\n        System.out.println(\"No\");\n    }\n\t}",
+  "fix_code_raw_response": "To resolve the issue, we need to simplify the logic to directly check for the presence of the required number of 'w' and 'b' in the repeating pattern \"wbwbwwbwbwbw\". We can use a sliding window approach over the pattern repeated enough times to cover the maximum possible length of W + B (which is 200). This approach will ensure that we correctly determine if there is a continuous segment within the keyboard that consists of W white keys and B black keys.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    if ( 0 == b )\n    {\n      if ( 0 <= w && w <= 2)\n      {\n        System.out.println( \"Yes\" );\n      }\n      else\n      {\n        System.out.println( \"No\" );\n      }\n    }\n    else\n    {\n      int odd = b % 5;\n      int base = 7 * (b / 5); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      switch (odd) {\n        case 0:\n            if ( 5 + base <= w && w <= 9 + base )\n            {\n              System.out.println( \"Yes\" );\n            }\n            else\n            {\n              System.out.println( \"No\" );\n            }\n            break;\n        case 1:\n            if ( base <= w && w <= 3 + base )\n            {\n              System.out.println( \"Yes\" );\n            }\n            else\n            {\n              System.out.println( \"No\" );\n            }\n            break;\n        case 2:\n            if ( 1 + base <= w && w <= 5 + base )\n            {\n              System.out.println( \"Yes\" );\n            }\n            else\n            {\n              System.out.println( \"No\" );\n            }\n            break;\n        case 3:\n            if ( 2 + base <= w && w <= 6 + base )\n            {\n              System.out.println( \"Yes\" );\n            }\n            else\n            {\n              System.out.println( \"No\" );\n            }\n            break;\n        case 4:\n            if ( 4 + base <= w && w <= 7 + base )\n            {\n              System.out.println( \"Yes\" );\n            }\n            else\n            {\n              System.out.println( \"No\" );\n            }\n            break;\n      }\n    }\n</original>\n<patched>\n    String pattern = \"wbwbwwbwbwbw\";\n    StringBuilder sb = new StringBuilder();\n    while (sb.length() < 200) {\n        sb.append(pattern);\n    }\n    String extendedPattern = sb.toString();\n    \n    boolean found = false;\n    for (int i = 0; i <= extendedPattern.length() - (w + b); i++) {\n        String substring = extendedPattern.substring(i, i + w + b);\n        long countW = substring.chars().filter(ch -> ch == 'w').count();\n        long countB = substring.chars().filter(ch -> ch == 'b').count();\n        if (countW == w && countB == b) {\n            found = true;\n            break;\n        }\n    }\n    \n    if (found) {\n        System.out.println(\"Yes\");\n    } else {\n        System.out.println(\"No\");\n    }\n</patched>\n```\n\nThis patch simplifies the logic by using a sliding window approach over the extended pattern to check for the presence of the required number of 'w' and 'b'. This ensures that the program correctly determines if there is a continuous segment within the keyboard that consists of W white keys and B black keys.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1214,
+        "output_tokens": 226,
+        "estimated_cost_usd": 0.009460000000000001
+      },
+      {
+        "input_tokens": 1734,
+        "output_tokens": 762,
+        "estimated_cost_usd": 0.0201
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.029560000000000003
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "programId": "53132740",
+  "repair_index": 1,
+  "task_name": "abc352_f",
+  "language": "Java",
+  "root_cause": "The method `solve` incorrectly calculates the sum of components with size one. The current implementation uses the expression `IntStream.range(0, N).filter(i -> dsu.getSize(i) == 1).sum();` which sums up the indices of components, not their count. This leads to incorrect logic in processing connected components further in the function.",
+  "suggestion": "Suggestion 1. Correct the calculation of single-element components - Modify the method to correctly count the number of single-element connected components.\n- Replace the incorrect sum with a proper count expression: \n      `int oneCount = (int) IntStream.range(0, N).filter(i -> dsu.getSize(i) == 1).count();`\n",
+  "fix_code": "private void solve(final FastIO io, final String[] args) {\n    io.setAutoFlush(true);\n    io.setAutoOutFlush(false);\n    /*\n     * author: 31536000\n     * AtCoder Beginner Contest 352 F問題\n     * 考察メモ\n     * まず、疎な頂点が二つある場合は明らかにそこに関しては一意に定まらない\n     * よって、残りの頂点に対する割り当てだけ考えれば良い\n     * 各連結成分に対して、最小値を決めれば残りは一意に定まる\n     * ということは、連結成分はN/2個以下であり、それぞれに最小値を決めるのは16P8≒5e8とか(実際にはもっと小さいはず)\n     */\n    int N = io.nextInt(), M = io.nextInt();\n    ACL.DisjointSetUnion dsu = ACL.DisjointSetUnion.create(N);\n    ArrayList<ArrayList<Edge>> graph = new ArrayList<>(N);\n    for (int i = 0; i < N; ++i) graph.add(new ArrayList<>());\n    for (int i = 0; i < M; ++i) {\n        int A = io.nextInt() - 1, B = io.nextInt() - 1, C = io.nextInt();\n        dsu.merge(A, B);\n        graph.get(A).add(new Edge(A, B, -C));\n        graph.get(B).add(new Edge(B, A, C));\n    }\n    // 要素数1の連結成分が二つ以上あるなら、数えない\n    int oneCount = (int) IntStream.range(0, N).filter(i -> dsu.getSize(i) == 1).count(); // Corrected the calculation\n    Component[] comp = Arrays\n            .stream(dsu.getGroups().stream().filter(i -> oneCount <= 1 || i.size() != 1).mapToInt(i -> i.get(0)).toArray())\n            .mapToObj(i -> new Component(i, graph)).toArray(Component[]::new);\n    dfs(comp, new BitSet(N), 0, N);\n    int[] ans = new int[N];\n    Arrays.fill(ans, -1);\n    for (Component c : comp) {\n        if (c.candidate.cardinality() != 1) continue;\n        int min = c.candidate.nextSetBit(0) + 1;\n        for (Map.Entry<Integer, Integer> e : c.add.entrySet()) ans[e.getKey()] = e.getValue() + min;\n    }\n    io.println(ans);\n}",
+  "repair_run": 1,
+  "source_repair_index": 1,
+  "discarded_patch_count_in_same_run": 1,
+  "batch_attempt_work_dir": "/home/taohongzhu/VibeRepair/ReinFixForConDecfects/output/batch_repair_dataset_2024_work/attempts/53132740/repair_01",
+  "batch_generated_at": "2026-06-14T09:29:10.040535"
+}

@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "programId": "54990754",
+  "repair_index": 2,
+  "task_name": "abc358_c",
+  "language": "Python",
+  "root_cause": "The root cause of the bug is an incorrect use of the equality operator `==` instead of the assignment operator `=` in the nested loop when trying to set values in the `data` list. This logical error prevents the `data` list from being updated correctly, leading to the wrong result when checking the condition if `data == [1] * M`.",
+  "suggestion": "Suggestion 1. Correct the operator in the nested loop Change the line `data[j] == 1` to `data[j] = 1` to ensure that the `data` list is updated with the correct values. This will fix the logical error and allow the program to correctly determine if all items in `data` are 1.\n",
+  "fix_code": "N, M = map(int, input().split())\nS = [list(input()) for _ in range(N)]\n\nans = M + 10\n\nfor bit in range(1 << N): #訪れるポップコーン売り場の選び方＝bit\n\n    store = []\n    for i in range(N): #N個の売り場について\n        if bit >> i & 1: #bitのi番目のビットが1かどうか pythonで1はTrue, 0はFalse\n            store.append(i) #bitで1だった売り場のindexをstoreに入れる\n    \n    data = [0] * M\n    for s_i in store: #storeに格納された売り場のindex=s_iについて\n        for j, s_j in enumerate(S[s_i]):\n            if s_j == 'o': #s_i番目の売り場のj番目の要素s_jがoだったら\n                data[j] = 1 # Fixed assignment operator\n\n    if data == [1] * M:\n        ans = min(ans, len(store))\n\nprint(ans) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence. /* bug is here */",
+  "repair_run": 2,
+  "source_repair_index": 1,
+  "discarded_patch_count_in_same_run": 2,
+  "batch_attempt_work_dir": "/home/taohongzhu/VibeRepair/ReinFixForConDecfects/output/batch_repair_dataset_2024_work/attempts/54990754/repair_02",
+  "batch_generated_at": "2026-06-14T12:31:59.592111"
+}

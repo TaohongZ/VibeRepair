@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55042277",
+  "task_name": "abc359_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:16:32.661629",
+  "finished_at": "2026-06-15T11:16:39.527603",
+  "elapsed_seconds": 6.87,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 6.87,
+      "estimated_cost": {
+        "total": 0.008855000000000002
+      }
+    }
+  ],
+  "faulty_function": "n = int(input())\nA = list(map(int, input().split()))\ncount = 0\n\nfor i in range(1, n*2-1):\n    if A[i-1] == A[i+1]:\n        count =+ 1 # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\nprint(count)",
+  "fix_code": "n = int(input())\nA = list(map(int, input().split()))\ncount = 0\n\n# Dictionary to store the positions of each color\npositions = {}\n\n# Collect positions of each color\nfor i in range(n * 2):\n    if A[i] in positions:\n        positions[A[i]].append(i)\n    else:\n        positions[A[i]] = [i]\n\n# Check the distance between the two positions of each color\nfor color in positions:\n    if positions[color][1] - positions[color][0] == 2:\n        count += 1\n\nprint(count)",
+  "fix_code_raw_response": "The issue in the code is that the condition `A[i-1] == A[i+1]` is not sufficient to check if there is exactly one person between the two people wearing clothes of the same color. We need to check the distance between the two occurrences of each color.\n\nTo fix this, we can use a dictionary to store the positions of each color and then check the distance between the two positions.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nn = int(input())\nA = list(map(int, input().split()))\ncount = 0\n\nfor i in range(1, n*2-1):\n    if A[i-1] == A[i+1]:\n        count =+ 1\n\nprint(count)\n</original>\n<patched>\nn = int(input())\nA = list(map(int, input().split()))\ncount = 0\n\n# Dictionary to store the positions of each color\npositions = {}\n\n# Collect positions of each color\nfor i in range(n * 2):\n    if A[i] in positions:\n        positions[A[i]].append(i)\n    else:\n        positions[A[i]] = [i]\n\n# Check the distance between the two positions of each color\nfor color in positions:\n    if positions[color][1] - positions[color][0] == 2:\n        count += 1\n\nprint(count)\n</patched>\n```",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 886,
+        "output_tokens": 295,
+        "estimated_cost_usd": 0.008855000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.008855000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "54873239",
+  "repair_index": 1,
+  "task_name": "abc343_b",
+  "language": "Python",
+  "flawed_specification": "[\n  Function: process_input_and_print_indices\n  Purpose: To process a series of integer lists and print indices of non-zero elements.\n  Signature: process_input_and_print_indices()\n  Input: \n    - An integer N from standard input, representing the number of lists to process.\n    - N lists of integers, each list provided via standard input, where each integer is separated by spaces.\n  Output: \n    - For each list, a list of 1-based indices of non-zero elements is printed to standard output.\n  Behavior:\n    1. Read an integer N from standard input, which determines the number of lists to process.\n    2. Iterate over a range of N, processing each list one by one.\n    3. For each iteration, read a line of input, split it by spaces, and convert each element to an integer to form a list A.\n    4. Initialize an empty list `ans` to store the indices of non-zero elements.\n    5. Iterate over each element in the list A using index j.\n    6. If the element A[j] is non-zero, append the 1-based index (j+1) to the list `ans`.\n    7. Print the list `ans` after processing each list A (bug is here).\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The intended behavior is to process the adjacency matrix of an undirected graph and print the vertices directly connected to each vertex. Specifically, for each vertex i, the program should print the indices of vertices j (in ascending order) where there is an edge between i and j, as indicated by the adjacency matrix entry A[i][j] being 1.",
+    "diagnosis_and_repair_directions": "The flawed specification describes a function that processes lists of integers and prints indices of non-zero elements, which does not align with the intended behavior of processing an adjacency matrix. The key issues are:\n1. The function is incorrectly designed to handle lists of integers rather than an adjacency matrix.\n2. The input description does not match the adjacency matrix format.\n3. The output should be the indices of connected vertices for each vertex, not just non-zero elements in a list.\n\nTo realign the specification:\n1. Change the input to reflect reading an integer N and an N x N adjacency matrix.\n2. Adjust the behavior to iterate over the rows of the matrix, identifying indices of connected vertices.\n3. Ensure the output lists the indices of connected vertices for each vertex in ascending order.",
+    "raw_response": "Intended Behavior:\nThe intended behavior is to process the adjacency matrix of an undirected graph and print the vertices directly connected to each vertex. Specifically, for each vertex i, the program should print the indices of vertices j (in ascending order) where there is an edge between i and j, as indicated by the adjacency matrix entry A[i][j] being 1.\n\nDiagnosis and Repair Directions:\nThe flawed specification describes a function that processes lists of integers and prints indices of non-zero elements, which does not align with the intended behavior of processing an adjacency matrix. The key issues are:\n1. The function is incorrectly designed to handle lists of integers rather than an adjacency matrix.\n2. The input description does not match the adjacency matrix format.\n3. The output should be the indices of connected vertices for each vertex, not just non-zero elements in a list.\n\nTo realign the specification:\n1. Change the input to reflect reading an integer N and an N x N adjacency matrix.\n2. Adjust the behavior to iterate over the rows of the matrix, identifying indices of connected vertices.\n3. Ensure the output lists the indices of connected vertices for each vertex in ascending order.\n\nFixed Specification:\nFunction: process_adjacency_matrix\nPurpose: To process an adjacency matrix of an undirected graph and print the vertices directly connected to each vertex.\nSignature: process_adjacency_matrix()\nInput: \n  - An integer N from standard input, representing the number of vertices in the graph.\n  - An N x N adjacency matrix provided via standard input, where each row contains N integers separated by spaces.\nOutput: \n  - For each vertex i (1 to N), print a list of 1-based indices of vertices directly connected to vertex i, in ascending order.\nBehavior:\n  1. Read an integer N from standard input, representing the number of vertices.\n  2. Initialize an empty list to store the adjacency matrix.\n  3. For each vertex i from 1 to N, read a line of input, split it by spaces, and convert each element to an integer to form the i-th row of the adjacency matrix.\n  4. For each vertex i from 1 to N:\n     a. Initialize an empty list `connected_vertices`.\n     b. Iterate over each vertex j from 1 to N.\n     c. If the adjacency matrix entry A[i][j] is 1, append the 1-based index j to `connected_vertices`.\n     d. Print the list `connected_vertices` for vertex i."
+  },
+  "fixed_specification": "Function: process_adjacency_matrix\nPurpose: To process an adjacency matrix of an undirected graph and print the vertices directly connected to each vertex.\nSignature: process_adjacency_matrix()\nInput: \n  - An integer N from standard input, representing the number of vertices in the graph.\n  - An N x N adjacency matrix provided via standard input, where each row contains N integers separated by spaces.\nOutput: \n  - For each vertex i (1 to N), print a list of 1-based indices of vertices directly connected to vertex i, in ascending order.\nBehavior:\n  1. Read an integer N from standard input, representing the number of vertices.\n  2. Initialize an empty list to store the adjacency matrix.\n  3. For each vertex i from 1 to N, read a line of input, split it by spaces, and convert each element to an integer to form the i-th row of the adjacency matrix.\n  4. For each vertex i from 1 to N:\n     a. Initialize an empty list `connected_vertices`.\n     b. Iterate over each vertex j from 1 to N.\n     c. If the adjacency matrix entry A[i][j] is 1, append the 1-based index j to `connected_vertices`.\n     d. Print the list `connected_vertices` for vertex i.",
+  "fix_code": "N = int(input())\nadjacency_matrix = []\n\nfor _ in range(N):\n    row = list(map(int, input().split()))\n    adjacency_matrix.append(row)\n\nfor i in range(N):\n    connected_vertices = []\n    for j in range(N):\n        if adjacency_matrix[i][j] == 1:\n            connected_vertices.append(j + 1)\n    print(connected_vertices)\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.003735,
+    "fix_specification": 0.00711,
+    "fix_specification_and_buggy_code_to_fix_code": 0.0021025,
+    "total": 0.0129475
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 418,
+      "output_tokens": 269,
+      "total_tokens": 687
+    },
+    "fix_specification": {
+      "input_tokens": 788,
+      "output_tokens": 514,
+      "total_tokens": 1302
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 513,
+      "output_tokens": 82,
+      "total_tokens": 595
+    }
+  }
+}

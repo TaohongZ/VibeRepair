@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54957150",
+  "task_name": "abc356_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:52:33.627447",
+  "finished_at": "2026-06-15T10:52:45.140729",
+  "elapsed_seconds": 11.51,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 11.51,
+      "estimated_cost": {
+        "total": 0.022240000000000003
+      }
+    }
+  ],
+  "faulty_function": "def main():\n  N, M, A ,X = input()\n  \n  ans = \"Yes\"\n  \n  for i in range(M):\n    total = 0\n    for j in range (N):\n      total += X[j][i]\n    if total < A[i]:\n      ans = False\n      print(ans)\n      return # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n  \n  print(ans)\n  return",
+  "fix_code": "def main():\n  import sys\n  input = sys.stdin.read\n  data = input().split()\n  \n  N = int(data[0])\n  M = int(data[1])\n  A = list(map(int, data[2:2+M]))\n  X = []\n  index = 2 + M\n  for i in range(N):\n    X.append(list(map(int, data[index:index+M])))\n    index += M\n  \n  ans = \"Yes\"\n  \n  for i in range(M):\n    total = 0\n    for j in range(N):\n      total += X[j][i]\n    if total < A[i]:\n      ans = \"No\"\n      print(ans)\n      return\n  \n  print(ans)\n  return",
+  "fix_code_raw_response": "The issue in the provided code is that the input is not being parsed correctly. The `input()` function returns a single string, but the code is treating it as if it returns multiple values. Additionally, the code is setting `ans` to `False` instead of the string `\"No\"` when the nutrient goal is not met, which causes the output to be incorrect.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\ndef main():\n  N, M, A ,X = input()\n  \n  ans = \"Yes\"\n  \n  for i in range(M):\n    total = 0\n    for j in range (N):\n      total += X[j][i]\n    if total < A[i]:\n      ans = False\n      print(ans)\n      return\n  \n  print(ans)\n  return\n</original>\n<patched>\ndef main():\n  import sys\n  input = sys.stdin.read\n  data = input().split()\n  \n  N = int(data[0])\n  M = int(data[1])\n  A = list(map(int, data[2:2+M]))\n  X = []\n  index = 2 + M\n  for i in range(N):\n    X.append(list(map(int, data[index:index+M])))\n    index += M\n  \n  ans = \"Yes\"\n  \n  for i in range(M):\n    total = 0\n    for j in range(N):\n      total += X[j][i]\n    if total < A[i]:\n      ans = \"No\"\n      print(ans)\n      return\n  \n  print(ans)\n  return\n</patched>\n```\n\nExplanation:\n1. The `input()` function is replaced with `sys.stdin.read` to read all input at once.\n2. The input data is split into a list of strings.\n3. The first two values are parsed as integers `N` and `M`.\n4. The next `M` values are parsed as the list `A`.\n5. The remaining values are parsed into the 2D list `X`.\n6. The variable `ans` is set to `\"Yes\"` initially.\n7. The nested loops calculate the total intake of each nutrient.\n8. If the total intake of any nutrient is less than the required amount, `ans` is set to `\"No\"` and printed.\n9. If all nutrient goals are met, `ans` remains `\"Yes\"` and is printed.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2930,
+        "output_tokens": 506,
+        "estimated_cost_usd": 0.022240000000000003
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.022240000000000003
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

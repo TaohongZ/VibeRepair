@@ -1,0 +1,98 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53512407",
+  "task_name": "arc177_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T07:29:58.406856",
+  "finished_at": "2026-06-15T07:31:16.505622",
+  "elapsed_seconds": 78.1,
+  "selected_outer_run_index": 2,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 27.3,
+      "estimated_cost": {
+        "total": 0.09708000000000003
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 50.8,
+      "estimated_cost": {
+        "total": 0.06762000000000001
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) throws IOException {\n        int[] crons = new int[6];\n        int[] cronss = new int[]{1, 5, 10, 50, 100, 500};\n        for (int i = 0; i < 6; i++) {\n            crons[i] = nextInt();\n        }\n        int N = nextInt();\n        int[] Xs = new int[N];\n        for (int i = 0; i < N; i++) {\n            Xs[i] = nextInt();\n        }\n        for (int X : Xs) {\n            int cron = 0;\n            for (int i = 5; i >= 0 && X > 0; i--) {\n                cron = X / cronss[i];\n                X -= Math.min(cron, crons[i]) * cronss[i];\n                crons[i] = Math.max(0, crons[i] - X); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n            }\n            if (X > 0) {\n                System.out.println(\"No\");\n                return;\n            }\n        }\n        System.out.println(\"Yes\");\n\n        out.flush();\n    }",
+  "fix_code": "    public static void main(String[] args) throws IOException {\n        int[] crons = new int[6];\n        int[] cronss = new int[]{1, 5, 10, 50, 100, 500};\n        for (int i = 0; i < 6; i++) {\n            crons[i] = nextInt();\n        }\n        int N = nextInt();\n        int[] Xs = new int[N];\n        for (int i = 0; i < N; i++) {\n            Xs[i] = nextInt();\n        }\n        for (int X : Xs) {\n            int[] tempCrons = crons.clone(); // Create a copy of the original coin counts\n            int cron = 0;\n            for (int i = 5; i >= 0 && X > 0; i--) {\n                cron = X / cronss[i];\n                int coinsUsed = Math.min(cron, tempCrons[i]);\n                X -= coinsUsed * cronss[i];\n                tempCrons[i] -= coinsUsed; // Correctly update the number of coins remaining in the temporary array\n            }\n            if (X > 0) {\n                System.out.println(\"No\");\n                return;\n            }\n            crons = tempCrons; // Update the original coin counts only if the current amount can be paid\n        }\n        System.out.println(\"Yes\");\n\n        out.flush();\n    }",
+  "fix_code_raw_response": "The issue seems to be with the way the coin counts are updated and how the remaining amount is calculated. Specifically, the line `crons[i] = Math.max(0, crons[i] - X);` is incorrect because it reduces the coin count by the remaining amount `X` instead of the number of coins used.\n\nWe need to fix this by correctly updating the coin counts and ensuring that the remaining amount is calculated properly.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n        for (int X : Xs) {\n            int cron = 0;\n            for (int i = 5; i >= 0 && X > 0; i--) {\n                cron = X / cronss[i];\n                X -= Math.min(cron, crons[i]) * cronss[i];\n                crons[i] = Math.max(0, crons[i] - X); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n            }\n            if (X > 0) {\n                System.out.println(\"No\");\n                return;\n            }\n        }\n</original>\n<patched>\n        for (int X : Xs) {\n            int[] tempCrons = crons.clone(); // Create a copy of the original coin counts\n            int cron = 0;\n            for (int i = 5; i >= 0 && X > 0; i--) {\n                cron = X / cronss[i];\n                int coinsUsed = Math.min(cron, tempCrons[i]);\n                X -= coinsUsed * cronss[i];\n                tempCrons[i] -= coinsUsed; // Correctly update the number of coins remaining in the temporary array\n            }\n            if (X > 0) {\n                System.out.println(\"No\");\n                return;\n            }\n            crons = tempCrons; // Update the original coin counts only if the current amount can be paid\n        }\n</patched>\n```\n\nThis patch ensures that the coin counts are correctly updated by subtracting the number of coins used (`coinsUsed`) instead of the remaining amount `X`. Additionally, it updates the original coin counts only if the current amount can be paid, ensuring that the coin counts are correctly maintained across multiple stores. This should resolve the issue and produce the correct output.",
+  "patch_handle": "4",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1237,
+        "output_tokens": 214,
+        "estimated_cost_usd": 0.009395
+      },
+      {
+        "input_tokens": 1757,
+        "output_tokens": 211,
+        "estimated_cost_usd": 0.011950000000000002
+      },
+      {
+        "input_tokens": 1757,
+        "output_tokens": 436,
+        "estimated_cost_usd": 0.015325000000000002
+      },
+      {
+        "input_tokens": 1695,
+        "output_tokens": 440,
+        "estimated_cost_usd": 0.015075
+      },
+      {
+        "input_tokens": 1699,
+        "output_tokens": 492,
+        "estimated_cost_usd": 0.015875
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.06762000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

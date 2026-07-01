@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "programId": "49555147",
+  "repair_index": 1,
+  "task_name": "arc170_c",
+  "language": "Java",
+  "root_cause": "The initialization of `dp[0][1]` when `array[0] != 1` is incorrect. The value assigned (`ml-1`) does not correctly represent the intended initialization based on problem constraints.",
+  "suggestion": "Suggestion 1. Correct Initialization Value Change the initialization of `dp[0][1]` to `ml` instead of `ml-1`. This correctly represents the starting value based on the problem constraints and ensures accurate subsequent computations.\n",
+  "fix_code": "public static void main(String[] args) throws IOException {\n    BufferedReader f = new BufferedReader(new InputStreamReader(System.in));\n    PrintWriter out = new PrintWriter(System.out);\n\n    StringTokenizer st = new StringTokenizer(f.readLine());\n\n    int n = Integer.parseInt(st.nextToken());\n    int m = Integer.parseInt(st.nextToken());\n    long ml = (long) m;\n\n    int[] array = new int[n];\n    st = new StringTokenizer(f.readLine());\n    int num0 = 0;\n    for (int k = 0; k < n; k++) {\n        array[k] = Integer.parseInt(st.nextToken());\n        if (array[k] == 0) num0++;\n    }\n\n    if (m >= n) {\n        out.println(exp(ml, num0));\n        out.close();\n        return;\n    }\n\n    // first n, number of distinct values (max m+1 distinct values)\n    long[][] dp = new long[n][m + 2];\n    ml = (long) m;\n    if (array[0] == 1) dp[0][1] = 1L;\n    else dp[0][1] = ml; // Corrected initialization value\n\n    for (int k = 0; k < n - 1; k++) {\n        for (int j = 1; j <= m + 1; j++) {\n            if (dp[k][j] == 0L) continue;\n\n            if (array[k + 1] == 1) {\n                // must add a distinct value\n                if (j + 1 <= m + 1) {\n                    dp[k + 1][j + 1] = (dp[k + 1][j + 1] + dp[k][j] + MOD) % MOD;\n                }\n            } else {\n                // add a distinct value that is not mex\n                long mul = ml + 1 - j - 1L;\n                if (mul > 0 && j + 1 <= m + 1) {\n                    dp[k + 1][j + 1] = (dp[k + 1][j + 1] + dp[k][j] * mul + MOD) % MOD;\n                }\n\n                // add same value\n                dp[k + 1][j] = (dp[k + 1][j] + dp[k][j] * (long) j + MOD) % MOD;\n            }\n        }\n    }\n\n    long answer = 0L;\n    for (int j = 1; j <= m + 1; j++) {\n        answer = (answer + dp[n - 1][j] + MOD) % MOD;\n    }\n    out.println(answer);\n\n    out.close();\n}",
+  "repair_run": 1,
+  "source_repair_index": 1,
+  "discarded_patch_count_in_same_run": 2,
+  "batch_attempt_work_dir": "/home/taohongzhu/VibeRepair/ReinFixForConDecfects/output/batch_repair_dataset_2024_work/attempts/49555147/repair_01",
+  "batch_generated_at": "2026-06-14T08:12:04.479188"
+}

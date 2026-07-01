@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55114037",
+  "task_name": "abc355_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:19:07.908298",
+  "finished_at": "2026-06-15T11:19:17.601245",
+  "elapsed_seconds": 9.69,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 9.69,
+      "estimated_cost": {
+        "total": 0.008135
+      }
+    }
+  ],
+  "faulty_function": "N, M = map(int, input().split())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\nans = \"No\"\nC = sorted(A + B)\nfor i in range(len(C)-1):\n  if (C[i] in A and C[i+1] in A) or (C[i] in B and C[i+1] in B):\n    ans = \"Yes\" # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nprint(ans)",
+  "fix_code": "N, M = map(int, input().split())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\nans = \"No\"\nC = sorted(A + B)\nfor i in range(len(C)-1):\n  if C[i] in A and C[i+1] in A:\n    ans = \"Yes\"\nprint(ans)",
+  "fix_code_raw_response": "The issue in the provided code is that it incorrectly checks for consecutive elements from the same sequence (either A or B) in the sorted combined list C. The correct behavior should be to check if there are two consecutive elements in C that both belong to sequence A.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nif (C[i] in A and C[i+1] in A) or (C[i] in B and C[i+1] in B):\n</original>\n<patched>\nif C[i] in A and C[i+1] in A:\n</patched>\n```\n\nExplanation:\n- The original code checks if two consecutive elements in the sorted list C both belong to either A or B.\n- The correct check should only verify if two consecutive elements in C both belong to A, as per the problem statement.\n- The patched code removes the condition that checks for consecutive elements in B, ensuring that only consecutive elements in A are considered.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 988,
+        "output_tokens": 213,
+        "estimated_cost_usd": 0.008135
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.008135
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

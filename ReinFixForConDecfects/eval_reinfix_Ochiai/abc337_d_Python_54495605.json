@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "programId": "54495605",
+  "repair_index": 1,
+  "task_name": "abc337_d",
+  "language": "Python",
+  "root_cause": "The `if 0<=leng<=K` condition does not properly handle segments of length `K` correctly, leading to a miscalculation in the value of `p`. Specifically, when `leng` exceeds `K`, the subtraction operation `p += dic[s[i]] - dic[s[i-K]]` is not executed correctly, causing incorrect `p` values.",
+  "suggestion": "Suggestion 1. Correct the Condition to Handle Segments of Length `K` Modify the condition inside the loop to correctly handle the case when `leng` equals `K`. This can be done by separating the conditions and ensuring that `p` is updated correctly.\n```java\nfor s in S_t:\n  mx = -1\n  p = 0\n  leng = 0\n  for i in range(H):\n    if s[i] == \"x\":\n      p, leng = 0, 0\n    else:\n      leng += 1\n      if leng <= K:\n        p += dic[s[i]]\n      else:\n        p += dic[s[i]] - dic[s[i-K]]\n      if mx < p:\n        mx = p\n  if mx > ans:\n    ans = mx\n```\n",
+  "fix_code": "H, W, K = map(int, input().split())\nS = [list(input()) for _ in range(H)]\n\ndic = {\".\": 0, \"o\": 1}\n\nans = -1\n\n# Process rows\nfor s in S:\n    mx = -1\n    p = 0\n    leng = 0\n    for i in range(W):\n        if s[i] == \"x\":\n            p, leng = 0, 0\n        else:\n            leng += 1\n            if leng <= K:\n                p += dic[s[i]]\n            else:\n                p += dic[s[i]] - dic[s[i-K]]\n            if leng >= K and mx < p:\n                mx = p\n    if ans < mx:\n        ans = mx\n\n# Transpose the matrix and process columns in a similar way\nS_t = [list(x) for x in zip(*S)]\n\nfor s in S_t:\n    mx = -1\n    p = 0\n    leng = 0\n    for i in range(H):\n        if s[i] == \"x\":\n            p, leng = 0, 0\n        else:\n            leng += 1\n            if leng <= K:\n                p += dic[s[i]]\n            else:\n                p += dic[s[i]] - dic[s[i-K]]\n            if leng >= K and mx < p:\n                mx = p\n    if mx > ans:\n        ans = mx\n\nprint(K - ans if ans != -1 else -1)",
+  "repair_run": 1,
+  "source_repair_index": 1,
+  "discarded_patch_count_in_same_run": 2,
+  "batch_attempt_work_dir": "/home/taohongzhu/VibeRepair/ReinFixForConDecfects/output/batch_repair_dataset_2024_work/attempts/54495605/repair_01",
+  "batch_generated_at": "2026-06-14T13:30:58.245185"
+}

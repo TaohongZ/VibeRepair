@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54249756",
+  "task_name": "abc340_d",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T14:35:26.548419",
+  "finished_at": "2026-06-15T14:36:02.482459",
+  "elapsed_seconds": 35.93,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 35.93,
+      "estimated_cost": {
+        "total": 0.05562500000000001
+      }
+    }
+  ],
+  "faulty_function": "import heapq\n\nN = int(input())\nVs = list()\nEs = list()\ninf = 10 **10\nfor i in range(1, N):\n    Vs.append([i, inf])\n    Ai, Bi, Xi = map(int, input().split())\n    Es.append([i+i, Ai, Xi, Bi])\nVs.append([N, inf])\nVs[0][1] = 0\n\nU = []\nheapq.heappush(U, (Vs[0][1], Vs[0]))\nnow = heapq.heappop(U)[1]\nwhile now[0] != N:\n    i = Es[now[0]-1][0]\n    A = Es[now[0]-1][1]\n    X = Es[now[0]-1][2]\n    B = Es[now[0]-1][3]\n    if Vs[now[0]][1] == inf:\n        Vs[now[0]][1] = now[1] + A\n        heapq.heappush(U, (Vs[now[0]][1], Vs[now[0]]))\n    elif Vs[now[0]][1] > now[1] + A:\n        Vs[now[0]][1] = now[1] + A # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n    if Vs[X-1][1] == inf:\n        Vs[X-1][1] = now[1] + B\n        heapq.heappush(U, (Vs[X-1][1], Vs[X-1]))\n    elif Vs[X-1][1] > now[1] + B:\n        Vs[X-1][1] = now[1] + B\n    now = heapq.heappop(U)[1]\n\nprint(Vs[N-1][1])",
+  "fix_code": "import heapq\n\nN = int(input())\nVs = list()\nEs = list()\ninf = 10 **10\nfor i in range(1, N):\n    Vs.append([i, inf])\n    Ai, Bi, Xi = map(int, input().split())\n    Es.append([i, Ai, Xi, Bi])\nVs.append([N, inf])\nVs[0][1] = 0\n\nU = []\nheapq.heappush(U, (Vs[0][1], Vs[0]))\nnow = heapq.heappop(U)[1]\nwhile now[0] != N:\n    i = Es[now[0]-1][0]\n    A = Es[now[0]-1][1]\n    X = Es[now[0]-1][2]\n    B = Es[now[0]-1][3]\n    if Vs[now[0]][1] == inf or Vs[now[0]][1] > now[1] + A:\n        Vs[now[0]][1] = now[1] + A\n        heapq.heappush(U, (Vs[now[0]][1], Vs[now[0]]))\n    if Vs[X-1][1] == inf or Vs[X-1][1] > now[1] + B:\n        Vs[X-1][1] = now[1] + B\n        heapq.heappush(U, (Vs[X-1][1], Vs[X-1]))\n    now = heapq.heappop(U)[1]\n\nprint(Vs[N-1][1])",
+  "fix_code_raw_response": "The main issue with the current implementation is that it does not correctly handle the priority queue updates when a shorter path is found. Additionally, the use of `i+i` in `Es.append([i+i, Ai, Xi, Bi])` is incorrect and should be `i`.\n\nTo fix this, we need to:\n1. Correct the `Es.append([i+i, Ai, Xi, Bi])` to `Es.append([i, Ai, Xi, Bi])`.\n2. Ensure that whenever a shorter path to a stage is found, the updated stage with the new time is pushed back into the priority queue.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\n    Es.append([i+i, Ai, Xi, Bi])\n</original>\n<patched>\n    Es.append([i, Ai, Xi, Bi])\n</patched>\n```\n\n# modification 2\n```\n<file>faultyVersion.py</file>\n<original>\n    if Vs[now[0]][1] == inf:\n        Vs[now[0]][1] = now[1] + A\n        heapq.heappush(U, (Vs[now[0]][1], Vs[now[0]]))\n    elif Vs[now[0]][1] > now[1] + A:\n        Vs[now[0]][1] = now[1] + A\n    if Vs[X-1][1] == inf:\n        Vs[X-1][1] = now[1] + B\n        heapq.heappush(U, (Vs[X-1][1], Vs[X-1]))\n    elif Vs[X-1][1] > now[1] + B:\n        Vs[X-1][1] = now[1] + B\n</original>\n<patched>\n    if Vs[now[0]][1] == inf or Vs[now[0]][1] > now[1] + A:\n        Vs[now[0]][1] = now[1] + A\n        heapq.heappush(U, (Vs[now[0]][1], Vs[now[0]]))\n    if Vs[X-1][1] == inf or Vs[X-1][1] > now[1] + B:\n        Vs[X-1][1] = now[1] + B\n        heapq.heappush(U, (Vs[X-1][1], Vs[X-1]))\n</patched>\n```\n\nThese changes ensure that the priority queue is correctly managed and all possible paths are considered, allowing the algorithm to correctly find the minimum time to reach stage N.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2918,
+        "output_tokens": 417,
+        "estimated_cost_usd": 0.020845000000000002
+      },
+      {
+        "input_tokens": 5327,
+        "output_tokens": 543,
+        "estimated_cost_usd": 0.034780000000000005
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.05562500000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

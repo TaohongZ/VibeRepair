@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "50383842",
+  "task_name": "abc341_f",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T05:39:23.897295",
+  "finished_at": "2026-06-15T05:39:50.623239",
+  "elapsed_seconds": 26.73,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 26.73,
+      "estimated_cost": {
+        "total": 0.026365
+      }
+    }
+  ],
+  "faulty_function": "  public static void main(String[] args){\n    Scanner sc_i = new Scanner(System.in);\n    int n = Integer.parseInt(sc_i.next());\n    int m = Integer.parseInt(sc_i.next());\n    int[][] uv = new int[m][2];\n    for(int i_i = 0; i_i < m; i_i++){for(int j_i = 0; j_i < 2; j_i++){uv[i_i][j_i] = Integer.parseInt(sc_i.next());};};\n    int[] w = new int[n]; for(int i_i = 0; i_i < n; i_i++){w[i_i] = Integer.parseInt(sc_i.next());};\n    int[] a = new int[n]; for(int i_i = 0; i_i < n; i_i++){a[i_i] = Integer.parseInt(sc_i.next());};\n    var edge = new ArrayList<ArrayList<Integer>>(n+10);\n    for(int i = 0; i < n; i++){\n      edge.add(new ArrayList<>());\n    };\n    for(int i = 0; i < m; i++){\n      edge.get(uv[i][0]-1).add(uv[i][1]-1);\n      edge.get(uv[i][1]-1).add(uv[i][0]-1);\n    };\n    var pq = new PriorityQueue<Integer>();\n    var costMap = new HashMap<Integer, ArrayList<Integer>>();\n    for(int i = 0; i < n; i++){\n      if(! costMap.containsKey(w[i])){costMap.put(w[i], new ArrayList<>()); pq.add(w[i]);};\n      costMap.get(w[i]).add(i);\n    };\n    int[] price = new int[n];\n    while(! pq.isEmpty()){\n      for(var vertex : costMap.get(pq.poll())){\n        var map = new HashMap<Integer, Integer>();\n        map.put(- w[vertex], 1);\n        for(var trg : edge.get(vertex)){if(w[trg] <= w[vertex]){\n          var newmap = new HashMap<Integer, Integer>();\n          for(var en : map.entrySet()){\n            int key = en.getKey(), value = en.getValue();\n            newmap.put(key, newmap.containsKey(key) ? Math.max(value, newmap.get(key)) : value);\n            if(key + w[trg] < 0){\n              key += w[trg]; value += price[trg];\n              newmap.put(key, newmap.containsKey(key) ? Math.max(value, newmap.get(key)) : value); // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n            };\n          };\n          map = newmap;\n        };};\n        int max = 0;\n        for(var en : map.entrySet()){max = Math.max(max, en.getValue());}\n        price[vertex] = max;\n      };\n    };\n    long ans = 0;\n    for(int i = 0; i < n; i++){\n      ans += a[i] * price[i];\n    };\n    System.out.println(ans);\n  }",
+  "fix_code": "  public static void main(String[] args){\n    Scanner sc_i = new Scanner(System.in);\n    int n = Integer.parseInt(sc_i.next());\n    int m = Integer.parseInt(sc_i.next());\n    int[][] uv = new int[m][2];\n    for(int i_i = 0; i_i < m; i_i++){for(int j_i = 0; j_i < 2; j_i++){uv[i_i][j_i] = Integer.parseInt(sc_i.next());};};\n    int[] w = new int[n]; for(int i_i = 0; i_i < n; i_i++){w[i_i] = Integer.parseInt(sc_i.next());};\n    int[] a = new int[n]; for(int i_i = 0; i_i < n; i_i++){a[i_i] = Integer.parseInt(sc_i.next());};\n    var edge = new ArrayList<ArrayList<Integer>>(n+10);\n    for(int i = 0; i < n; i++){\n      edge.add(new ArrayList<>());\n    };\n    for(int i = 0; i < m; i++){\n      edge.get(uv[i][0]-1).add(uv[i][1]-1);\n      edge.get(uv[i][1]-1).add(uv[i][0]-1);\n    };\n    var pq = new PriorityQueue<Integer>();\n    var costMap = new HashMap<Integer, ArrayList<Integer>>();\n    for(int i = 0; i < n; i++){\n      if(! costMap.containsKey(w[i])){costMap.put(w[i], new ArrayList<>()); pq.add(w[i]);};\n      costMap.get(w[i]).add(i);\n    };\n    int[] price = new int[n];\n    while(! pq.isEmpty()){\n      for(var vertex : costMap.get(pq.poll())){\n        var map = new HashMap<Integer, Integer>();\n        map.put(- w[vertex], 1);\n        for(var trg : edge.get(vertex)){if(w[trg] <= w[vertex]){\n          var newmap = new HashMap<Integer, Integer>();\n          for(var en : map.entrySet()){\n            int key = en.getKey(), value = en.getValue();\n            newmap.put(key, newmap.containsKey(key) ? Math.max(value, newmap.get(key)) : value);\n            if(key + w[trg] < 0){\n              int newKey = key + w[trg];\n              int newValue = value + price[trg];\n              newmap.put(newKey, newmap.containsKey(newKey) ? Math.max(newValue, newmap.get(newKey)) : newValue);\n            };\n          };\n          map = newmap;\n        };};\n        int max = 0;\n        for(var en : map.entrySet()){max = Math.max(max, en.getValue());}\n        price[vertex] = max;\n      };\n    };\n    long ans = 0;\n    for(int i = 0; i < n; i++){\n      ans += (long) a[i] * price[i];\n    };\n    System.out.println(ans);\n  }",
+  "fix_code_raw_response": "The issue seems to be related to the handling of the `newmap` HashMap and the calculation of the `price` array. Specifically, the line identified by Ochiai fault localization is likely causing an integer overflow due to the large values of `A_i`. We need to ensure that the values are handled correctly to avoid overflow.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n            if(key + w[trg] < 0){\n              key += w[trg]; value += price[trg];\n              newmap.put(key, newmap.containsKey(key) ? Math.max(value, newmap.get(key)) : value); // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n            };\n</original>\n<patched>\n            if(key + w[trg] < 0){\n              int newKey = key + w[trg];\n              int newValue = value + price[trg];\n              newmap.put(newKey, newmap.containsKey(newKey) ? Math.max(newValue, newmap.get(newKey)) : newValue);\n            };\n</patched>\n```\n\n# modification 2\n```\n<file>faultyVersion.java</file>\n<original>\n    long ans = 0;\n    for(int i = 0; i < n; i++){\n      ans += a[i] * price[i];\n    };\n</original>\n<patched>\n    long ans = 0;\n    for(int i = 0; i < n; i++){\n      ans += (long) a[i] * price[i];\n    };\n</patched>\n```\n\nExplanation:\n1. In the first modification, we ensure that the `key` and `value` are not directly modified within the loop. Instead, we use `newKey` and `newValue` to store the updated values and then put them into `newmap`. This avoids potential issues with modifying the loop variables directly and ensures the correct values are used.\n\n2. In the second modification, we cast `a[i]` to `long` before multiplying it with `price[i]`. This ensures that the multiplication does not overflow and the result is correctly stored in the `long` variable `ans`.\n\nThese changes should resolve the issue and ensure the program handles large values correctly.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 3740,
+        "output_tokens": 511,
+        "estimated_cost_usd": 0.026365
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.026365
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

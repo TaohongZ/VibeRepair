@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54901128",
+  "task_name": "abc349_c",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:37:14.050888",
+  "finished_at": "2026-06-15T10:37:44.263517",
+  "elapsed_seconds": 30.21,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 30.21,
+      "estimated_cost": {
+        "total": 0.012545
+      }
+    }
+  ],
+  "faulty_function": "S = input()\nT = input()\nif T[-1] == 'X':\n    T = T[0:2]\nT = T.lower()\n\nj = 0\nfor i in range(len(T)):\n    while j < len(S):\n        if T[i] == S[j]:\n            j += 1\n            break\n        j += 1\nif j == len(S):\n    print(\"No\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nelse:\n    print(\"Yes\")",
+  "fix_code": "S = input()\nT = input()\nis_valid = False\n\n# Check if T is derived by taking a subsequence of length 3 from S\nt_lower = T.lower()\nj = 0\nfor i in range(len(t_lower)):\n    while j < len(S):\n        if t_lower[i] == S[j]:\n            j += 1\n            break\n        j += 1\n    else:\n        break\nelse:\n    is_valid = True\n\n# Check if T is derived by taking a subsequence of length 2 from S and appending 'X'\nif not is_valid and T[-1] == 'X':\n    t_lower = T[0:2].lower()\n    j = 0\n    for i in range(len(t_lower)):\n        while j < len(S):\n            if t_lower[i] == S[j]:\n                j += 1\n                break\n            j += 1\n        else:\n            break\n    else:\n        is_valid = True\n\nif is_valid:\n    print(\"Yes\")\nelse:\n    print(\"No\")",
+  "fix_code_raw_response": "The issue in the provided code is that it incorrectly checks if `T` is a subsequence of `S`. Specifically, the condition `if j == len(S)` is incorrect because it should check if all characters of `T` have been found in `S` in the correct order. Additionally, the code does not handle the case where `T` is derived by taking a subsequence of length 2 from `S` and appending 'X'.\n\nTo fix this, we need to:\n1. Correctly check if `T` is a subsequence of `S`.\n2. Handle the case where `T` is derived by taking a subsequence of length 2 from `S` and appending 'X'.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nS = input()\nT = input()\nif T[-1] == 'X':\n    T = T[0:2]\nT = T.lower()\n\nj = 0\nfor i in range(len(T)):\n    while j < len(S):\n        if T[i] == S[j]:\n            j += 1\n            break\n        j += 1\nif j == len(S):\n    print(\"No\")\nelse:\n    print(\"Yes\")\n</original>\n<patched>\nS = input()\nT = input()\nis_valid = False\n\n# Check if T is derived by taking a subsequence of length 3 from S\nt_lower = T.lower()\nj = 0\nfor i in range(len(t_lower)):\n    while j < len(S):\n        if t_lower[i] == S[j]:\n            j += 1\n            break\n        j += 1\n    else:\n        break\nelse:\n    is_valid = True\n\n# Check if T is derived by taking a subsequence of length 2 from S and appending 'X'\nif not is_valid and T[-1] == 'X':\n    t_lower = T[0:2].lower()\n    j = 0\n    for i in range(len(t_lower)):\n        while j < len(S):\n            if t_lower[i] == S[j]:\n                j += 1\n                break\n            j += 1\n        else:\n            break\n    else:\n        is_valid = True\n\nif is_valid:\n    print(\"Yes\")\nelse:\n    print(\"No\")\n</patched>\n```\n\nThis patch ensures that the program correctly checks both conditions for `T` being an airport code for `S` and provides the correct output.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 931,
+        "output_tokens": 526,
+        "estimated_cost_usd": 0.012545
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.012545
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

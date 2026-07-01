@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55140212",
+  "task_name": "abc348_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:24:13.450372",
+  "finished_at": "2026-06-15T11:24:24.049705",
+  "elapsed_seconds": 10.6,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 10.6,
+      "estimated_cost": {
+        "total": 0.01285
+      }
+    }
+  ],
+  "faulty_function": "N=int(input())\nX=[None for _ in range(N+1)]\nY=[None for _ in range(N+1)]\nfor n in range(1,N+1):\n  X[n],Y[n]=map(int,input().split())\nfor i in range(1,N+1):\n  k,d=0,0\n  for j in range(1,N+1):\n    dn=(X[i]-X[j])**2+(Y[i]-Y[j])**2\n    if dn<d:\n      k,d=j,dn\n  print(k) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "N=int(input())\nX=[None for _ in range(N+1)]\nY=[None for _ in range(N+1)]\nfor n in range(1,N+1):\n  X[n],Y[n]=map(int,input().split())\nfor i in range(1,N+1):\n  k,d=0,-1\n  for j in range(1,N+1):\n    if i != j:\n      dn=(X[i]-X[j])**2+(Y[i]-Y[j])**2\n      if dn > d or (dn == d and j < k):\n        k,d=j,dn\n  print(k)",
+  "fix_code_raw_response": "The issue in the provided code is that the variable `d` is initialized to 0, which means that the condition `if dn < d` will never be true since distances are always non-negative. Additionally, the variable `k` is initialized to 0, which is not a valid ID for any point (IDs start from 1). We need to initialize `d` to a very large value and update the condition to find the maximum distance instead of the minimum.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nN=int(input())\nX=[None for _ in range(N+1)]\nY=[None for _ in range(N+1)]\nfor n in range(1,N+1):\n  X[n],Y[n]=map(int,input().split())\nfor i in range(1,N+1):\n  k,d=0,0\n  for j in range(1,N+1):\n    dn=(X[i]-X[j])**2+(Y[i]-Y[j])**2\n    if dn<d:\n      k,d=j,dn\n  print(k) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n</original>\n<patched>\nN=int(input())\nX=[None for _ in range(N+1)]\nY=[None for _ in range(N+1)]\nfor n in range(1,N+1):\n  X[n],Y[n]=map(int,input().split())\nfor i in range(1,N+1):\n  k,d=0,-1\n  for j in range(1,N+1):\n    if i != j:\n      dn=(X[i]-X[j])**2+(Y[i]-Y[j])**2\n      if dn > d or (dn == d and j < k):\n        k,d=j,dn\n  print(k)\n</patched>\n```\n\nExplanation:\n1. Initialize `d` to -1 instead of 0 to ensure that any valid distance will be greater than `d` initially.\n2. Add a condition `if i != j` to avoid comparing a point with itself.\n3. Update the condition to `if dn > d or (dn == d and j < k)` to find the farthest point and, in case of ties, select the point with the smallest ID.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1022,
+        "output_tokens": 516,
+        "estimated_cost_usd": 0.01285
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.01285
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

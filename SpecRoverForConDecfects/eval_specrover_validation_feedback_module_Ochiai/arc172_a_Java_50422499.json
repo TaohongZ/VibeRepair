@@ -1,0 +1,78 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "50422499",
+  "task_name": "arc172_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T05:40:44.716388",
+  "finished_at": "2026-06-15T05:41:47.513771",
+  "elapsed_seconds": 62.8,
+  "selected_outer_run_index": 2,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": false,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 0.6296296296296297,
+      "patch_handle": "3",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 42.93,
+      "estimated_cost": {
+        "total": 0.19793500000000003
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 19.87,
+      "estimated_cost": {
+        "total": 0.020090000000000004
+      }
+    }
+  ],
+  "faulty_function": "    public static void solve() {\n        long H = sc.nextLong();\n        long W = sc.nextLong();\n        if(H < W){\n            long tmp = W;\n            W = H;\n            H = tmp;\n        }\n        int N = sc.nextInt();\n        ArrayList<Integer> arr = new ArrayList<>();\n        for(int i = 0; i < N; i++){\n            arr.add(sc.nextInt());\n        }\n        Collections.sort(arr,Comparator.reverseOrder());\n        PriorityQueue<long[]> second = new PriorityQueue<>(new ArrayComparator());\n        Deque<long[]> keep = new ArrayDeque<long[]>();\n        second.add(new long[]{H,W});\n        for(int i = 0; i < N; i++){\n            int v = arr.get(i);\n            long w = 1L << v;\n            long remW = w;\n            while(second.size() > 0 && remW > 0){\n                long[] now = second.poll();\n                if(now[0] < w){\n                    continue; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                }else{\n                    if(remW > now[1]){\n                        remW -= now[1];\n                        now[0] -= w;\n                        keep.add(now);\n                    }else{\n                        long[] now1 = new long[]{now[0]-w,remW};\n                        long[] now2 = new long[]{now[0],now[1]-remW};\n                        remW = 0;\n                        second.add(now1);\n                        if(now2[1] != 0){\n                            second.add(now2);\n                        }\n                        while(keep.size() > 0){\n                            second.add(keep.pollLast());\n                        }\n                    }\n                }\n            }\n            if(remW != 0){\n                pw.println(\"No\");\n                return;\n            }\n        }\n        pw.println(\"Yes\");\n    }",
+  "fix_code": "    public static void solve() {\n        long H = sc.nextLong();\n        long W = sc.nextLong();\n        if(H < W){\n            long tmp = W;\n            W = H;\n            H = tmp;\n        }\n        int N = sc.nextInt();\n        ArrayList<Integer> arr = new ArrayList<>();\n        for(int i = 0; i < N; i++){\n            arr.add(sc.nextInt());\n        }\n        Collections.sort(arr,Comparator.reverseOrder());\n        PriorityQueue<long[]> second = new PriorityQueue<>(new ArrayComparator());\n        Deque<long[]> keep = new ArrayDeque<long[]>();\n        second.add(new long[]{H,W});\n        for(int i = 0; i < N; i++){\n            int v = arr.get(i);\n            long w = 1L << v;\n            long remW = w;\n            while(second.size() > 0 && remW > 0){\n                long[] now = second.poll();\n                if(now[0] < w){\n                    keep.add(now); // Add the piece back to the queue for further processing\n                    continue;\n                }else{\n                    if(remW > now[1]){\n                        remW -= now[1];\n                        now[0] -= w;\n                        keep.add(now);\n                    }else{\n                        long[] now1 = new long[]{now[0]-w,remW};\n                        long[] now2 = new long[]{now[0],now[1]-remW};\n                        remW = 0;\n                        second.add(now1);\n                        if(now2[1] != 0){\n                            second.add(now2);\n                        }\n                        while(keep.size() > 0){\n                            second.add(keep.pollLast());\n                        }\n                    }\n                }\n            }\n            if(remW != 0){\n                pw.println(\"No\");\n                return;\n            }\n        }\n        pw.println(\"Yes\");\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that it does not correctly handle the case where the chocolate bar dimensions are large and the required pieces are small. Specifically, the code incorrectly skips pieces that are too small to fit the current piece, which can lead to an incorrect \"No\" output even when it is possible to fit all pieces.\n\nTo fix this, we need to ensure that the code correctly handles the case where the current piece is smaller than the required piece by adding it back to the queue for further processing.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n                if(now[0] < w){\n                    continue; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                }else{\n</original>\n<patched>\n                if(now[0] < w){\n                    keep.add(now); // Add the piece back to the queue for further processing\n                    continue;\n                }else{\n</patched>\n```\n\nThis change ensures that pieces that are too small to fit the current required piece are not discarded but are instead added back to the queue for further processing. This should resolve the issue and produce the correct output for the given test case.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 3247,
+        "output_tokens": 257,
+        "estimated_cost_usd": 0.020090000000000004
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.020090000000000004
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

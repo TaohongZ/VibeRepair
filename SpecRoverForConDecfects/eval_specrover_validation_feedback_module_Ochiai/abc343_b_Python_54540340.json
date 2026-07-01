@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54540340",
+  "task_name": "abc343_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:33:31.135712",
+  "finished_at": "2026-06-15T09:33:39.973695",
+  "elapsed_seconds": 8.84,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 8.84,
+      "estimated_cost": {
+        "total": 0.009580000000000002
+      }
+    }
+  ],
+  "faulty_function": "N = int(input())\nA = [list(map(int, input().split())) for _ in range(N)]\nans = []\nfor i in range(N):\n    for j in range(N):\n        if A[i][j] == 1:\n            ans.append(j+1) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n    print(*ans)",
+  "fix_code": "N = int(input())\nA = [list(map(int, input().split())) for _ in range(N)]\nfor i in range(N):\n    ans = []\n    for j in range(N):\n        if A[i][j] == 1:\n            ans.append(j+1)\n    print(*ans)",
+  "fix_code_raw_response": "The issue in the provided code is that the `ans` list is not being reset for each vertex `i`. As a result, the connections for all vertices are being accumulated in the `ans` list, leading to incorrect output. To fix this, we need to reset the `ans` list at the beginning of each iteration of the outer loop.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nN = int(input())\nA = [list(map(int, input().split())) for _ in range(N)]\nans = []\nfor i in range(N):\n    for j in range(N):\n        if A[i][j] == 1:\n            ans.append(j+1) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n    print(*ans)\n</original>\n<patched>\nN = int(input())\nA = [list(map(int, input().split())) for _ in range(N)]\nfor i in range(N):\n    ans = []\n    for j in range(N):\n        if A[i][j] == 1:\n            ans.append(j+1)\n    print(*ans)\n</patched>\n```\n\nThis patch ensures that the `ans` list is reset for each vertex `i`, so that only the direct connections for the current vertex are printed.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 998,
+        "output_tokens": 306,
+        "estimated_cost_usd": 0.009580000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.009580000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

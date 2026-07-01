@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54452004",
+  "task_name": "abc335_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:24:50.734860",
+  "finished_at": "2026-06-15T09:25:02.234499",
+  "elapsed_seconds": 11.5,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 11.5,
+      "estimated_cost": {
+        "total": 0.0103
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\tint n = Integer.parseInt(sc.next());\n\n\t\tPrintWriter pw = new PrintWriter(System.out);\n\t\tfor (int i = 0; i < n + 1; i++) {\n\t\t\tfor (int j = 0; j < n - i + 1; j++) {\n\t\t\t\tfor (int k = 0; k < n - k - i + 1; k++) {\n\t\t\t\t\tpw.println(String.valueOf(i) + \" \" + String.valueOf(j) + \" \" + String.valueOf(k));\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\tpw.flush();\n\t} // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\tint n = Integer.parseInt(sc.next());\n\n\t\tPrintWriter pw = new PrintWriter(System.out);\n\t\tfor (int i = 0; i < n + 1; i++) {\n\t\t\tfor (int j = 0; j < n - i + 1; j++) {\n\t\t\t\tfor (int k = 0; k < n - j - i + 1; k++) {\n\t\t\t\t\tpw.println(String.valueOf(i) + \" \" + String.valueOf(j) + \" \" + String.valueOf(k));\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\tpw.flush();\n\t}",
+  "fix_code_raw_response": "The issue in the provided code is in the nested loops where the condition for the innermost loop is incorrect. Specifically, the condition `k < n - k - i + 1` is incorrect and should be `k < n - j - i + 1` to correctly generate all triples (x, y, z) such that x + y + z <= N.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\t\tfor (int i = 0; i < n + 1; i++) {\n\t\t\tfor (int j = 0; j < n - i + 1; j++) {\n\t\t\t\tfor (int k = 0; k < n - k - i + 1; k++) {\n\t\t\t\t\tpw.println(String.valueOf(i) + \" \" + String.valueOf(j) + \" \" + String.valueOf(k));\n\t\t\t\t}\n\t\t\t}\n\t\t}\n</original>\n<patched>\n\t\tfor (int i = 0; i < n + 1; i++) {\n\t\t\tfor (int j = 0; j < n - i + 1; j++) {\n\t\t\t\tfor (int k = 0; k < n - j - i + 1; k++) {\n\t\t\t\t\tpw.println(String.valueOf(i) + \" \" + String.valueOf(j) + \" \" + String.valueOf(k));\n\t\t\t\t}\n\t\t\t}\n\t\t}\n</patched>\n```\n\nThis patch corrects the condition in the innermost loop to ensure that all valid triples (x, y, z) such that x + y + z <= N are printed in lexicographical order.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 992,
+        "output_tokens": 356,
+        "estimated_cost_usd": 0.0103
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.0103
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54723688",
+  "task_name": "abc353_f",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T19:26:32.611149",
+  "finished_at": "2026-06-15T19:27:02.247778",
+  "elapsed_seconds": 29.64,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 29.64,
+      "estimated_cost": {
+        "total": 0.0125
+      }
+    }
+  ],
+  "faulty_function": "# Accepted. From the official editorial.\nK = int(input())\nSx, Sy = [int(x) for x in input().split()]\nTx, Ty = [int(x) for x in input().split()]\n# Kずつ右上にずらしておく。\nSx += K\nSy += K\nTx += K\nTy += K\n# 上界を入れておく。\ndist = max(Tx, Sx) - min(Tx, Sx) + max(Ty, Sy) - min(Ty, Sy)\n# 1 < Kのとき、大タイルを経由する移動を考える。\nif 1 < K:\n    large_start = []  # はじめに到達する大タイルの候補。\n    if ((Sx // K) ^ (Sy // K)) & 1:  # 開始位置が大タイルなら。\n        large_start.append((Sx // K, Sy // K, 0))  # その大タイル。\n    else:  # そうでなければ、四方向いずれかで最も近い大タイルが候補。\n        large_start.append((Sx // K - 1, Sy // K, 1 + Sx % K))  # 左。\n        large_start.append((Sx // K + 1, Sy // K, K - Sx % K))  # 右。\n        large_start.append((Sx // K, Sy // K - 1, 1 + Sy % K))  # 下。\n        large_start.append((Sx // K, Sy // K + 1, K - Sy % K))  # 上。\n    large_goal = []  # 最後に到達する大タイルの候補。\n    if ((Tx // K) ^ (Ty // K)) & 1:  # 終了位置が大タイルなら。\n        large_goal.append((Tx // K, Ty // K, 0))  # その大タイル。\n    else:  # そうでなければ、四方向いずれかで最も近い大タイルが候補。\n        large_goal.append((Tx // K - 1, Ty // K, 1 + Tx % K))  # 左。\n        large_goal.append((Tx // K + 1, Ty // K, K - Tx % K))  # 右。\n        large_goal.append((Tx // K, Ty // K - 1, 1 + Ty % K))  # 下。\n        large_goal.append((Tx // K, Ty // K + 1, K - Ty % K))  # 上。\n    # K = 2かどうかで場合分け。\n    if K == 2:\n        for x, y, d1 in large_start:\n            for z, w, d2 in large_goal:\n                x_diff = max(x, z) - min(x, z)\n                y_diff = max(y, w) - min(y, w)\n                dist = min(dist, d1 + d2 + x_diff + y_diff + (max(x_diff, y_diff) - min(x_diff, y_diff)) / 2) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n    else:\n        for x, y, d1 in large_start:\n            for z, w, d2 in large_goal:\n                dist = min(dist, d1 + d2 + max(x + y, z + w) - min(x + y, z + w) + max(x + w, z + y) - min(x + w, z + y))\nprint(dist)",
+  "fix_code": "# Accepted. From the official editorial.\nK = int(input())\nSx, Sy = [int(x) for x in input().split()]\nTx, Ty = [int(x) for x in input().split()]\n# Kずつ右上にずらしておく。\nSx += K\nSy += K\nTx += K\nTy += K\n# 上界を入れておく。\ndist = max(Tx, Sx) - min(Tx, Sx) + max(Ty, Sy) - min(Ty, Sy)\n# 1 < Kのとき、大タイルを経由する移動を考える。\nif 1 < K:\n    large_start = []  # はじめに到達する大タイルの候補。\n    if ((Sx // K) ^ (Sy // K)) & 1:  # 開始位置が大タイルなら。\n        large_start.append((Sx // K, Sy // K, 0))  # その大タイル。\n    else:  # そうでなければ、四方向いずれかで最も近い大タイルが候補。\n        large_start.append((Sx // K - 1, Sy // K, 1 + Sx % K))  # 左。\n        large_start.append((Sx // K + 1, Sy // K, K - Sx % K))  # 右。\n        large_start.append((Sx // K, Sy // K - 1, 1 + Sy % K))  # 下。\n        large_start.append((Sx // K, Sy // K + 1, K - Sy % K))  # 上。\n    large_goal = []  # 最後に到達する大タイルの候補。\n    if ((Tx // K) ^ (Ty // K)) & 1:  # 終了位置が大タイルなら。\n        large_goal.append((Tx // K, Ty // K, 0))  # その大タイル。\n    else:  # そうでなければ、四方向いずれかで最も近い大タイルが候補。\n        large_goal.append((Tx // K - 1, Ty // K, 1 + Tx % K))  # 左。\n        large_goal.append((Tx // K + 1, Ty // K, K - Tx % K))  # 右。\n        large_goal.append((Tx // K, Ty // K - 1, 1 + Ty % K))  # 下。\n        large_goal.append((Tx // K, Ty // K + 1, K - Ty % K))  # 上。\n    # K = 2かどうかで場合分け。\n    if K == 2:\n        for x, y, d1 in large_start:\n            for z, w, d2 in large_goal:\n                x_diff = max(x, z) - min(x, z)\n                y_diff = max(y, w) - min(y, w)\n                dist = min(dist, d1 + d2 + x_diff + y_diff + (max(x_diff, y_diff) - min(x_diff, y_diff)) // 2)\n    else:\n        for x, y, d1 in large_start:\n            for z, w, d2 in large_goal:\n                dist = min(dist, d1 + d2 + max(x + y, z + w) - min(x + y, z + w) + max(x + w, z + y) - min(x + w, z + y))\nprint(dist)",
+  "fix_code_raw_response": "The issue in the code is that the output is a floating-point number when it should be an integer. This is due to the division operation in the line identified by the Ochiai fault localization. To fix this, we need to ensure that the result of the division is an integer. We can achieve this by using integer division (`//`) instead of floating-point division (`/`).\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\ndist = min(dist, d1 + d2 + x_diff + y_diff + (max(x_diff, y_diff) - min(x_diff, y_diff)) / 2)\n</original>\n<patched>\ndist = min(dist, d1 + d2 + x_diff + y_diff + (max(x_diff, y_diff) - min(x_diff, y_diff)) // 2)\n</patched>\n```\n\nThis change ensures that the division result is an integer, which aligns with the expected output format.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1870,
+        "output_tokens": 210,
+        "estimated_cost_usd": 0.0125
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.0125
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

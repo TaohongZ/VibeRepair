@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53701884",
+  "task_name": "abc354_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T07:40:33.415992",
+  "finished_at": "2026-06-15T07:40:45.415167",
+  "elapsed_seconds": 12.0,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 12.0,
+      "estimated_cost": {
+        "total": 0.018160000000000003
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) throws IOException {\n        BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));\n        int t = Integer.parseInt(buf.readLine());\n        PriorityQueue<String>pq = new PriorityQueue<>(Collections.reverseOrder()); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n        long total = 0;\n        for(int i = 0 ; i < t ; i++) {\n            String[] s = buf.readLine().trim().split(\" \");\n            String name = s[0];\n            int rating = Integer.parseInt(s[1]);\n            total += rating;\n            pq.add(name);\n        }\n        total %= t;\n        while(total--> 0){\n            pq.poll();\n        }\n        System.out.println(pq.peek());\n    }",
+  "fix_code": "    public static void main(String[] args) throws IOException {\n        BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));\n        int t = Integer.parseInt(buf.readLine());\n        List<String> names = new ArrayList<>();\n        long total = 0;\n        for(int i = 0 ; i < t ; i++) {\n            String[] s = buf.readLine().trim().split(\" \");\n            String name = s[0];\n            int rating = Integer.parseInt(s[1]);\n            total += rating;\n            names.add(name);\n        }\n        Collections.sort(names);\n        total %= t;\n        System.out.println(names.get((int) total));\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that the `PriorityQueue` is being used in reverse order, which does not help in maintaining the lexicographical order of usernames. Instead, we should use a list, sort it lexicographically, and then determine the winner based on the sum of the ratings.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    public static void main(String[] args) throws IOException {\n        BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));\n        int t = Integer.parseInt(buf.readLine());\n        PriorityQueue<String>pq = new PriorityQueue<>(Collections.reverseOrder()); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n        long total = 0;\n        for(int i = 0 ; i < t ; i++) {\n            String[] s = buf.readLine().trim().split(\" \");\n            String name = s[0];\n            int rating = Integer.parseInt(s[1]);\n            total += rating;\n            pq.add(name);\n        }\n        total %= t;\n        while(total--> 0){\n            pq.poll();\n        }\n        System.out.println(pq.peek());\n    }\n</original>\n<patched>\n    public static void main(String[] args) throws IOException {\n        BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));\n        int t = Integer.parseInt(buf.readLine());\n        List<String> names = new ArrayList<>();\n        long total = 0;\n        for(int i = 0 ; i < t ; i++) {\n            String[] s = buf.readLine().trim().split(\" \");\n            String name = s[0];\n            int rating = Integer.parseInt(s[1]);\n            total += rating;\n            names.add(name);\n        }\n        Collections.sort(names);\n        total %= t;\n        System.out.println(names.get((int) total));\n    }\n</patched>\n```\n\nExplanation:\n1. Replace the `PriorityQueue` with a `List<String>` to store the usernames.\n2. After reading all usernames and ratings, sort the list of usernames lexicographically using `Collections.sort()`.\n3. Calculate the index of the winner using `total % t`.\n4. Print the username at the calculated index from the sorted list.\n\nThis patch ensures that the usernames are sorted lexicographically and the correct winner is determined based on the sum of the ratings.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2108,
+        "output_tokens": 508,
+        "estimated_cost_usd": 0.018160000000000003
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.018160000000000003
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

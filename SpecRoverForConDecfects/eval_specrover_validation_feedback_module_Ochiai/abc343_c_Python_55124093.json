@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55124093",
+  "task_name": "abc343_c",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T16:32:30.660510",
+  "finished_at": "2026-06-15T16:32:44.303114",
+  "elapsed_seconds": 13.64,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 13.64,
+      "estimated_cost": {
+        "total": 0.008315
+      }
+    }
+  ],
+  "faulty_function": "N = int(input())\nn = 10**6\nfor i in range(n, 1, -1):\n  k = i **3\n  k_str = str(k)\n  if (k < N) and (k_str == k_str[::-1]): # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n    print(k)\n    exit()\nprint(1)",
+  "fix_code": "N = int(input())\nn = 10**6\nfor i in range(n, 1, -1):\n  k = i **3\n  k_str = str(k)\n  if (k <= N) and (k_str == k_str[::-1]):\n    print(k)\n    exit()\nprint(1)",
+  "fix_code_raw_response": "The issue in the provided code is that the condition `(k < N)` should be `(k <= N)` to include the case where `k` is exactly equal to `N`. This is why the test case with input `8` is failing, as the cube of `2` (which is `8`) is not being considered.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nN = int(input())\nn = 10**6\nfor i in range(n, 1, -1):\n  k = i **3\n  k_str = str(k)\n  if (k < N) and (k_str == k_str[::-1]):\n    print(k)\n    exit()\nprint(1)\n</original>\n<patched>\nN = int(input())\nn = 10**6\nfor i in range(n, 1, -1):\n  k = i **3\n  k_str = str(k)\n  if (k <= N) and (k_str == k_str[::-1]):\n    print(k)\n    exit()\nprint(1)\n</patched>\n```",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 943,
+        "output_tokens": 240,
+        "estimated_cost_usd": 0.008315
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.008315
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

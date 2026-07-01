@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54463118",
+  "task_name": "abc352_d",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:27:50.270205",
+  "finished_at": "2026-06-15T09:28:13.767964",
+  "elapsed_seconds": 23.5,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 23.5,
+      "estimated_cost": {
+        "total": 0.023655000000000002
+      }
+    }
+  ],
+  "faulty_function": "\nN, K = map(int, input().split())\nP = list(map(int, input().split()))\n\nC = [-1 for _ in range(N)]\n\nfor i, p in enumerate(P):\n    C[p-1] = i+1\n\nans = 100000000000\n\nfrom sortedcontainers import SortedList\n\ns = SortedList(sorted(C[:K]))\n\nfor i in range(N-K):\n    s.remove(C[i])\n    s.add(C[i+K])\n    ans = min(ans, s[-1]-s[0])\nprint(ans) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "\nN, K = map(int, input().split())\nP = list(map(int, input().split()))\n\nC = [-1 for _ in range(N)]\n\nfor i, p in enumerate(P):\n    C[p-1] = i\n\nans = float('inf')\n\nfrom sortedcontainers import SortedList\n\ns = SortedList(C[:K])\n\nfor i in range(N-K+1):\n    if i > 0:\n        s.remove(C[i-1])\n        s.add(C[i+K-1])\n    ans = min(ans, s[-1] - s[0])\nprint(ans)",
+  "fix_code_raw_response": "The issue in the provided code is that it does not correctly handle the calculation of the minimum value of `i_K - i_1` among all good index sequences. The main problem lies in the way the sorted list `s` is managed and updated. The current implementation does not correctly maintain the sorted list of indices, leading to incorrect results.\n\nTo fix this, we need to ensure that the sorted list `s` always contains the correct indices and that we correctly calculate the minimum difference between the maximum and minimum indices in the list.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nN, K = map(int, input().split())\nP = list(map(int, input().split()))\n\nC = [-1 for _ in range(N)]\n\nfor i, p in enumerate(P):\n    C[p-1] = i+1\n\nans = 100000000000\n\nfrom sortedcontainers import SortedList\n\ns = SortedList(sorted(C[:K]))\n\nfor i in range(N-K):\n    s.remove(C[i])\n    s.add(C[i+K])\n    ans = min(ans, s[-1]-s[0])\nprint(ans)\n</original>\n<patched>\nN, K = map(int, input().split())\nP = list(map(int, input().split()))\n\nC = [-1 for _ in range(N)]\n\nfor i, p in enumerate(P):\n    C[p-1] = i\n\nans = float('inf')\n\nfrom sortedcontainers import SortedList\n\ns = SortedList(C[:K])\n\nfor i in range(N-K+1):\n    if i > 0:\n        s.remove(C[i-1])\n        s.add(C[i+K-1])\n    ans = min(ans, s[-1] - s[0])\nprint(ans)\n</patched>\n```\n\n### Explanation:\n1. **Initialization of `C`**: The original code initializes `C[p-1] = i+1`, which is incorrect because it should be `C[p-1] = i` to correctly map the permutation indices.\n2. **Initial Sorted List `s`**: The initial sorted list `s` should be created from `C[:K]` without sorting it again, as `SortedList` will handle the sorting.\n3. **Loop to Update `s`**: The loop should iterate from `0` to `N-K+1` to ensure all possible subsequences are considered. The condition `if i > 0` ensures that the first iteration does not attempt to remove an element that does not exist.\n4. **Calculation of `ans`**: The calculation of `ans` should be done by taking the difference between the maximum and minimum values in the sorted list `s`.\n\nThis patch ensures that the program correctly finds the minimum value of `i_K - i_1` among all good index sequences.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2937,
+        "output_tokens": 598,
+        "estimated_cost_usd": 0.023655000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.023655000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

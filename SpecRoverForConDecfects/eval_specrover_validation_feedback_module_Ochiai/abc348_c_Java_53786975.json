@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53786975",
+  "task_name": "abc348_c",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T08:02:18.266483",
+  "finished_at": "2026-06-15T08:02:38.476195",
+  "elapsed_seconds": 20.21,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 20.21,
+      "estimated_cost": {
+        "total": 0.01339
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\n\t\tint n = sc.nextInt();\n\t\tMap<Integer, Integer> map = new HashMap<>();\n\n\t\tfor(int i=0; i<n; i++){\n\t\t\tint taste = sc.nextInt();\n\t\t\tint color = sc.nextInt();\n\n\t\t\tif(map.containsKey(color)){\n\t\t\t\tint getTaste = map.get(color);\n\n\t\t\t\tif(getTaste < taste){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\t\t\tmap.put(color, taste);\n\t\t\t\t}\n\t\t\t} else {\n\t\t\t\tmap.put(color, taste);\n\t\t\t}\n\t\t}\n\n\t\tInteger maxValue = 0;\n\n\t\tfor(Integer value : map.values()){\n\t\t\tif(maxValue < value){\n\t\t\t\tmaxValue = value;\n\t\t\t}\n\t\t}\n\t\tSystem.out.println(maxValue);\n\t}",
+  "fix_code": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\n\t\tint n = sc.nextInt();\n\t\tMap<Integer, Integer> map = new HashMap<>();\n\n\t\tfor(int i=0; i<n; i++){\n\t\t\tint taste = sc.nextInt();\n\t\t\tint color = sc.nextInt();\n\n\t\t\tif(map.containsKey(color)){\n\t\t\t\tint getTaste = map.get(color);\n\n\t\t\t\tif(getTaste > taste){ // Change comparison to track minimum deliciousness\n\t\t\t\t\tmap.put(color, taste);\n\t\t\t\t}\n\t\t\t} else {\n\t\t\t\tmap.put(color, taste);\n\t\t\t}\n\t\t}\n\n\t\tInteger maxValue = Integer.MIN_VALUE; // Initialize to minimum possible value\n\n\t\tfor(Integer value : map.values()){\n\t\t\tif(maxValue < value){\n\t\t\t\tmaxValue = value;\n\t\t\t}\n\t\t}\n\t\tSystem.out.println(maxValue);\n\t}",
+  "fix_code_raw_response": "The issue in the provided code is that it is trying to maximize the minimum possible deliciousness of the bean you eat by selecting the optimal color. However, the current implementation is incorrect because it only keeps track of the maximum deliciousness for each color and then selects the maximum among those, which does not align with the problem statement.\n\nTo fix this, we need to:\n1. Track the minimum deliciousness for each color.\n2. Then, find the maximum among these minimum deliciousness values.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\n\t\tint n = sc.nextInt();\n\t\tMap<Integer, Integer> map = new HashMap<>();\n\n\t\tfor(int i=0; i<n; i++){\n\t\t\tint taste = sc.nextInt();\n\t\t\tint color = sc.nextInt();\n\n\t\t\tif(map.containsKey(color)){\n\t\t\t\tint getTaste = map.get(color);\n\n\t\t\t\tif(getTaste < taste){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\t\t\tmap.put(color, taste);\n\t\t\t\t}\n\t\t\t} else {\n\t\t\t\tmap.put(color, taste);\n\t\t\t}\n\t\t}\n\n\t\tInteger maxValue = 0;\n\n\t\tfor(Integer value : map.values()){\n\t\t\tif(maxValue < value){\n\t\t\t\tmaxValue = value;\n\t\t\t}\n\t\t}\n\t\tSystem.out.println(maxValue);\n\t}\n</original>\n<patched>\n\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\n\t\tint n = sc.nextInt();\n\t\tMap<Integer, Integer> map = new HashMap<>();\n\n\t\tfor(int i=0; i<n; i++){\n\t\t\tint taste = sc.nextInt();\n\t\t\tint color = sc.nextInt();\n\n\t\t\tif(map.containsKey(color)){\n\t\t\t\tint getTaste = map.get(color);\n\n\t\t\t\tif(getTaste > taste){ // Change comparison to track minimum deliciousness\n\t\t\t\t\tmap.put(color, taste);\n\t\t\t\t}\n\t\t\t} else {\n\t\t\t\tmap.put(color, taste);\n\t\t\t}\n\t\t}\n\n\t\tInteger maxValue = Integer.MIN_VALUE; // Initialize to minimum possible value\n\n\t\tfor(Integer value : map.values()){\n\t\t\tif(maxValue < value){\n\t\t\t\tmaxValue = value;\n\t\t\t}\n\t\t}\n\t\tSystem.out.println(maxValue);\n\t}\n</patched>\n```\n\nExplanation:\n- The comparison `if(getTaste < taste)` was changed to `if(getTaste > taste)` to ensure we are tracking the minimum deliciousness for each color.\n- The initialization of `maxValue` was changed to `Integer.MIN_VALUE` to ensure it correctly finds the maximum among the minimum deliciousness values.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 977,
+        "output_tokens": 567,
+        "estimated_cost_usd": 0.01339
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.01339
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

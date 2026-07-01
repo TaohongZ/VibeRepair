@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54729742",
+  "task_name": "abc354_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:53:05.320742",
+  "finished_at": "2026-06-15T09:53:12.490268",
+  "elapsed_seconds": 7.17,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 7.17,
+      "estimated_cost": {
+        "total": 0.010895
+      }
+    }
+  ],
+  "faulty_function": "N = int(input())\nlist = []\nT = 0\nfor i in range(N):\n    S, C = input().split()\n    list.append([S, int(C)])\n    T += int(C)\nname = []\nfor j in range(N):\n    name.append(list[j])\nname.sort()\nm = T % N\nprint(list[m][0]) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "N = int(input())\nlist = []\nT = 0\nfor i in range(N):\n    S, C = input().split()\n    list.append([S, int(C)])\n    T += int(C)\nlist.sort()  # Sort the list lexicographically by usernames\nm = T % N\nprint(list[m][0])",
+  "fix_code_raw_response": "The issue in the code is that the final print statement is using the original list to determine the winner, but the list should be sorted lexicographically by usernames before determining the winner. The correct index should be used from the sorted list.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nN = int(input())\nlist = []\nT = 0\nfor i in range(N):\n    S, C = input().split()\n    list.append([S, int(C)])\n    T += int(C)\nname = []\nfor j in range(N):\n    name.append(list[j])\nname.sort()\nm = T % N\nprint(list[m][0]) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n</original>\n<patched>\nN = int(input())\nlist = []\nT = 0\nfor i in range(N):\n    S, C = input().split()\n    list.append([S, int(C)])\n    T += int(C)\nlist.sort()  # Sort the list lexicographically by usernames\nm = T % N\nprint(list[m][0])\n</patched>\n```\n\nExplanation:\n- The original code was creating a separate `name` list and sorting it, but the final print statement was using the unsorted `list`.\n- The patch sorts the `list` directly and then uses it to determine the winner, ensuring the correct username is printed.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1195,
+        "output_tokens": 328,
+        "estimated_cost_usd": 0.010895
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.010895
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

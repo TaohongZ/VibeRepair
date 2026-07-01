@@ -1,0 +1,78 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54055907",
+  "task_name": "abc339_e",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T13:13:42.114041",
+  "finished_at": "2026-06-15T13:32:12.236478",
+  "elapsed_seconds": 1110.12,
+  "selected_outer_run_index": 2,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": false,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 0.7966101694915254,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 910.11,
+      "estimated_cost": {
+        "total": 0.10963
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 200.01,
+      "estimated_cost": {
+        "total": 0.018775
+      }
+    }
+  ],
+  "faulty_function": "# import sys\n# sys.setrecursionlimit(10**6)\n# sys.set_int_max_str_digits(10**6)\n# from scipy.optimize import bisect\n# from collections import defaultdict, Counter\n# import bisect\n# import heapq\nfrom atcoder.segtree import SegTree # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nfrom sortedcontainers import SortedList\n\n# mod = 998244353\n# ds = [(-1,0),(0,1),(1,0),(0,-1)]\n\n# S = input()\n# N = int(input())\nN, D = map(int, input().split())\n\nA = list(map(int, input().split()))\n\n\nM = max(A)\nseg = SegTree(max, 0, M+1)\nfor i in range(N):\n    a = A[i]\n    m = seg.prod(max(a-D, 0),min(M,a+D+1))\n    seg.set(a,m+1)\n    \nans = seg.all_prod()\nprint(ans)",
+  "fix_code": "# import sys\n# sys.setrecursionlimit(10**6)\n# sys.set_int_max_str_digits(10**6)\n# from scipy.optimize import bisect\n# from collections import defaultdict, Counter\n# import bisect\n# import heapq\nfrom atcoder.segtree import SegTree\nfrom sortedcontainers import SortedList\n\n# mod = 998244353\n# ds = [(-1,0),(0,1),(1,0),(0,-1)]\n\n# S = input()\n# N = int(input())\nN, D = map(int, input().split())\n\nA = list(map(int, input().split()))\n\n\nM = max(A)\nseg = SegTree(max, 0, M+1)\nfor i in range(N):\n    a = A[i]\n    m = seg.prod(max(a-D, 0), min(a+D+1, M+1))\n    seg.set(a, m+1)\n    \nans = seg.all_prod()\nprint(ans)",
+  "fix_code_raw_response": "The issue in the provided code is that the `SegTree` is being initialized with a size of `M+1`, where `M` is the maximum value in the array `A`. This is incorrect because the segment tree should be able to handle the range of values from `0` to `M` inclusively. Additionally, the `prod` method should be called with the correct range to ensure it covers the required elements.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nM = max(A)\nseg = SegTree(max, 0, M+1)\nfor i in range(N):\n    a = A[i]\n    m = seg.prod(max(a-D, 0),min(M,a+D+1))\n    seg.set(a,m+1)\n    \nans = seg.all_prod()\nprint(ans)\n</original>\n<patched>\nM = max(A)\nseg = SegTree(max, 0, M+1)\nfor i in range(N):\n    a = A[i]\n    m = seg.prod(max(a-D, 0), min(a+D+1, M+1))\n    seg.set(a, m+1)\n    \nans = seg.all_prod()\nprint(ans)\n</patched>\n```\n\nExplanation:\n1. The `seg.prod` method call has been corrected to ensure the range is properly bounded. The `min(a+D+1, M+1)` ensures that the upper bound does not exceed the maximum value plus one.\n2. This ensures that the segment tree correctly calculates the maximum length of the subsequence with the given constraints.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2747,
+        "output_tokens": 336,
+        "estimated_cost_usd": 0.018775
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.018775
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

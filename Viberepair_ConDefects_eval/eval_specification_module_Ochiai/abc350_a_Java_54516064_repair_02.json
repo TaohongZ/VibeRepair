@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "54516064",
+  "repair_index": 2,
+  "task_name": "abc350_a",
+  "language": "Java",
+  "flawed_specification": "[\n  Function: main\n  Purpose: To read a string input from the user and print \"Yes\" or \"No\" based on specific conditions related to the substring of the input.\n  Signature: main(String[] args)\n  Input: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\n  Output: Prints \"Yes\" or \"No\" to the standard output based on the conditions evaluated.\n  Behavior:\n    1. Initialize a `Scanner` object to read input from the standard input stream.\n    2. Read a string `S` from the input using `sc.next()`.\n    3. Check if the substring of `S` starting from index 3 equals \"316\".\n    4. If the condition in step 3 is true, print \"No\".\n    5. If the condition in step 3 is false, parse the substring of `S` starting from index 3 as an integer.\n    6. Check if the parsed integer is less than 350 (bug is here).\n    7. If the condition in step 6 is true, print \"Yes\".\n    8. If the condition in step 6 is false, print \"No\".\n    9. Close the `Scanner` object.\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should determine if a given string `S` of length 6, with the first three characters being \"ABC\" and the last three characters being digits, is an abbreviation of a contest held and concluded on AtCoder before the start of this contest. Specifically, it should check if the last three digits of `S` form a number that is in the set of valid contest numbers: 001 to 315, 317 to 349. If `S` matches one of these valid contest numbers, the function should print \"Yes\"; otherwise, it should print \"No\".",
+    "diagnosis_and_repair_directions": "The flawed specification incorrectly checks if the integer parsed from the last three digits of `S` is less than 350, which would incorrectly include \"ABC316\" as a valid contest number. The correct behavior should explicitly exclude \"316\" from the valid numbers. The specification should be adjusted to:\n1. Check if the substring of `S` starting from index 3 is \"316\" and print \"No\" if true.\n2. Otherwise, parse the substring of `S` starting from index 3 as an integer.\n3. Check if the parsed integer is between 1 and 315, or between 317 and 349, and print \"Yes\" if true.\n4. Print \"No\" if none of the above conditions are met.",
+    "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` of length 6, with the first three characters being \"ABC\" and the last three characters being digits, is an abbreviation of a contest held and concluded on AtCoder before the start of this contest. Specifically, it should check if the last three digits of `S` form a number that is in the set of valid contest numbers: 001 to 315, 317 to 349. If `S` matches one of these valid contest numbers, the function should print \"Yes\"; otherwise, it should print \"No\".\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly checks if the integer parsed from the last three digits of `S` is less than 350, which would incorrectly include \"ABC316\" as a valid contest number. The correct behavior should explicitly exclude \"316\" from the valid numbers. The specification should be adjusted to:\n1. Check if the substring of `S` starting from index 3 is \"316\" and print \"No\" if true.\n2. Otherwise, parse the substring of `S` starting from index 3 as an integer.\n3. Check if the parsed integer is between 1 and 315, or between 317 and 349, and print \"Yes\" if true.\n4. Print \"No\" if none of the above conditions are met.\n\nFixed Specification:\nFunction: main\nPurpose: To read a string input from the user and print \"Yes\" or \"No\" based on whether the string is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the conditions evaluated.\nBehavior:\n1. Initialize a `Scanner` object to read input from the standard input stream.\n2. Read a string `S` from the input using `sc.next()`.\n3. Check if the substring of `S` starting from index 3 equals \"316\".\n4. If the condition in step 3 is true, print \"No\".\n5. If the condition in step 3 is false, parse the substring of `S` starting from index 3 as an integer.\n6. Check if the parsed integer is between 1 and 315, or between 317 and 349.\n7. If the condition in step 6 is true, print \"Yes\".\n8. If the condition in step 6 is false, print \"No\".\n9. Close the `Scanner` object."
+  },
+  "fixed_specification": "Function: main\nPurpose: To read a string input from the user and print \"Yes\" or \"No\" based on whether the string is a valid contest abbreviation.\nSignature: main(String[] args)\nInput: A single command-line argument, `args`, which is an array of strings. The function reads a string from standard input using a `Scanner`.\nOutput: Prints \"Yes\" or \"No\" to the standard output based on the conditions evaluated.\nBehavior:\n1. Initialize a `Scanner` object to read input from the standard input stream.\n2. Read a string `S` from the input using `sc.next()`.\n3. Check if the substring of `S` starting from index 3 equals \"316\".\n4. If the condition in step 3 is true, print \"No\".\n5. If the condition in step 3 is false, parse the substring of `S` starting from index 3 as an integer.\n6. Check if the parsed integer is between 1 and 315, or between 317 and 349.\n7. If the condition in step 6 is true, print \"Yes\".\n8. If the condition in step 6 is false, print \"No\".\n9. Close the `Scanner` object.",
+  "fix_code": "public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    String S = sc.next();\n    if(S.substring(3).equals(\"316\")){\n        System.out.print(\"No\");\n    } else {\n        int num = Integer.parseInt(S.substring(3));\n        if((num >= 1 && num <= 315) || (num >= 317 && num <= 349)){\n            System.out.print(\"Yes\");\n        } else {\n            System.out.print(\"No\");\n        }\n    }\n    sc.close();\n}\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.003925,
+    "fix_specification": 0.0072875,
+    "fix_specification_and_buggy_code_to_fix_code": 0.00249,
+    "total": 0.0137025
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 466,
+      "output_tokens": 276,
+      "total_tokens": 742
+    },
+    "fix_specification": {
+      "input_tokens": 767,
+      "output_tokens": 537,
+      "total_tokens": 1304
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 540,
+      "output_tokens": 114,
+      "total_tokens": 654
+    }
+  }
+}

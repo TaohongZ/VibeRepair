@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54941641",
+  "task_name": "abc359_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:50:07.424673",
+  "finished_at": "2026-06-15T10:50:26.880015",
+  "elapsed_seconds": 19.46,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 19.46,
+      "estimated_cost": {
+        "total": 0.010000000000000002
+      }
+    }
+  ],
+  "faulty_function": "  public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    int a = sc.nextInt();\n    String [] str = new String[a];\n    int count = 0;\n    for(int i = 0 ; i<a;i++){\n      str[i] = sc.nextLine(); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      if(str[i].equals(\"Takahashi\")){\n       count++;  \n      }\n    \n    \n    }\n    System.out.println(count);\n    \n    \n  }",
+  "fix_code": "  public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    int a = sc.nextInt();\n    sc.nextLine(); // Consume the leftover newline character\n    String [] str = new String[a];\n    int count = 0;\n    for(int i = 0 ; i<a;i++){\n      str[i] = sc.nextLine();\n      if(str[i].equals(\"Takahashi\")){\n       count++;  \n      }\n    \n    \n    }\n    System.out.println(count);\n    \n    \n  }",
+  "fix_code_raw_response": "The issue in the provided code is that `sc.nextLine()` is used to read the strings, but after reading the integer `a` with `sc.nextInt()`, there is a newline character left in the input buffer. This causes the first call to `sc.nextLine()` to read an empty string instead of the first actual string. To fix this, we need to consume the leftover newline character after reading the integer.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n  public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    int a = sc.nextInt();\n    String [] str = new String[a];\n    int count = 0;\n    for(int i = 0 ; i<a;i++){\n      str[i] = sc.nextLine(); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      if(str[i].equals(\"Takahashi\")){\n       count++;  \n      }\n    \n    \n    }\n    System.out.println(count);\n    \n    \n  }\n</original>\n<patched>\n  public static void main(String[] args){\n    Scanner sc = new Scanner(System.in);\n    int a = sc.nextInt();\n    sc.nextLine(); // Consume the leftover newline character\n    String [] str = new String[a];\n    int count = 0;\n    for(int i = 0 ; i<a;i++){\n      str[i] = sc.nextLine();\n      if(str[i].equals(\"Takahashi\")){\n       count++;  \n      }\n    \n    \n    }\n    System.out.println(count);\n    \n    \n  }\n</patched>\n```\n\nThis patch ensures that the leftover newline character after reading the integer `a` is consumed, allowing the subsequent calls to `sc.nextLine()` to correctly read the actual strings.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 857,
+        "output_tokens": 381,
+        "estimated_cost_usd": 0.010000000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.010000000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54954465",
+  "task_name": "abc358_c",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:52:09.764228",
+  "finished_at": "2026-06-15T10:52:27.274956",
+  "elapsed_seconds": 17.51,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 17.51,
+      "estimated_cost": {
+        "total": 0.008285
+      }
+    }
+  ],
+  "faulty_function": "from itertools import combinations\n\nN, M = list(map(int, input().split()))\nflavors_of_stands = []\nfor _ in range(N):\n    s = int(\"\".join(list(map(lambda x: '1' if x == 'o' else '0', input()))), base=2)\n    flavors_of_stands.append(s)\ntotal = 2 ** M - 1\nfor i in range(1, N): # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n    all_cases = combinations(range(N), i)\n    for case in all_cases:\n        cur_ans = 0\n        for idx in case:\n            cur_ans |= flavors_of_stands[idx]\n        if cur_ans == total:\n            print(len(case))\n            exit(0)",
+  "fix_code": "from itertools import combinations\n\nN, M = list(map(int, input().split()))\nflavors_of_stands = []\nfor _ in range(N):\n    s = int(\"\".join(list(map(lambda x: '1' if x == 'o' else '0', input()))), base=2)\n    flavors_of_stands.append(s)\ntotal = 2 ** M - 1\nfor i in range(1, N + 1):\n    all_cases = combinations(range(N), i)\n    for case in all_cases:\n        cur_ans = 0\n        for idx in case:\n            cur_ans |= flavors_of_stands[idx]\n        if cur_ans == total:\n            print(len(case))\n            exit(0)",
+  "fix_code_raw_response": "The issue in the code is that the loop starts from `1` instead of `0`, which means it never considers the case where all stands might be needed to cover all flavors. This is why the test case with 10 stands and 10 flavors fails, as it requires all 10 stands to cover all flavors.\n\nTo fix this, we need to start the loop from `0` and handle the case where all stands might be needed.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nfor i in range(1, N):\n</original>\n<patched>\nfor i in range(1, N + 1):\n</patched>\n```\n\nThis change ensures that the loop considers the case where all stands might be needed to cover all flavors.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1156,
+        "output_tokens": 167,
+        "estimated_cost_usd": 0.008285
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.008285
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

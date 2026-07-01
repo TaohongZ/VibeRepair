@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54700053",
+  "task_name": "abc358_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:46:31.639114",
+  "finished_at": "2026-06-15T09:46:45.569133",
+  "elapsed_seconds": 13.93,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 13.93,
+      "estimated_cost": {
+        "total": 0.011215000000000001
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\t\n\t\tint N = sc.nextInt();\n\t\tint A = sc.nextInt();\n\t\tint[] T = new int[N];\n\t\tint ansT = 0;\n\t\t\n\t\tfor (int i=0; i<N; i++) {\n\t\t\tT[i]=sc.nextInt();\n\t\t}\n\t\t\n\t\tansT = T[0] + A;\n\t\tSystem.out.println(ansT);\n\t\t\n\t\tfor (int i=1; i<N; i++) {\n\t\t\tif (ansT>=T[i]) {\n\t\t\t\tSystem.out.println(ansT+A);\n\t\t\t\tansT = T[i] + A; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\t}else {\n\t\t\t\tansT = T[i] + A;\n\t\t\t\tSystem.out.println(ansT);\n\t\t\t}\n\t\t}\n\t}",
+  "fix_code": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\t\n\t\tint N = sc.nextInt();\n\t\tint A = sc.nextInt();\n\t\tint[] T = new int[N];\n\t\tint ansT = 0;\n\t\t\n\t\tfor (int i=0; i<N; i++) {\n\t\t\tT[i]=sc.nextInt();\n\t\t}\n\t\t\n\t\tansT = T[0] + A;\n\t\tSystem.out.println(ansT);\n\t\t\n\t\tfor (int i=1; i<N; i++) {\n\t\t\tif (ansT>=T[i]) {\n\t\t\t\tansT += A;\n\t\t\t\tSystem.out.println(ansT);\n\t\t\t}else {\n\t\t\t\tansT = T[i] + A;\n\t\t\t\tSystem.out.println(ansT);\n\t\t\t}\n\t\t}\n\t}",
+  "fix_code_raw_response": "The issue in the code is that the `ansT` variable is being reset incorrectly inside the loop. Specifically, the line `ansT = T[i] + A;` should only be executed when the current person starts their purchasing process immediately after the previous person finishes. Otherwise, `ansT` should be incremented by `A` to account for the time taken by the current person to purchase their ticket.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\t\tfor (int i=1; i<N; i++) {\n\t\t\tif (ansT>=T[i]) {\n\t\t\t\tSystem.out.println(ansT+A);\n\t\t\t\tansT = T[i] + A; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\t\t}else {\n\t\t\t\tansT = T[i] + A;\n\t\t\t\tSystem.out.println(ansT);\n\t\t\t}\n\t\t}\n</original>\n<patched>\n\t\tfor (int i=1; i<N; i++) {\n\t\t\tif (ansT>=T[i]) {\n\t\t\t\tansT += A;\n\t\t\t\tSystem.out.println(ansT);\n\t\t\t}else {\n\t\t\t\tansT = T[i] + A;\n\t\t\t\tSystem.out.println(ansT);\n\t\t\t}\n\t\t}\n</patched>\n```\n\nExplanation:\n- The line `ansT = T[i] + A;` inside the `if` block is replaced with `ansT += A;` to correctly increment the time by `A` seconds when the current person starts their purchasing process after the previous person.\n- This ensures that the time `ansT` correctly reflects the total time elapsed when each person finishes purchasing their ticket.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1163,
+        "output_tokens": 360,
+        "estimated_cost_usd": 0.011215000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.011215000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

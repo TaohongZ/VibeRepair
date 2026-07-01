@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54872777",
+  "task_name": "abc342_e",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T16:26:28.848045",
+  "finished_at": "2026-06-15T16:26:58.525985",
+  "elapsed_seconds": 29.68,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 29.68,
+      "estimated_cost": {
+        "total": 0.024465
+      }
+    }
+  ],
+  "faulty_function": "import heapq\nN,M=map(int,input().split())\nedge=[[] for i in range(N)]\nfor i in range(M):\n\tl,d,k,c,A,B=map(int,input().split())\n\tA-=1;B-=1\n\tedge[B].append((l,d,k,c,A))\nP=[(-10**20,N-1)]\nheapq.heapify(P)\nans=[-1]*N\nwhile P:\n\ttime,pos=heapq.heappop(P)\n\ttime*=-1\n\tif ans[pos]>0:\n\t\tcontinue\n\tans[pos]=time\n\tfor l,d,k,c,A in edge[pos]:\n\t\tif ans[A]>0:\n\t\t\tcontinue\n\t\tkt=(time-c-l)//d\n\t\tif kt<0:\n\t\t\tcontinue\n\t\tif kt>k-1:\n\t\t\tkt=k-1\n\t\theapq.heappush(P,(-kt*d-l,A))\nfor a in ans:\n\tprint(a if a>=0 else 'Unreachable') # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "import heapq\nN,M=map(int,input().split())\nedge=[[] for i in range(N)]\nfor i in range(M):\n\tl,d,k,c,A,B=map(int,input().split())\n\tA-=1;B-=1\n\tedge[B].append((l,d,k,c,A))\nP=[(-10**20,N-1)]\nheapq.heapify(P)\nans=[-1]*N\nwhile P:\n\ttime,pos=heapq.heappop(P)\n\ttime*=-1\n\tif ans[pos]>=0:\n\t\tcontinue\n\tans[pos]=time\n\tfor l,d,k,c,A in edge[pos]:\n\t\tif ans[A]>0:\n\t\t\tcontinue\n\t\tkt=(time-c-l)//d\n\t\tif kt<0:\n\t\t\tcontinue\n\t\tif kt>k-1:\n\t\t\tkt=k-1\n\t\theapq.heappush(P,(-kt*d-l,A))\nfor a in ans[:-1]:\n\tprint(a if a>=0 else 'Unreachable')",
+  "fix_code_raw_response": "The issue in the code is twofold:\n1. The condition used to check if a station has been visited is incorrect.\n2. The output contains an extra value when it should only contain N-1 values.\n\nTo fix these issues, we need to:\n1. Modify the condition to check if a station has been visited to `if ans[pos] >= 0:`.\n2. Ensure that the output only contains N-1 values.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nif ans[pos]>0:\n</original>\n<patched>\nif ans[pos]>=0:\n</patched>\n```\n\n# modification 2\n```\n<file>faultyVersion.py</file>\n<original>\nfor a in ans:\n</original>\n<patched>\nfor a in ans[:-1]:\n</patched>\n```\n\nThese changes ensure that:\n1. The condition correctly identifies if a station has been visited.\n2. The output only contains N-1 values, as required by the problem statement.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1563,
+        "output_tokens": 179,
+        "estimated_cost_usd": 0.0105
+      },
+      {
+        "input_tokens": 2133,
+        "output_tokens": 220,
+        "estimated_cost_usd": 0.013965000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.024465
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54950052",
+  "task_name": "abc350_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:51:33.079719",
+  "finished_at": "2026-06-15T10:51:43.881037",
+  "elapsed_seconds": 10.8,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 10.8,
+      "estimated_cost": {
+        "total": 0.020390000000000002
+      }
+    }
+  ],
+  "faulty_function": "s = input()\nmemo = int(s[3])*100+int(s[4])*10+int(s[5])\nif memo>=0 and memo<=349 and memo!=316:\n  print(\"Yes\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\nelse:\n  print(\"No\")",
+  "fix_code": "s = input()\nmemo = int(s[3:])\nif memo >= 1 and memo <= 349 and memo != 316:\n  print(\"Yes\")\nelse:\n  print(\"No\")",
+  "fix_code_raw_response": "The issue with the previous patch was that it did not correctly handle the case where the last three digits are '000'. The condition `memo >= 0` is always true for non-negative integers, including '000', which is why the output was 'Yes' instead of 'No'. \n\nTo fix this, we need to ensure that the valid range starts from '001' instead of '000'. The correct condition should be `if memo >= 1 and memo <= 349 and memo != 316:`.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\ns = input()\nmemo = int(s[3])*100+int(s[4])*10+int(s[5])\nif memo>=0 and memo<=349 and memo!=316:\n  print(\"Yes\")\nelse:\n  print(\"No\")\n</original>\n<patched>\ns = input()\nmemo = int(s[3:])\nif memo >= 1 and memo <= 349 and memo != 316:\n  print(\"Yes\")\nelse:\n  print(\"No\")\n</patched>\n```\n\nExplanation:\n- The original code incorrectly converts the last three characters of the string `S` to an integer by multiplying each digit by its positional value.\n- The patched code correctly converts the substring `s[3:]` (which contains the last three characters) directly to an integer using `int(s[3:])`.\n- The condition is updated to `if memo >= 1 and memo <= 349 and memo != 316:` to ensure that the valid range starts from '001' instead of '000'. This ensures that the conversion is accurate and the comparison logic works as intended.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 887,
+        "output_tokens": 259,
+        "estimated_cost_usd": 0.008320000000000001
+      },
+      {
+        "input_tokens": 1370,
+        "output_tokens": 348,
+        "estimated_cost_usd": 0.01207
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.020390000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

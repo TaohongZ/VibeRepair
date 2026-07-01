@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "51442152",
+  "task_name": "abc338_c",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T06:07:31.555123",
+  "finished_at": "2026-06-15T06:07:42.395928",
+  "elapsed_seconds": 10.84,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 10.84,
+      "estimated_cost": {
+        "total": 0.014275
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[] Q = new int[N];\n        int[] A = new int[N];\n        int[] B = new int[N];\n        for (int i = 0; i < N; i++) {\n            Q[i]=sc.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            A[i]=sc.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            B[i]=sc.nextInt();\n        }\n        int x_min = Integer.MAX_VALUE;\n        for (int i = 0; i < N; i++) {\n            if(A[i]!=0) x_min=Math.min(x_min,Q[i]/A[i]);\n        }\n        int ans=0;\n        for (int i = x_min; i >=0; i--) {\n            int y_min=Integer.MAX_VALUE;\n            for (int j = 0; j < N; j++) {\n                if(B[j]!=0) y_min=Math.min(y_min,(Q[j]-A[j]*i)/B[j]);\n            }\n            ans=Math.max(ans,y_min+x_min);\n        }\n        System.out.println(ans);\n    } // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[] Q = new int[N];\n        int[] A = new int[N];\n        int[] B = new int[N];\n        for (int i = 0; i < N; i++) {\n            Q[i]=sc.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            A[i]=sc.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            B[i]=sc.nextInt();\n        }\n        int x_min = Integer.MAX_VALUE;\n        for (int i = 0; i < N; i++) {\n            if(A[i]!=0) x_min=Math.min(x_min,Q[i]/A[i]);\n        }\n        int ans=0;\n        for (int i = x_min; i >=0; i--) {\n            int y_min=Integer.MAX_VALUE;\n            for (int j = 0; j < N; j++) {\n                if(B[j]!=0) y_min=Math.min(y_min,(Q[j]-A[j]*i)/B[j]);\n                else y_min = Math.min(y_min, Q[j] >= A[j] * i ? Integer.MAX_VALUE : -1);\n            }\n            if (y_min >= 0) {\n                ans = Math.max(ans, y_min + i);\n            }\n        }\n        System.out.println(ans);\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that the calculation of the maximum number of servings is incorrect. Specifically, the variable `x_min` is calculated correctly, but the subsequent loop that calculates `y_min` and updates `ans` is flawed. The `ans` calculation should consider the sum of servings of both dishes, not just `y_min + x_min`.\n\nHere's the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n        int ans=0;\n        for (int i = x_min; i >=0; i--) {\n            int y_min=Integer.MAX_VALUE;\n            for (int j = 0; j < N; j++) {\n                if(B[j]!=0) y_min=Math.min(y_min,(Q[j]-A[j]*i)/B[j]);\n            }\n            ans=Math.max(ans,y_min+x_min);\n        }\n</original>\n<patched>\n        int ans=0;\n        for (int i = x_min; i >=0; i--) {\n            int y_min=Integer.MAX_VALUE;\n            for (int j = 0; j < N; j++) {\n                if(B[j]!=0) y_min=Math.min(y_min,(Q[j]-A[j]*i)/B[j]);\n                else y_min = Math.min(y_min, Q[j] >= A[j] * i ? Integer.MAX_VALUE : -1);\n            }\n            if (y_min >= 0) {\n                ans = Math.max(ans, y_min + i);\n            }\n        }\n</patched>\n```\n\nExplanation:\n1. The loop iterates over possible values of `i` (number of servings of dish A) from `x_min` down to 0.\n2. For each `i`, it calculates the maximum possible `y_min` (number of servings of dish B) that can be made with the remaining ingredients.\n3. The condition `else y_min = Math.min(y_min, Q[j] >= A[j] * i ? Integer.MAX_VALUE : -1);` ensures that if `B[j]` is zero, it checks if the remaining quantity of ingredient `j` after making `i` servings of dish A is non-negative. If it is, it sets `y_min` to a high value (effectively ignoring this ingredient for dish B), otherwise, it sets `y_min` to -1, indicating that making `i` servings of dish A is not feasible.\n4. The final `if (y_min >= 0)` ensures that only valid combinations of `i` and `y_min` are considered for updating `ans`.\n\nThis patch should correct the logic and produce the expected output for the given test case.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1184,
+        "output_tokens": 557,
+        "estimated_cost_usd": 0.014275
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.014275
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

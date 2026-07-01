@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "53148155",
+  "repair_index": 1,
+  "task_name": "abc336_e",
+  "language": "Java",
+  "flawed_specification": "[\n  Function: main\n  Purpose: To compute a specific value based on the input number and print it.\n  Signature: main(String[] args)\n  Input: A single argument `args`, which is an array of strings. The function reads a long integer from the standard input.\n  Output: The function prints a long integer to the standard output.\n  Behavior:\n    1. Initialize a `PrintWriter` object `out` for output and an `InputReader` object `sc` for input.\n    2. Read a long integer `n` from the input.\n    3. Convert `n` to a character array `cs`.\n    4. Initialize a long variable `ans` to 0.\n    5. Determine the length `s` of the character array `cs`.\n    6. Iterate over `i` from 1 to 117 (inclusive).\n    7. For each `i`, initialize a 4-dimensional array `dp` with dimensions `[s + 1][2][i + 1][i]`.\n    8. Set `dp[0][1][0][0]` to 1.\n    9. Iterate over each character position `j` in `cs`.\n    10. For each `j`, iterate over `j2` from 0 to 1.\n    11. For each `j2`, iterate over `k` from 0 to `i`.\n    12. For each `k`, iterate over `k2` from 0 to `i - 1`.\n    13. Retrieve the value `pre` from `dp[j][j2][k][k2]`.\n    14. If `pre` is 0, continue to the next iteration.\n    15. Iterate over `l` from 0 to 9.\n    16. Set `nj2` to `j2`.\n    17. Calculate `nk` as `k + l`.\n    18. Calculate `nk2` as `(k2 * 10 + l) % i`.\n    19. If `c < l` and `j2` is 1, continue to the next iteration.\n    20. If `c > l`, set `nj2` to 0.\n    21. If `k + l` is greater than `i`, continue to the next iteration.\n    22. Update `dp[j + 1][nj2][nk][nk2]` by adding `pre`.\n    23. After completing the nested loops, update `ans` by adding `dp[s][0][i][0]` and `dp[s][1][i][0]`.\n    24. Print the value of `ans` to the standard output.\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should calculate how many positive integers less than or equal to a given integer \\( N \\) are \"good integers.\" A \"good integer\" is defined as one that is divisible by the sum of its digits. The function should read the integer \\( N \\) from input, compute the count of good integers up to \\( N \\), and print this count.",
+    "diagnosis_and_repair_directions": "The flawed specification describes a complex dynamic programming approach that seems to be attempting to solve the problem, but it is not clearly aligned with the intended behavior. The specification includes unnecessary complexity and steps that do not directly contribute to the goal of counting good integers. Specifically, the use of a 4-dimensional array and the nested loops are overly complex for the task at hand. The specification should be simplified to directly compute the digit sum for each integer up to \\( N \\) and check divisibility.\nConcrete directions for repair:\n1. Simplify the approach by iterating over each integer from 1 to \\( N \\).\n2. For each integer, calculate its digit sum.\n3. Check if the integer is divisible by its digit sum.\n4. Count the integers that satisfy this condition.\n5. Print the count.",
+    "raw_response": "Intended Behavior:\nThe function should calculate how many positive integers less than or equal to a given integer \\( N \\) are \"good integers.\" A \"good integer\" is defined as one that is divisible by the sum of its digits. The function should read the integer \\( N \\) from input, compute the count of good integers up to \\( N \\), and print this count.\n\nDiagnosis and Repair Directions:\nThe flawed specification describes a complex dynamic programming approach that seems to be attempting to solve the problem, but it is not clearly aligned with the intended behavior. The specification includes unnecessary complexity and steps that do not directly contribute to the goal of counting good integers. Specifically, the use of a 4-dimensional array and the nested loops are overly complex for the task at hand. The specification should be simplified to directly compute the digit sum for each integer up to \\( N \\) and check divisibility.\n\nConcrete directions for repair:\n1. Simplify the approach by iterating over each integer from 1 to \\( N \\).\n2. For each integer, calculate its digit sum.\n3. Check if the integer is divisible by its digit sum.\n4. Count the integers that satisfy this condition.\n5. Print the count.\n\nFixed Specification:\nFunction: main\nPurpose: To compute the number of \"good integers\" less than or equal to a given integer \\( N \\).\nSignature: main(String[] args)\nInput: A single argument `args`, which is an array of strings. The function reads a long integer \\( N \\) from the standard input.\nOutput: The function prints a long integer to the standard output, representing the count of good integers.\nBehavior:\n1. Read a long integer \\( N \\) from the input.\n2. Initialize a long variable `count` to 0.\n3. Iterate over each integer \\( i \\) from 1 to \\( N \\).\n4. For each \\( i \\), calculate the digit sum by converting \\( i \\) to a string, iterating over each character, converting it to an integer, and summing these integers.\n5. Check if \\( i \\) is divisible by its digit sum.\n6. If divisible, increment `count`.\n7. After the loop, print the value of `count` to the standard output."
+  },
+  "fixed_specification": "Function: main\nPurpose: To compute the number of \"good integers\" less than or equal to a given integer \\( N \\).\nSignature: main(String[] args)\nInput: A single argument `args`, which is an array of strings. The function reads a long integer \\( N \\) from the standard input.\nOutput: The function prints a long integer to the standard output, representing the count of good integers.\nBehavior:\n1. Read a long integer \\( N \\) from the input.\n2. Initialize a long variable `count` to 0.\n3. Iterate over each integer \\( i \\) from 1 to \\( N \\).\n4. For each \\( i \\), calculate the digit sum by converting \\( i \\) to a string, iterating over each character, converting it to an integer, and summing these integers.\n5. Check if \\( i \\) is divisible by its digit sum.\n6. If divisible, increment `count`.\n7. After the loop, print the value of `count` to the standard output.",
+  "fix_code": "public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    long n = sc.nextLong();\n    long count = 0;\n    \n    for (long i = 1; i <= n; i++) {\n        long sumOfDigits = 0;\n        long number = i;\n        \n        while (number > 0) {\n            sumOfDigits += number % 10;\n            number /= 10;\n        }\n        \n        if (i % sumOfDigits == 0) {\n            count++;\n        }\n    }\n    \n    System.out.println(count);\n}\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.0078225,
+    "fix_specification": 0.0072275,
+    "fix_specification_and_buggy_code_to_fix_code": 0.0033425,
+    "total": 0.0183925
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 801,
+      "output_tokens": 582,
+      "total_tokens": 1383
+    },
+    "fix_specification": {
+      "input_tokens": 1043,
+      "output_tokens": 462,
+      "total_tokens": 1505
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 833,
+      "output_tokens": 126,
+      "total_tokens": 959
+    }
+  }
+}

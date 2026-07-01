@@ -1,0 +1,289 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54234667",
+  "repair_index": 1,
+  "task_name": "abc337_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_loops": 5,
+  "test_timeout_seconds": 300.0,
+  "validated_attempt_index": 2,
+  "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443",
+  "generated_at": "2026-06-09T01:55:17.281534+00:00",
+  "elapsed_seconds": 34.141,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443",
+      "elapsed_seconds": 34.141,
+      "attempts": 2
+    }
+  ],
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "status": "fail",
+      "pass": false,
+      "pass_rate": 0.5384615384615384,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_01",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_01/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_01/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_01/dataset/abc337_a/Java/54234667",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_01/dataset/abc337_a/Java/54234667/faultyVersion.java",
+      "test_records": [
+        {
+          "task": "abc337_a",
+          "language": "Java",
+          "program_id": "54234667",
+          "pass_rate": 0.5384615384615384,
+          "tests_run": 13,
+          "failed_tests": [
+            "00_sample_01.txt",
+            "01_random_03.txt",
+            "01_random_06.txt",
+            "02_handmade_09.txt",
+            "02_handmade_10.txt",
+            "02_handmade_12.txt"
+          ],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function should determine the winner between Team Takahashi and Team Aoki based on their total scores across N matches. For each match, Team Takahashi's score is given by X_i and Team Aoki's score by Y_i. The function should sum the scores for each team over all matches and compare the totals. If Team Takahashi's total score is higher, it should print \"Takahashi\". If Team Aoki's total score is higher, it should print \"Aoki\". If both teams have the same total score, it should print \"draw\".",
+        "diagnosis_and_repair_directions": "The flawed specification incorrectly uses a single integer `sum` to track the score difference between the two teams by adding Team Takahashi's score and subtracting Team Aoki's score in each iteration. This approach can lead to incorrect results because it does not separately track the total scores for each team. The correct approach is to maintain two separate accumulators: one for Team Takahashi's total score and another for Team Aoki's total score. The function should then compare these two totals to determine the winner or if it's a draw.\nRepair Directions:\n1. Replace the single integer `sum` with two separate integers: `takahashiTotal` and `aokiTotal`.\n2. In each iteration, add the score of Team Takahashi to `takahashiTotal` and the score of Team Aoki to `aokiTotal`.\n3. After iterating through all matches, compare `takahashiTotal` and `aokiTotal` to determine the winner or if it's a draw.\n4. Adjust the logic for setting the result string based on the comparison of the two totals.",
+        "raw_response": "Intended Behavior:\nThe function should determine the winner between Team Takahashi and Team Aoki based on their total scores across N matches. For each match, Team Takahashi's score is given by X_i and Team Aoki's score by Y_i. The function should sum the scores for each team over all matches and compare the totals. If Team Takahashi's total score is higher, it should print \"Takahashi\". If Team Aoki's total score is higher, it should print \"Aoki\". If both teams have the same total score, it should print \"draw\".\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly uses a single integer `sum` to track the score difference between the two teams by adding Team Takahashi's score and subtracting Team Aoki's score in each iteration. This approach can lead to incorrect results because it does not separately track the total scores for each team. The correct approach is to maintain two separate accumulators: one for Team Takahashi's total score and another for Team Aoki's total score. The function should then compare these two totals to determine the winner or if it's a draw.\n\nRepair Directions:\n1. Replace the single integer `sum` with two separate integers: `takahashiTotal` and `aokiTotal`.\n2. In each iteration, add the score of Team Takahashi to `takahashiTotal` and the score of Team Aoki to `aokiTotal`.\n3. After iterating through all matches, compare `takahashiTotal` and `aokiTotal` to determine the winner or if it's a draw.\n4. Adjust the logic for setting the result string based on the comparison of the two totals.\n\nFixed Specification:\nFunction: main\nPurpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on their total scores from multiple matches, or declare a \"draw\" if scores are equal.\nSignature: main(String[] args)\nInput: \n  - args: An array of strings representing command line arguments (not used in the function).\n  - User input via standard input: \n    - An integer `n` which specifies the number of rounds.\n    - For each round, two integers are input sequentially representing the scores of Team Takahashi and Team Aoki.\nOutput: \n  - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"draw\".\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer `n` from input, representing the number of rounds.\n  3. Initialize two integers `takahashiTotal` and `aokiTotal` to 0.\n  4. Iterate from 1 to `n` (inclusive):\n     - In each iteration, read two integers from input.\n     - Add the first integer to `takahashiTotal`.\n     - Add the second integer to `aokiTotal`.\n  5. Close the Scanner object.\n  6. Initialize a string `str` with the value \"draw\".\n  7. If `takahashiTotal` is greater than `aokiTotal`, set `str` to \"Takahashi\".\n  8. Else if `aokiTotal` is greater than `takahashiTotal`, set `str` to \"Aoki\".\n  9. Print the value of `str`."
+      },
+      "fixed_specification": "Function: main\nPurpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on their total scores from multiple matches, or declare a \"draw\" if scores are equal.\nSignature: main(String[] args)\nInput: \n  - args: An array of strings representing command line arguments (not used in the function).\n  - User input via standard input: \n    - An integer `n` which specifies the number of rounds.\n    - For each round, two integers are input sequentially representing the scores of Team Takahashi and Team Aoki.\nOutput: \n  - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"draw\".\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer `n` from input, representing the number of rounds.\n  3. Initialize two integers `takahashiTotal` and `aokiTotal` to 0.\n  4. Iterate from 1 to `n` (inclusive):\n     - In each iteration, read two integers from input.\n     - Add the first integer to `takahashiTotal`.\n     - Add the second integer to `aokiTotal`.\n  5. Close the Scanner object.\n  6. Initialize a string `str` with the value \"draw\".\n  7. If `takahashiTotal` is greater than `aokiTotal`, set `str` to \"Takahashi\".\n  8. Else if `aokiTotal` is greater than `takahashiTotal`, set `str` to \"Aoki\".\n  9. Print the value of `str`.",
+      "fix_specification_usage": {
+        "input_tokens": 813,
+        "output_tokens": 704,
+        "total_tokens": 1517
+      },
+      "fix_specification_estimated_cost": 0.0090725,
+      "fix_code": "public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int takahashiTotal = 0;\n    int aokiTotal = 0;\n    for (int i = 1; i <= n; i++) {\n        takahashiTotal += sc.nextInt();\n        aokiTotal += sc.nextInt();\n    }\n    sc.close();\n    \n    String str = \"draw\";\n    if (takahashiTotal > aokiTotal) {\n        str = \"Takahashi\";\n    } else if (aokiTotal > takahashiTotal) {\n        str = \"Aoki\";\n    }\n    System.out.println(str);\n}\n",
+      "fix_code_raw_response": "```java\npublic static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int takahashiTotal = 0;\n    int aokiTotal = 0;\n    for (int i = 1; i <= n; i++) {\n        takahashiTotal += sc.nextInt();\n        aokiTotal += sc.nextInt();\n    }\n    sc.close();\n    \n    String str = \"draw\";\n    if (takahashiTotal > aokiTotal) {\n        str = \"Takahashi\";\n    } else if (aokiTotal > takahashiTotal) {\n        str = \"Aoki\";\n    }\n    System.out.println(str);\n}\n```",
+      "fix_code_usage": {
+        "input_tokens": 868,
+        "output_tokens": 150,
+        "total_tokens": 1018
+      },
+      "fix_code_estimated_cost": 0.00367
+    },
+    {
+      "attempt_index": 2,
+      "status": "pass",
+      "pass": true,
+      "pass_rate": 1.0,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_02",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_02/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_02/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_02/dataset/abc337_a/Java/54234667",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_02/dataset/abc337_a/Java/54234667/faultyVersion.java",
+      "test_records": [
+        {
+          "task": "abc337_a",
+          "language": "Java",
+          "program_id": "54234667",
+          "pass_rate": 1.0,
+          "tests_run": 13,
+          "failed_tests": [],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function should determine the winner between Team Takahashi and Team Aoki based on their total scores across N matches. For each match, Team Takahashi's score is given by X_i and Team Aoki's score by Y_i. The function should sum the scores for each team over all matches and compare the totals. If Team Takahashi's total score is higher, it should print \"Takahashi\". If Team Aoki's total score is higher, it should print \"Aoki\". If both teams have the same total score, it should print \"Draw\" with an uppercase 'D'.",
+        "diagnosis_and_repair_directions": "The verification feedback indicates that the previous fix attempt failed due to a case sensitivity issue in the output string. The function currently prints \"draw\" with a lowercase 'd' when the scores are equal, but the expected output format requires \"Draw\" with an uppercase 'D'. This is a semantic behavior error related to output formatting rather than the logic of score calculation. The repair direction should focus on ensuring the output string matches the expected case exactly.\nRepair Directions:\n1. Ensure that the output string for a draw is \"Draw\" with an uppercase 'D'.\n2. Maintain the logic for calculating the total scores for each team and determining the winner or if it's a draw.\n3. Verify that the output format for all cases (\"Takahashi\", \"Aoki\", \"Draw\") matches the expected case sensitivity.",
+        "raw_response": "Intended Behavior:\nThe function should determine the winner between Team Takahashi and Team Aoki based on their total scores across N matches. For each match, Team Takahashi's score is given by X_i and Team Aoki's score by Y_i. The function should sum the scores for each team over all matches and compare the totals. If Team Takahashi's total score is higher, it should print \"Takahashi\". If Team Aoki's total score is higher, it should print \"Aoki\". If both teams have the same total score, it should print \"Draw\" with an uppercase 'D'.\n\nDiagnosis and Repair Directions:\nThe verification feedback indicates that the previous fix attempt failed due to a case sensitivity issue in the output string. The function currently prints \"draw\" with a lowercase 'd' when the scores are equal, but the expected output format requires \"Draw\" with an uppercase 'D'. This is a semantic behavior error related to output formatting rather than the logic of score calculation. The repair direction should focus on ensuring the output string matches the expected case exactly.\n\nRepair Directions:\n1. Ensure that the output string for a draw is \"Draw\" with an uppercase 'D'.\n2. Maintain the logic for calculating the total scores for each team and determining the winner or if it's a draw.\n3. Verify that the output format for all cases (\"Takahashi\", \"Aoki\", \"Draw\") matches the expected case sensitivity.\n\nFixed Specification:\nFunction: main\nPurpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on their total scores from multiple matches, or declare a \"Draw\" if scores are equal.\nSignature: main(String[] args)\nInput: \n  - args: An array of strings representing command line arguments (not used in the function).\n  - User input via standard input: \n    - An integer `n` which specifies the number of rounds.\n    - For each round, two integers are input sequentially representing the scores of Team Takahashi and Team Aoki.\nOutput: \n  - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"Draw\".\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer `n` from input, representing the number of rounds.\n  3. Initialize two integers `takahashiTotal` and `aokiTotal` to 0.\n  4. Iterate from 1 to `n` (inclusive):\n     - In each iteration, read two integers from input.\n     - Add the first integer to `takahashiTotal`.\n     - Add the second integer to `aokiTotal`.\n  5. Close the Scanner object.\n  6. Initialize a string `str` with the value \"Draw\".\n  7. If `takahashiTotal` is greater than `aokiTotal`, set `str` to \"Takahashi\".\n  8. Else if `aokiTotal` is greater than `takahashiTotal`, set `str` to \"Aoki\".\n  9. Print the value of `str`."
+      },
+      "fixed_specification": "Function: main\nPurpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on their total scores from multiple matches, or declare a \"Draw\" if scores are equal.\nSignature: main(String[] args)\nInput: \n  - args: An array of strings representing command line arguments (not used in the function).\n  - User input via standard input: \n    - An integer `n` which specifies the number of rounds.\n    - For each round, two integers are input sequentially representing the scores of Team Takahashi and Team Aoki.\nOutput: \n  - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"Draw\".\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer `n` from input, representing the number of rounds.\n  3. Initialize two integers `takahashiTotal` and `aokiTotal` to 0.\n  4. Iterate from 1 to `n` (inclusive):\n     - In each iteration, read two integers from input.\n     - Add the first integer to `takahashiTotal`.\n     - Add the second integer to `aokiTotal`.\n  5. Close the Scanner object.\n  6. Initialize a string `str` with the value \"Draw\".\n  7. If `takahashiTotal` is greater than `aokiTotal`, set `str` to \"Takahashi\".\n  8. Else if `aokiTotal` is greater than `takahashiTotal`, set `str` to \"Aoki\".\n  9. Print the value of `str`.",
+      "fix_specification_usage": {
+        "input_tokens": 1934,
+        "output_tokens": 651,
+        "total_tokens": 2585
+      },
+      "fix_specification_estimated_cost": 0.011345,
+      "fix_code": "public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int takahashiTotal = 0;\n    int aokiTotal = 0;\n    for (int i = 1; i <= n; i++) {\n        takahashiTotal += sc.nextInt();\n        aokiTotal += sc.nextInt();\n    }\n    sc.close();\n    \n    String str = \"Draw\";\n    if (takahashiTotal > aokiTotal) {\n        str = \"Takahashi\";\n    } else if (aokiTotal > takahashiTotal) {\n        str = \"Aoki\";\n    }\n    System.out.println(str);\n}\n",
+      "fix_code_raw_response": "```java\npublic static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int takahashiTotal = 0;\n    int aokiTotal = 0;\n    for (int i = 1; i <= n; i++) {\n        takahashiTotal += sc.nextInt();\n        aokiTotal += sc.nextInt();\n    }\n    sc.close();\n    \n    String str = \"Draw\";\n    if (takahashiTotal > aokiTotal) {\n        str = \"Takahashi\";\n    } else if (aokiTotal > takahashiTotal) {\n        str = \"Aoki\";\n    }\n    System.out.println(str);\n}\n```",
+      "fix_code_usage": {
+        "input_tokens": 868,
+        "output_tokens": 150,
+        "total_tokens": 1018
+      },
+      "fix_code_estimated_cost": 0.00367
+    }
+  ],
+  "last_chain_summary": {
+    "status": "success",
+    "generated_at": "2026-06-09T01:54:57.362697+00:00",
+    "programId": "54234667",
+    "task_name": "abc337_a",
+    "language": "Java",
+    "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443",
+    "max_loops": 5,
+    "use_structure_adapter": false,
+    "faulty_function": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\tint n = sc.nextInt();\n\t\tint sum = 0;\n\t\tfor (int i = 1; i <= n; i++) {\n\t\t\tsum += sc.nextInt();\n\t\t\tsum -= sc.nextInt();\n\t\t}\n\t\tsc.close();\n\t\t\n\t\tString str = \"draw\";\n\t\tif (sum > 0) {\n\t\t\tstr = \"Takahashi\";\n\t\t} else if (sum < 0) { // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\t\t\tstr = \"Aoki\";\n\t\t}\n\t\tSystem.out.println(str);\n\t}",
+    "flawed_specification": "[\n  Function: main\n  Purpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on input values, or declare a \"draw\".\n  Signature: main(String[] args)\n  Input: \n    - args: An array of strings representing command line arguments (not used in the function).\n    - User input via standard input: \n      - An integer `n` which specifies the number of rounds.\n      - For each round, two integers are input sequentially.\n  Output: \n    - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"draw\".\n  Behavior:\n    1. Initialize a Scanner object to read from standard input.\n    2. Read an integer `n` from input, representing the number of rounds.\n    3. Initialize an integer `sum` to 0.\n    4. Iterate from 1 to `n` (inclusive):\n       - In each iteration, read two integers from input.\n       - Add the first integer to `sum`.\n       - Subtract the second integer from `sum`.\n    5. Close the Scanner object.\n    6. Initialize a string `str` with the value \"draw\".\n    7. If `sum` is greater than 0, set `str` to \"Takahashi\".\n    8. Else if `sum` is less than 0, set `str` to \"Aoki\" (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n    9. Print the value of `str`.\n]",
+    "flawed_specification_usage": {
+      "input_tokens": 634,
+      "output_tokens": 336,
+      "total_tokens": 970
+    },
+    "flawed_specification_estimated_cost": 0.004945,
+    "validated_attempt_index": 2,
+    "final_fix_code": "public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int takahashiTotal = 0;\n    int aokiTotal = 0;\n    for (int i = 1; i <= n; i++) {\n        takahashiTotal += sc.nextInt();\n        aokiTotal += sc.nextInt();\n    }\n    sc.close();\n    \n    String str = \"Draw\";\n    if (takahashiTotal > aokiTotal) {\n        str = \"Takahashi\";\n    } else if (aokiTotal > takahashiTotal) {\n        str = \"Aoki\";\n    }\n    System.out.println(str);\n}\n",
+    "outer_run_index": 1,
+    "elapsed_seconds": 34.141,
+    "attempts": [
+      {
+        "attempt_index": 1,
+        "status": "fail",
+        "pass": false,
+        "pass_rate": 0.5384615384615384,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_01",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_01/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_01/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_01/dataset/abc337_a/Java/54234667",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_01/dataset/abc337_a/Java/54234667/faultyVersion.java",
+        "test_records": [
+          {
+            "task": "abc337_a",
+            "language": "Java",
+            "program_id": "54234667",
+            "pass_rate": 0.5384615384615384,
+            "tests_run": 13,
+            "failed_tests": [
+              "00_sample_01.txt",
+              "01_random_03.txt",
+              "01_random_06.txt",
+              "02_handmade_09.txt",
+              "02_handmade_10.txt",
+              "02_handmade_12.txt"
+            ],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function should determine the winner between Team Takahashi and Team Aoki based on their total scores across N matches. For each match, Team Takahashi's score is given by X_i and Team Aoki's score by Y_i. The function should sum the scores for each team over all matches and compare the totals. If Team Takahashi's total score is higher, it should print \"Takahashi\". If Team Aoki's total score is higher, it should print \"Aoki\". If both teams have the same total score, it should print \"draw\".",
+          "diagnosis_and_repair_directions": "The flawed specification incorrectly uses a single integer `sum` to track the score difference between the two teams by adding Team Takahashi's score and subtracting Team Aoki's score in each iteration. This approach can lead to incorrect results because it does not separately track the total scores for each team. The correct approach is to maintain two separate accumulators: one for Team Takahashi's total score and another for Team Aoki's total score. The function should then compare these two totals to determine the winner or if it's a draw.\nRepair Directions:\n1. Replace the single integer `sum` with two separate integers: `takahashiTotal` and `aokiTotal`.\n2. In each iteration, add the score of Team Takahashi to `takahashiTotal` and the score of Team Aoki to `aokiTotal`.\n3. After iterating through all matches, compare `takahashiTotal` and `aokiTotal` to determine the winner or if it's a draw.\n4. Adjust the logic for setting the result string based on the comparison of the two totals.",
+          "raw_response": "Intended Behavior:\nThe function should determine the winner between Team Takahashi and Team Aoki based on their total scores across N matches. For each match, Team Takahashi's score is given by X_i and Team Aoki's score by Y_i. The function should sum the scores for each team over all matches and compare the totals. If Team Takahashi's total score is higher, it should print \"Takahashi\". If Team Aoki's total score is higher, it should print \"Aoki\". If both teams have the same total score, it should print \"draw\".\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly uses a single integer `sum` to track the score difference between the two teams by adding Team Takahashi's score and subtracting Team Aoki's score in each iteration. This approach can lead to incorrect results because it does not separately track the total scores for each team. The correct approach is to maintain two separate accumulators: one for Team Takahashi's total score and another for Team Aoki's total score. The function should then compare these two totals to determine the winner or if it's a draw.\n\nRepair Directions:\n1. Replace the single integer `sum` with two separate integers: `takahashiTotal` and `aokiTotal`.\n2. In each iteration, add the score of Team Takahashi to `takahashiTotal` and the score of Team Aoki to `aokiTotal`.\n3. After iterating through all matches, compare `takahashiTotal` and `aokiTotal` to determine the winner or if it's a draw.\n4. Adjust the logic for setting the result string based on the comparison of the two totals.\n\nFixed Specification:\nFunction: main\nPurpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on their total scores from multiple matches, or declare a \"draw\" if scores are equal.\nSignature: main(String[] args)\nInput: \n  - args: An array of strings representing command line arguments (not used in the function).\n  - User input via standard input: \n    - An integer `n` which specifies the number of rounds.\n    - For each round, two integers are input sequentially representing the scores of Team Takahashi and Team Aoki.\nOutput: \n  - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"draw\".\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer `n` from input, representing the number of rounds.\n  3. Initialize two integers `takahashiTotal` and `aokiTotal` to 0.\n  4. Iterate from 1 to `n` (inclusive):\n     - In each iteration, read two integers from input.\n     - Add the first integer to `takahashiTotal`.\n     - Add the second integer to `aokiTotal`.\n  5. Close the Scanner object.\n  6. Initialize a string `str` with the value \"draw\".\n  7. If `takahashiTotal` is greater than `aokiTotal`, set `str` to \"Takahashi\".\n  8. Else if `aokiTotal` is greater than `takahashiTotal`, set `str` to \"Aoki\".\n  9. Print the value of `str`."
+        },
+        "fixed_specification": "Function: main\nPurpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on their total scores from multiple matches, or declare a \"draw\" if scores are equal.\nSignature: main(String[] args)\nInput: \n  - args: An array of strings representing command line arguments (not used in the function).\n  - User input via standard input: \n    - An integer `n` which specifies the number of rounds.\n    - For each round, two integers are input sequentially representing the scores of Team Takahashi and Team Aoki.\nOutput: \n  - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"draw\".\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer `n` from input, representing the number of rounds.\n  3. Initialize two integers `takahashiTotal` and `aokiTotal` to 0.\n  4. Iterate from 1 to `n` (inclusive):\n     - In each iteration, read two integers from input.\n     - Add the first integer to `takahashiTotal`.\n     - Add the second integer to `aokiTotal`.\n  5. Close the Scanner object.\n  6. Initialize a string `str` with the value \"draw\".\n  7. If `takahashiTotal` is greater than `aokiTotal`, set `str` to \"Takahashi\".\n  8. Else if `aokiTotal` is greater than `takahashiTotal`, set `str` to \"Aoki\".\n  9. Print the value of `str`.",
+        "fix_specification_usage": {
+          "input_tokens": 813,
+          "output_tokens": 704,
+          "total_tokens": 1517
+        },
+        "fix_specification_estimated_cost": 0.0090725,
+        "fix_code": "public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int takahashiTotal = 0;\n    int aokiTotal = 0;\n    for (int i = 1; i <= n; i++) {\n        takahashiTotal += sc.nextInt();\n        aokiTotal += sc.nextInt();\n    }\n    sc.close();\n    \n    String str = \"draw\";\n    if (takahashiTotal > aokiTotal) {\n        str = \"Takahashi\";\n    } else if (aokiTotal > takahashiTotal) {\n        str = \"Aoki\";\n    }\n    System.out.println(str);\n}\n",
+        "fix_code_raw_response": "```java\npublic static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int takahashiTotal = 0;\n    int aokiTotal = 0;\n    for (int i = 1; i <= n; i++) {\n        takahashiTotal += sc.nextInt();\n        aokiTotal += sc.nextInt();\n    }\n    sc.close();\n    \n    String str = \"draw\";\n    if (takahashiTotal > aokiTotal) {\n        str = \"Takahashi\";\n    } else if (aokiTotal > takahashiTotal) {\n        str = \"Aoki\";\n    }\n    System.out.println(str);\n}\n```",
+        "fix_code_usage": {
+          "input_tokens": 868,
+          "output_tokens": 150,
+          "total_tokens": 1018
+        },
+        "fix_code_estimated_cost": 0.00367
+      },
+      {
+        "attempt_index": 2,
+        "status": "pass",
+        "pass": true,
+        "pass_rate": 1.0,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_02",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_02/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_02/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_02/dataset/abc337_a/Java/54234667",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54234667/outer_run_01/54234667_20260609_015443/attempt_02/dataset/abc337_a/Java/54234667/faultyVersion.java",
+        "test_records": [
+          {
+            "task": "abc337_a",
+            "language": "Java",
+            "program_id": "54234667",
+            "pass_rate": 1.0,
+            "tests_run": 13,
+            "failed_tests": [],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function should determine the winner between Team Takahashi and Team Aoki based on their total scores across N matches. For each match, Team Takahashi's score is given by X_i and Team Aoki's score by Y_i. The function should sum the scores for each team over all matches and compare the totals. If Team Takahashi's total score is higher, it should print \"Takahashi\". If Team Aoki's total score is higher, it should print \"Aoki\". If both teams have the same total score, it should print \"Draw\" with an uppercase 'D'.",
+          "diagnosis_and_repair_directions": "The verification feedback indicates that the previous fix attempt failed due to a case sensitivity issue in the output string. The function currently prints \"draw\" with a lowercase 'd' when the scores are equal, but the expected output format requires \"Draw\" with an uppercase 'D'. This is a semantic behavior error related to output formatting rather than the logic of score calculation. The repair direction should focus on ensuring the output string matches the expected case exactly.\nRepair Directions:\n1. Ensure that the output string for a draw is \"Draw\" with an uppercase 'D'.\n2. Maintain the logic for calculating the total scores for each team and determining the winner or if it's a draw.\n3. Verify that the output format for all cases (\"Takahashi\", \"Aoki\", \"Draw\") matches the expected case sensitivity.",
+          "raw_response": "Intended Behavior:\nThe function should determine the winner between Team Takahashi and Team Aoki based on their total scores across N matches. For each match, Team Takahashi's score is given by X_i and Team Aoki's score by Y_i. The function should sum the scores for each team over all matches and compare the totals. If Team Takahashi's total score is higher, it should print \"Takahashi\". If Team Aoki's total score is higher, it should print \"Aoki\". If both teams have the same total score, it should print \"Draw\" with an uppercase 'D'.\n\nDiagnosis and Repair Directions:\nThe verification feedback indicates that the previous fix attempt failed due to a case sensitivity issue in the output string. The function currently prints \"draw\" with a lowercase 'd' when the scores are equal, but the expected output format requires \"Draw\" with an uppercase 'D'. This is a semantic behavior error related to output formatting rather than the logic of score calculation. The repair direction should focus on ensuring the output string matches the expected case exactly.\n\nRepair Directions:\n1. Ensure that the output string for a draw is \"Draw\" with an uppercase 'D'.\n2. Maintain the logic for calculating the total scores for each team and determining the winner or if it's a draw.\n3. Verify that the output format for all cases (\"Takahashi\", \"Aoki\", \"Draw\") matches the expected case sensitivity.\n\nFixed Specification:\nFunction: main\nPurpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on their total scores from multiple matches, or declare a \"Draw\" if scores are equal.\nSignature: main(String[] args)\nInput: \n  - args: An array of strings representing command line arguments (not used in the function).\n  - User input via standard input: \n    - An integer `n` which specifies the number of rounds.\n    - For each round, two integers are input sequentially representing the scores of Team Takahashi and Team Aoki.\nOutput: \n  - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"Draw\".\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer `n` from input, representing the number of rounds.\n  3. Initialize two integers `takahashiTotal` and `aokiTotal` to 0.\n  4. Iterate from 1 to `n` (inclusive):\n     - In each iteration, read two integers from input.\n     - Add the first integer to `takahashiTotal`.\n     - Add the second integer to `aokiTotal`.\n  5. Close the Scanner object.\n  6. Initialize a string `str` with the value \"Draw\".\n  7. If `takahashiTotal` is greater than `aokiTotal`, set `str` to \"Takahashi\".\n  8. Else if `aokiTotal` is greater than `takahashiTotal`, set `str` to \"Aoki\".\n  9. Print the value of `str`."
+        },
+        "fixed_specification": "Function: main\nPurpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on their total scores from multiple matches, or declare a \"Draw\" if scores are equal.\nSignature: main(String[] args)\nInput: \n  - args: An array of strings representing command line arguments (not used in the function).\n  - User input via standard input: \n    - An integer `n` which specifies the number of rounds.\n    - For each round, two integers are input sequentially representing the scores of Team Takahashi and Team Aoki.\nOutput: \n  - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"Draw\".\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer `n` from input, representing the number of rounds.\n  3. Initialize two integers `takahashiTotal` and `aokiTotal` to 0.\n  4. Iterate from 1 to `n` (inclusive):\n     - In each iteration, read two integers from input.\n     - Add the first integer to `takahashiTotal`.\n     - Add the second integer to `aokiTotal`.\n  5. Close the Scanner object.\n  6. Initialize a string `str` with the value \"Draw\".\n  7. If `takahashiTotal` is greater than `aokiTotal`, set `str` to \"Takahashi\".\n  8. Else if `aokiTotal` is greater than `takahashiTotal`, set `str` to \"Aoki\".\n  9. Print the value of `str`.",
+        "fix_specification_usage": {
+          "input_tokens": 1934,
+          "output_tokens": 651,
+          "total_tokens": 2585
+        },
+        "fix_specification_estimated_cost": 0.011345,
+        "fix_code": "public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int takahashiTotal = 0;\n    int aokiTotal = 0;\n    for (int i = 1; i <= n; i++) {\n        takahashiTotal += sc.nextInt();\n        aokiTotal += sc.nextInt();\n    }\n    sc.close();\n    \n    String str = \"Draw\";\n    if (takahashiTotal > aokiTotal) {\n        str = \"Takahashi\";\n    } else if (aokiTotal > takahashiTotal) {\n        str = \"Aoki\";\n    }\n    System.out.println(str);\n}\n",
+        "fix_code_raw_response": "```java\npublic static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int takahashiTotal = 0;\n    int aokiTotal = 0;\n    for (int i = 1; i <= n; i++) {\n        takahashiTotal += sc.nextInt();\n        aokiTotal += sc.nextInt();\n    }\n    sc.close();\n    \n    String str = \"Draw\";\n    if (takahashiTotal > aokiTotal) {\n        str = \"Takahashi\";\n    } else if (aokiTotal > takahashiTotal) {\n        str = \"Aoki\";\n    }\n    System.out.println(str);\n}\n```",
+        "fix_code_usage": {
+          "input_tokens": 868,
+          "output_tokens": 150,
+          "total_tokens": 1018
+        },
+        "fix_code_estimated_cost": 0.00367
+      }
+    ]
+  },
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\tint n = sc.nextInt();\n\t\tint sum = 0;\n\t\tfor (int i = 1; i <= n; i++) {\n\t\t\tsum += sc.nextInt();\n\t\t\tsum -= sc.nextInt();\n\t\t}\n\t\tsc.close();\n\t\t\n\t\tString str = \"draw\";\n\t\tif (sum > 0) {\n\t\t\tstr = \"Takahashi\";\n\t\t} else if (sum < 0) { // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\t\t\tstr = \"Aoki\";\n\t\t}\n\t\tSystem.out.println(str);\n\t}",
+  "flawed_specification": "[\n  Function: main\n  Purpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on input values, or declare a \"draw\".\n  Signature: main(String[] args)\n  Input: \n    - args: An array of strings representing command line arguments (not used in the function).\n    - User input via standard input: \n      - An integer `n` which specifies the number of rounds.\n      - For each round, two integers are input sequentially.\n  Output: \n    - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"draw\".\n  Behavior:\n    1. Initialize a Scanner object to read from standard input.\n    2. Read an integer `n` from input, representing the number of rounds.\n    3. Initialize an integer `sum` to 0.\n    4. Iterate from 1 to `n` (inclusive):\n       - In each iteration, read two integers from input.\n       - Add the first integer to `sum`.\n       - Subtract the second integer from `sum`.\n    5. Close the Scanner object.\n    6. Initialize a string `str` with the value \"draw\".\n    7. If `sum` is greater than 0, set `str` to \"Takahashi\".\n    8. Else if `sum` is less than 0, set `str` to \"Aoki\" (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n    9. Print the value of `str`.\n]",
+  "flawed_specification_usage": {
+    "input_tokens": 634,
+    "output_tokens": 336,
+    "total_tokens": 970
+  },
+  "flawed_specification_estimated_cost": 0.004945,
+  "selected_inner_attempt_index": 2,
+  "selected_inner_attempt_status": "pass",
+  "pass_rate": 1.0,
+  "test_records": [
+    {
+      "task": "abc337_a",
+      "language": "Java",
+      "program_id": "54234667",
+      "pass_rate": 1.0,
+      "tests_run": 13,
+      "failed_tests": [],
+      "error_tests": []
+    }
+  ],
+  "test_error": null,
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should determine the winner between Team Takahashi and Team Aoki based on their total scores across N matches. For each match, Team Takahashi's score is given by X_i and Team Aoki's score by Y_i. The function should sum the scores for each team over all matches and compare the totals. If Team Takahashi's total score is higher, it should print \"Takahashi\". If Team Aoki's total score is higher, it should print \"Aoki\". If both teams have the same total score, it should print \"Draw\" with an uppercase 'D'.",
+    "diagnosis_and_repair_directions": "The verification feedback indicates that the previous fix attempt failed due to a case sensitivity issue in the output string. The function currently prints \"draw\" with a lowercase 'd' when the scores are equal, but the expected output format requires \"Draw\" with an uppercase 'D'. This is a semantic behavior error related to output formatting rather than the logic of score calculation. The repair direction should focus on ensuring the output string matches the expected case exactly.\nRepair Directions:\n1. Ensure that the output string for a draw is \"Draw\" with an uppercase 'D'.\n2. Maintain the logic for calculating the total scores for each team and determining the winner or if it's a draw.\n3. Verify that the output format for all cases (\"Takahashi\", \"Aoki\", \"Draw\") matches the expected case sensitivity.",
+    "raw_response": "Intended Behavior:\nThe function should determine the winner between Team Takahashi and Team Aoki based on their total scores across N matches. For each match, Team Takahashi's score is given by X_i and Team Aoki's score by Y_i. The function should sum the scores for each team over all matches and compare the totals. If Team Takahashi's total score is higher, it should print \"Takahashi\". If Team Aoki's total score is higher, it should print \"Aoki\". If both teams have the same total score, it should print \"Draw\" with an uppercase 'D'.\n\nDiagnosis and Repair Directions:\nThe verification feedback indicates that the previous fix attempt failed due to a case sensitivity issue in the output string. The function currently prints \"draw\" with a lowercase 'd' when the scores are equal, but the expected output format requires \"Draw\" with an uppercase 'D'. This is a semantic behavior error related to output formatting rather than the logic of score calculation. The repair direction should focus on ensuring the output string matches the expected case exactly.\n\nRepair Directions:\n1. Ensure that the output string for a draw is \"Draw\" with an uppercase 'D'.\n2. Maintain the logic for calculating the total scores for each team and determining the winner or if it's a draw.\n3. Verify that the output format for all cases (\"Takahashi\", \"Aoki\", \"Draw\") matches the expected case sensitivity.\n\nFixed Specification:\nFunction: main\nPurpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on their total scores from multiple matches, or declare a \"Draw\" if scores are equal.\nSignature: main(String[] args)\nInput: \n  - args: An array of strings representing command line arguments (not used in the function).\n  - User input via standard input: \n    - An integer `n` which specifies the number of rounds.\n    - For each round, two integers are input sequentially representing the scores of Team Takahashi and Team Aoki.\nOutput: \n  - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"Draw\".\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer `n` from input, representing the number of rounds.\n  3. Initialize two integers `takahashiTotal` and `aokiTotal` to 0.\n  4. Iterate from 1 to `n` (inclusive):\n     - In each iteration, read two integers from input.\n     - Add the first integer to `takahashiTotal`.\n     - Add the second integer to `aokiTotal`.\n  5. Close the Scanner object.\n  6. Initialize a string `str` with the value \"Draw\".\n  7. If `takahashiTotal` is greater than `aokiTotal`, set `str` to \"Takahashi\".\n  8. Else if `aokiTotal` is greater than `takahashiTotal`, set `str` to \"Aoki\".\n  9. Print the value of `str`."
+  },
+  "fixed_specification": "Function: main\nPurpose: To determine and print the winner between \"Takahashi\" and \"Aoki\" based on their total scores from multiple matches, or declare a \"Draw\" if scores are equal.\nSignature: main(String[] args)\nInput: \n  - args: An array of strings representing command line arguments (not used in the function).\n  - User input via standard input: \n    - An integer `n` which specifies the number of rounds.\n    - For each round, two integers are input sequentially representing the scores of Team Takahashi and Team Aoki.\nOutput: \n  - Prints a string to the standard output, which can be \"Takahashi\", \"Aoki\", or \"Draw\".\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer `n` from input, representing the number of rounds.\n  3. Initialize two integers `takahashiTotal` and `aokiTotal` to 0.\n  4. Iterate from 1 to `n` (inclusive):\n     - In each iteration, read two integers from input.\n     - Add the first integer to `takahashiTotal`.\n     - Add the second integer to `aokiTotal`.\n  5. Close the Scanner object.\n  6. Initialize a string `str` with the value \"Draw\".\n  7. If `takahashiTotal` is greater than `aokiTotal`, set `str` to \"Takahashi\".\n  8. Else if `aokiTotal` is greater than `takahashiTotal`, set `str` to \"Aoki\".\n  9. Print the value of `str`.",
+  "fix_code": "public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int takahashiTotal = 0;\n    int aokiTotal = 0;\n    for (int i = 1; i <= n; i++) {\n        takahashiTotal += sc.nextInt();\n        aokiTotal += sc.nextInt();\n    }\n    sc.close();\n    \n    String str = \"Draw\";\n    if (takahashiTotal > aokiTotal) {\n        str = \"Takahashi\";\n    } else if (aokiTotal > takahashiTotal) {\n        str = \"Aoki\";\n    }\n    System.out.println(str);\n}\n",
+  "fix_code_raw_response": "```java\npublic static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int takahashiTotal = 0;\n    int aokiTotal = 0;\n    for (int i = 1; i <= n; i++) {\n        takahashiTotal += sc.nextInt();\n        aokiTotal += sc.nextInt();\n    }\n    sc.close();\n    \n    String str = \"Draw\";\n    if (takahashiTotal > aokiTotal) {\n        str = \"Takahashi\";\n    } else if (aokiTotal > takahashiTotal) {\n        str = \"Aoki\";\n    }\n    System.out.println(str);\n}\n```",
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 634,
+      "output_tokens": 336,
+      "total_tokens": 970
+    },
+    "fix_specification": {
+      "input_tokens": 1934,
+      "output_tokens": 651,
+      "total_tokens": 2585
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 868,
+      "output_tokens": 150,
+      "total_tokens": 1018
+    }
+  },
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.004945,
+    "fix_specification": 0.011345,
+    "fix_specification_and_buggy_code_to_fix_code": 0.00367
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54784722",
+  "task_name": "abc355_c",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:09:31.144129",
+  "finished_at": "2026-06-15T10:10:03.685280",
+  "elapsed_seconds": 32.54,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 32.54,
+      "estimated_cost": {
+        "total": 0.010535000000000001
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n\n        InputStream source = System.in;\n        Scanner sc = new Scanner(source);\n\n\n        int N = sc.nextInt();\n        int T = sc.nextInt();\n\n\n        int [] yoko = new int[N];\n        int [] tate = new int[N];\n        int naname_左上から右下 = 0;\n        int naname_右上から左下 = 0;\n\n        int[][] grid = new int[N][N];\n        int count = 1;\n        for (int i=0; i<N; i++) {\n            for (int j=0; j<N; j++) {\n                grid[i][j] = count;\n                yoko[i] += count;\n                tate[j] += count;\n                if (i==j) {\n                    naname_左上から右下 += count;\n                }\n\n                count++;\n            }\n        }\n        naname_右上から左下 = naname_左上から右下;\n\n        for (int i=0; i<T; i++) {\n            int t = sc.nextInt();\n            int x = (t-1) % N;\n            int y = (t-1) / N;\n\n            yoko[y] -= t;\n            tate[x] -= t;\n            if (x == y) {\n                naname_左上から右下 -= t;\n            }\n            if (x+y == N+1) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                naname_右上から左下 -= t;\n            }\n\n            for (int j=0; j<N; j++) {\n                if (yoko[j] == 0) {\n                    System.out.println(i+1);\n                    return;\n                }\n                if (tate[j] == 0) {\n                    System.out.println(i+1);\n                    return;\n                }\n                if (naname_左上から右下 == 0) {\n                    System.out.println(i+1);\n                    return;\n                }\n                if (naname_右上から左下 == 0) {\n                    System.out.println(i+1);\n                    return;\n                }\n            }\n        }\n        System.out.println(\"-1\");\n    }",
+  "fix_code": "    public static void main(String[] args) {\n\n        InputStream source = System.in;\n        Scanner sc = new Scanner(source);\n\n\n        int N = sc.nextInt();\n        int T = sc.nextInt();\n\n\n        int [] yoko = new int[N];\n        int [] tate = new int[N];\n        int naname_左上から右下 = 0;\n        int naname_右上から左下 = 0;\n\n        int[][] grid = new int[N][N];\n        int count = 1;\n        for (int i=0; i<N; i++) {\n            for (int j=0; j<N; j++) {\n                grid[i][j] = count;\n                yoko[i] += count;\n                tate[j] += count;\n                if (i==j) {\n                    naname_左上から右下 += count;\n                }\n\n                count++;\n            }\n        }\n        naname_右上から左下 = naname_左上から右下;\n\n        for (int i=0; i<T; i++) {\n            int t = sc.nextInt();\n            int x = (t-1) % N;\n            int y = (t-1) / N;\n\n            yoko[y] -= t;\n            tate[x] -= t;\n            if (x == y) {\n                naname_左上から右下 -= t;\n            }\n            if (x+y == N-1) {\n                naname_右上から左下 -= t;\n            }\n\n            for (int j=0; j<N; j++) {\n                if (yoko[j] == 0) {\n                    System.out.println(i+1);\n                    return;\n                }\n                if (tate[j] == 0) {\n                    System.out.println(i+1);\n                    return;\n                }\n                if (naname_左上から右下 == 0) {\n                    System.out.println(i+1);\n                    return;\n                }\n                if (naname_右上から左下 == 0) {\n                    System.out.println(i+1);\n                    return;\n                }\n            }\n        }\n        System.out.println(\"-1\");\n    }",
+  "fix_code_raw_response": "The issue in the code is with the condition that checks for the diagonal from the top-right to the bottom-left. The condition `if (x+y == N+1)` is incorrect. It should be `if (x+y == N-1)` because the sum of the indices for the top-right to bottom-left diagonal in an N x N grid is always N-1.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n            if (x+y == N+1) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                naname_右上から左下 -= t;\n            }\n</original>\n<patched>\n            if (x+y == N-1) { // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n                naname_右上から左下 -= t;\n            }\n</patched>\n```\n\nThis change ensures that the condition correctly identifies the cells on the top-right to bottom-left diagonal, allowing the program to correctly determine when Bingo is achieved.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1372,
+        "output_tokens": 245,
+        "estimated_cost_usd": 0.010535000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.010535000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

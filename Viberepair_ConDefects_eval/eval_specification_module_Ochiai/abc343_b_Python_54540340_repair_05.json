@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "54540340",
+  "repair_index": 5,
+  "task_name": "abc343_b",
+  "language": "Python",
+  "flawed_specification": "[\n  Function: process_matrix\n  Purpose: To process an N x N matrix and print specific elements based on a condition.\n  Signature: process_matrix()\n  Input: \n    - N (int): The size of the matrix, representing both the number of rows and columns.\n    - A (list of list of int): A two-dimensional list (matrix) of integers, inputted by the user.\n  Output: \n    - None (prints output directly).\n  Behavior:\n    1. Read an integer N from input, representing the dimensions of the matrix.\n    2. Read N lines of input, each containing N integers, and store them in a two-dimensional list A.\n    3. Initialize an empty list `ans`.\n    4. Iterate over each row index `i` from 0 to N-1.\n    5. For each row, iterate over each column index `j` from 0 to N-1.\n    6. Check if the element A[i][j] is equal to 1.\n    7. If the condition is true, append `j+1` to the list `ans` (bug is here).\n    8. After processing each row, print the contents of `ans`.\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should process an adjacency matrix of a simple undirected graph and print the vertices directly connected to each vertex in ascending order. For each vertex i, it should list all vertices j such that there is an edge between i and j (i.e., A[i][j] = 1). The output for each vertex should be printed on a new line.",
+    "diagnosis_and_repair_directions": "The flawed specification correctly describes the input and output requirements but contains a bug in the behavior section. Specifically, the bug is in step 7, where the index `j+1` is appended to the list `ans`. The issue is that `ans` is not reset for each vertex, leading to incorrect results. The list `ans` should be re-initialized for each vertex i to ensure it only contains the vertices directly connected to i. Additionally, the specification should clarify that the vertices should be printed in ascending order, which is naturally handled by iterating over `j` from 0 to N-1.",
+    "raw_response": "Intended Behavior:\nThe function should process an adjacency matrix of a simple undirected graph and print the vertices directly connected to each vertex in ascending order. For each vertex i, it should list all vertices j such that there is an edge between i and j (i.e., A[i][j] = 1). The output for each vertex should be printed on a new line.\n\nDiagnosis and Repair Directions:\nThe flawed specification correctly describes the input and output requirements but contains a bug in the behavior section. Specifically, the bug is in step 7, where the index `j+1` is appended to the list `ans`. The issue is that `ans` is not reset for each vertex, leading to incorrect results. The list `ans` should be re-initialized for each vertex i to ensure it only contains the vertices directly connected to i. Additionally, the specification should clarify that the vertices should be printed in ascending order, which is naturally handled by iterating over `j` from 0 to N-1.\n\nFixed Specification:\nFunction: process_matrix\nPurpose: To process an adjacency matrix of a simple undirected graph and print the vertices directly connected to each vertex.\nSignature: process_matrix()\nInput: \n  - N (int): The size of the matrix, representing both the number of rows and columns.\n  - A (list of list of int): A two-dimensional list (matrix) of integers, inputted by the user.\nOutput: \n  - None (prints output directly).\nBehavior:\n  1. Read an integer N from input, representing the dimensions of the matrix.\n  2. Read N lines of input, each containing N integers, and store them in a two-dimensional list A.\n  3. For each vertex index `i` from 0 to N-1:\n     a. Initialize an empty list `ans`.\n     b. Iterate over each vertex index `j` from 0 to N-1.\n     c. Check if the element A[i][j] is equal to 1.\n     d. If true, append `j+1` to the list `ans`.\n     e. Print the contents of `ans`, which contains the vertices directly connected to vertex `i`, in ascending order."
+  },
+  "fixed_specification": "Function: process_matrix\nPurpose: To process an adjacency matrix of a simple undirected graph and print the vertices directly connected to each vertex.\nSignature: process_matrix()\nInput: \n  - N (int): The size of the matrix, representing both the number of rows and columns.\n  - A (list of list of int): A two-dimensional list (matrix) of integers, inputted by the user.\nOutput: \n  - None (prints output directly).\nBehavior:\n  1. Read an integer N from input, representing the dimensions of the matrix.\n  2. Read N lines of input, each containing N integers, and store them in a two-dimensional list A.\n  3. For each vertex index `i` from 0 to N-1:\n     a. Initialize an empty list `ans`.\n     b. Iterate over each vertex index `j` from 0 to N-1.\n     c. Check if the element A[i][j] is equal to 1.\n     d. If true, append `j+1` to the list `ans`.\n     e. Print the contents of `ans`, which contains the vertices directly connected to vertex `i`, in ascending order.",
+  "fix_code": "N = int(input())\nA = [list(map(int, input().split())) for _ in range(N)]\nfor i in range(N):\n    ans = []\n    for j in range(N):\n        if A[i][j] == 1:\n            ans.append(j+1)\n    print(*ans)\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.00378,
+    "fix_specification": 0.006535,
+    "fix_specification_and_buggy_code_to_fix_code": 0.0020175,
+    "total": 0.0123325
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 476,
+      "output_tokens": 259,
+      "total_tokens": 735
+    },
+    "fix_specification": {
+      "input_tokens": 778,
+      "output_tokens": 459,
+      "total_tokens": 1237
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 543,
+      "output_tokens": 66,
+      "total_tokens": 609
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "programId": "54750119",
+  "repair_index": 2,
+  "task_name": "abc355_c",
+  "language": "Java",
+  "root_cause": "The condition in the if statement at the identified bug location does not correctly handle cases where `num` represents elements on the anti-diagonal of an n x n grid. Specifically, the check `num % (n - 1) == 0` should exclude 0, which is incorrectly counted as part of the anti-diagonal.",
+  "suggestion": "Suggestion 1. Adjust the condition to exclude 0 Modify the condition to correctly account for elements on the anti-diagonal by including an additional check for `num != 0`:\n```java\nif (num % (n - 1) == 0 && num != 0 && num != n * n - 1) {\n    diag[1]++;\n}\n```\n",
+  "fix_code": "public static void main(String[] args) {\n    Scanner scan = new Scanner(System.in);\n    int n = scan.nextInt();\n    int t = scan.nextInt();\n    int[] numbers = new int[t];\n    for (int i = 0; i < t; i++) {\n        numbers[i] = scan.nextInt();\n    }\n\n    scan.close();\n\n    int[] cols = new int[n];\n    int[] rows = new int[n];\n    int[] diag = new int[2];\n    for (int i = 0; i < t; i++) {\n        int num = numbers[i] - 1;\n        cols[num % n]++;\n        rows[num / n]++;\n        if (num % (n + 1) == 0) {\n            diag[0]++;\n        }\n        if (num % (n - 1) == 0 && num != 0 && num != n * n - 1) { // Fixed condition\n            diag[1]++;\n        }\n\n        if (i >= n - 1) {\n            if (diag[0] == n || diag[1] == n) {\n                System.out.println(i + 1);\n                return;\n            }\n            for (int j = 0; j < n; j++) {\n                if (cols[j] == n || rows[j] == n) {\n                    System.out.println(i + 1);\n                    return;\n                }\n            }\n        }\n    }\n    System.out.println(-1);\n}",
+  "repair_run": 2,
+  "source_repair_index": 1,
+  "discarded_patch_count_in_same_run": 1,
+  "batch_attempt_work_dir": "/home/taohongzhu/VibeRepair/ReinFixForConDecfects/output/batch_repair_dataset_2024_work/attempts/54750119/repair_02",
+  "batch_generated_at": "2026-06-14T11:23:39.661265"
+}

@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "55030637",
+  "repair_index": 5,
+  "task_name": "abc356_b",
+  "language": "Python",
+  "flawed_specification": "[\n  Function: main\n  Purpose: To determine if the sum of each column in a DataFrame exceeds corresponding target values.\n  Signature: main()\n  Input: \n    - Two integers `n` and `m` from standard input, representing the number of rows and columns, respectively.\n    - A list of integers `aim_am_lis` from standard input, representing target values for each column.\n    - A list of lists `am_lis`, where each sublist is a row of integers, from standard input.\n  Output: \n    - Prints \"Yes\" if the sum of each column in the DataFrame exceeds the corresponding target value in `aim_am_lis`.\n    - Prints \"No\" otherwise.\n  Behavior:\n    1. Reads two integers `n` and `m` from standard input.\n    2. Reads a list of integers `aim_am_lis` from standard input.\n    3. Initializes an empty list `am_lis`.\n    4. Iterates `n` times, appending a list of integers from standard input to `am_lis` in each iteration.\n    5. Creates a DataFrame `df` using `am_lis` and calculates the sum of each column.\n    6. Initializes a counter `cnt` to zero.\n    7. Iterates over each column index `i` from 0 to `m-1`.\n    8. Increments `cnt` if the sum of the column `df[i]` is greater than the corresponding target value `aim_am_lis[i]`.\n    9. Prints \"Yes\" if `cnt` equals `m`.\n    10. Prints \"No\" otherwise (bug is here).\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should determine if Takahashi has met his daily nutrient goals. Specifically, it should check if the total intake of each nutrient type across all foods meets or exceeds the specified target for that nutrient. If all nutrient goals are met, the function should output \"Yes\"; otherwise, it should output \"No\".",
+    "diagnosis_and_repair_directions": "The flawed specification incorrectly states that the function should print \"Yes\" if the sum of each column exceeds the corresponding target value. The correct behavior should be to print \"Yes\" if the sum of each column meets or exceeds the target value. The issue lies in step 8 of the behavior, where the condition should be `>=` instead of `>`. This ensures that meeting the exact target value is considered sufficient.",
+    "raw_response": "Intended Behavior:\nThe function should determine if Takahashi has met his daily nutrient goals. Specifically, it should check if the total intake of each nutrient type across all foods meets or exceeds the specified target for that nutrient. If all nutrient goals are met, the function should output \"Yes\"; otherwise, it should output \"No\".\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly states that the function should print \"Yes\" if the sum of each column exceeds the corresponding target value. The correct behavior should be to print \"Yes\" if the sum of each column meets or exceeds the target value. The issue lies in step 8 of the behavior, where the condition should be `>=` instead of `>`. This ensures that meeting the exact target value is considered sufficient.\n\nFixed Specification:\nFunction: main\nPurpose: To determine if the total intake of each nutrient type meets or exceeds the specified target values.\nSignature: main()\nInput: \n  - Two integers `n` and `m` from standard input, representing the number of foods and types of nutrients, respectively.\n  - A list of integers `aim_am_lis` from standard input, representing target values for each nutrient type.\n  - A list of lists `am_lis`, where each sublist represents the nutrient intake from a single food, from standard input.\nOutput: \n  - Prints \"Yes\" if the sum of each nutrient type across all foods meets or exceeds the corresponding target value in `aim_am_lis`.\n  - Prints \"No\" otherwise.\nBehavior:\n  1. Reads two integers `n` and `m` from standard input.\n  2. Reads a list of integers `aim_am_lis` from standard input.\n  3. Initializes an empty list `am_lis`.\n  4. Iterates `n` times, appending a list of integers from standard input to `am_lis` in each iteration.\n  5. Creates a DataFrame `df` using `am_lis` and calculates the sum of each column.\n  6. Initializes a counter `cnt` to zero.\n  7. Iterates over each column index `i` from 0 to `m-1`.\n  8. Increments `cnt` if the sum of the column `df[i]` is greater than or equal to the corresponding target value `aim_am_lis[i]`.\n  9. Prints \"Yes\" if `cnt` equals `m`.\n  10. Prints \"No\" otherwise."
+  },
+  "fixed_specification": "Function: main\nPurpose: To determine if the total intake of each nutrient type meets or exceeds the specified target values.\nSignature: main()\nInput: \n  - Two integers `n` and `m` from standard input, representing the number of foods and types of nutrients, respectively.\n  - A list of integers `aim_am_lis` from standard input, representing target values for each nutrient type.\n  - A list of lists `am_lis`, where each sublist represents the nutrient intake from a single food, from standard input.\nOutput: \n  - Prints \"Yes\" if the sum of each nutrient type across all foods meets or exceeds the corresponding target value in `aim_am_lis`.\n  - Prints \"No\" otherwise.\nBehavior:\n  1. Reads two integers `n` and `m` from standard input.\n  2. Reads a list of integers `aim_am_lis` from standard input.\n  3. Initializes an empty list `am_lis`.\n  4. Iterates `n` times, appending a list of integers from standard input to `am_lis` in each iteration.\n  5. Creates a DataFrame `df` using `am_lis` and calculates the sum of each column.\n  6. Initializes a counter `cnt` to zero.\n  7. Iterates over each column index `i` from 0 to `m-1`.\n  8. Increments `cnt` if the sum of the column `df[i]` is greater than or equal to the corresponding target value `aim_am_lis[i]`.\n  9. Prints \"Yes\" if `cnt` equals `m`.\n  10. Prints \"No\" otherwise.",
+  "fix_code": "import pandas as pd\nn, m = map(int, input().split())\naim_am_lis = list(map(int, input().split()))\nam_lis = []\nfor i in range(n):\n    am_lis.append(list(map(int, input().split())))\ndf = pd.DataFrame(data=am_lis).sum()\ncnt = 0\nfor i in range(m):\n    if df[i] >= aim_am_lis[i]:\n        cnt += 1\n\nif cnt == m:\n    print(\"Yes\")\nelse:\n    print(\"No\")\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.0048825,
+    "fix_specification": 0.0072325,
+    "fix_specification_and_buggy_code_to_fix_code": 0.0029125,
+    "total": 0.0150275
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 525,
+      "output_tokens": 357,
+      "total_tokens": 882
+    },
+    "fix_specification": {
+      "input_tokens": 829,
+      "output_tokens": 516,
+      "total_tokens": 1345
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 701,
+      "output_tokens": 116,
+      "total_tokens": 817
+    }
+  }
+}

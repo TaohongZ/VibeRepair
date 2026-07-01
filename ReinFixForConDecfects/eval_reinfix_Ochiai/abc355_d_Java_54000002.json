@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "programId": "54000002",
+  "repair_index": 1,
+  "task_name": "abc355_d",
+  "language": "Java",
+  "root_cause": "The issue lies with the indices used in the condition `if (b[mid] >= a[t])`. The array `b` is indexed directly using `mid`, but this should be the index stored in `arr[mid]`. The binary search logic is flawed due to this direct indexing which causes incorrect results in the comparison.",
+  "suggestion": "Suggestion 1. Correct the Indexing in the Condition Replace the line `if (b[mid] >= a[t])` with `if (b[arr[mid]] >= a[t])`. This will ensure that the correct indices are being used during the binary search.\nSteps:\n1. Locate the line `if (b[mid] >= a[t])`.\n2. Change it to `if (b[arr[mid]] >= a[t])`.\n3. Ensure the rest of the logic uses indices correctly where needed.\n",
+  "fix_code": "public static void solve() throws IOException {\n    int n = nextInt();\n    int[] a = new int[n], b = new int[n];\n    Integer[] arr = new Integer[n];\n    for (int i = 0; i < n; i++) {\n        a[i] = nextInt();\n        b[i] = nextInt();\n        arr[i] = i; // 存下标\n    }\n    Arrays.sort(arr, (o1, o2) -> b[o1] - b[o2]);\n    long ans = 0;\n    for (int i = 0; i < n; i++) {\n        int t = arr[i];\n        int l = 0, r = i - 1, mid, ind = i;\n        while (l <= r) {\n            mid = l + (r - l) / 2;\n            if (b[arr[mid]] >= a[t]) { // Correct the Indexing in the Condition\n                ind = mid;\n                r = mid - 1;\n            } else {\n                l = mid + 1;\n            }\n        }\n        ans += (i - ind);\n    }\n    pw.print(ans);\n}",
+  "repair_run": 1,
+  "source_repair_index": 1,
+  "discarded_patch_count_in_same_run": 2,
+  "batch_attempt_work_dir": "/home/taohongzhu/VibeRepair/ReinFixForConDecfects/output/batch_repair_dataset_2024_work/attempts/54000002/repair_01",
+  "batch_generated_at": "2026-06-14T10:07:13.898901"
+}

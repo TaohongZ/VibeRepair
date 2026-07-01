@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55030637",
+  "task_name": "abc356_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:13:06.087469",
+  "finished_at": "2026-06-15T11:13:23.607394",
+  "elapsed_seconds": 17.52,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 17.52,
+      "estimated_cost": {
+        "total": 0.010305
+      }
+    }
+  ],
+  "faulty_function": "import pandas as pd\nn, m = map(int, input().split())\naim_am_lis = list(map(int, input().split()))\nam_lis = []\nfor i in range(n):\n    am_lis.append(list(map(int, input().split())))\ndf = pd.DataFrame(data=am_lis).sum()\ncnt=0\nfor i in range(m):\n    if df[i] > aim_am_lis[i]:\n        cnt+=1\n\nif cnt==m:\n    print(\"Yes\")\nelse:\n    print(\"No\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "import pandas as pd\nn, m = map(int, input().split())\naim_am_lis = list(map(int, input().split()))\nam_lis = []\nfor i in range(n):\n    am_lis.append(list(map(int, input().split())))\ndf = pd.DataFrame(data=am_lis).sum()\ncnt=0\nfor i in range(m):\n    if df[i] >= aim_am_lis[i]:\n        cnt+=1\n\nif cnt==m:\n    print(\"Yes\")\nelse:\n    print(\"No\")",
+  "fix_code_raw_response": "The issue in the provided code is that it checks if the sum of nutrients from all foods is greater than the required amount for each nutrient. However, the problem statement requires that the sum should be at least the required amount, not greater than. Therefore, the condition should be `>=` instead of `>`.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nimport pandas as pd\nn, m = map(int, input().split())\naim_am_lis = list(map(int, input().split()))\nam_lis = []\nfor i in range(n):\n    am_lis.append(list(map(int, input().split())))\ndf = pd.DataFrame(data=am_lis).sum()\ncnt=0\nfor i in range(m):\n    if df[i] > aim_am_lis[i]:\n        cnt+=1\n\nif cnt==m:\n    print(\"Yes\")\nelse:\n    print(\"No\")\n</original>\n<patched>\nimport pandas as pd\nn, m = map(int, input().split())\naim_am_lis = list(map(int, input().split()))\nam_lis = []\nfor i in range(n):\n    am_lis.append(list(map(int, input().split())))\ndf = pd.DataFrame(data=am_lis).sum()\ncnt=0\nfor i in range(m):\n    if df[i] >= aim_am_lis[i]:\n        cnt+=1\n\nif cnt==m:\n    print(\"Yes\")\nelse:\n    print(\"No\")\n</patched>\n```\n\nThis patch changes the condition in the loop from `if df[i] > aim_am_lis[i]:` to `if df[i] >= aim_am_lis[i]:`, ensuring that the sum of nutrients meets or exceeds the required amount.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 945,
+        "output_tokens": 372,
+        "estimated_cost_usd": 0.010305
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.010305
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

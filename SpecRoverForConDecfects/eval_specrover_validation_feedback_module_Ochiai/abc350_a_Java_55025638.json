@@ -1,0 +1,83 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55025638",
+  "task_name": "abc350_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:12:34.777408",
+  "finished_at": "2026-06-15T11:13:00.400223",
+  "elapsed_seconds": 25.62,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 25.62,
+      "estimated_cost": {
+        "total": 0.06391000000000001
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String args[]){\n        Scanner sc = new Scanner(System.in);\n        String s = sc.next();\n\n        String rep = s.replace(\"ABC\", \"\");\n        int castI = Integer.parseInt(rep);\n        if(castI == 316 || castI >= 350){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n            System.out.println(\"No\");\n        }else{\n            System.out.println(\"Yes\");\n        }\n    }",
+  "fix_code": "    public static void main(String args[]){\n        Scanner sc = new Scanner(System.in);\n        String s = sc.next();\n\n        if (s.length() != 6 || !s.startsWith(\"ABC\")) {\n            System.out.println(\"No\");\n            return;\n        }\n\n        String rep = s.substring(3);\n        int castI = Integer.parseInt(rep);\n        if(castI < 1 || castI > 349 || castI == 316){ // Updated condition to exclude invalid ranges and ensure valid range\n            System.out.println(\"No\");\n        }else{\n            System.out.println(\"Yes\");\n        }\n    }",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the string `S` is checked correctly for the valid range of contest numbers, including handling leading zeros. The valid range is from \"ABC001\" to \"ABC314\" and \"ABC317\" to \"ABC349\", excluding \"ABC316\". Additionally, we need to ensure that the input string is exactly 6 characters long and starts with 'ABC'.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    public static void main(String args[]){\n        Scanner sc = new Scanner(System.in);\n        String s = sc.next();\n\n        String rep = s.replace(\"ABC\", \"\");\n        int castI = Integer.parseInt(rep);\n        if(castI == 316 || castI >= 350){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n            System.out.println(\"No\");\n        }else{\n            System.out.println(\"Yes\");\n        }\n    }\n</original>\n<patched>\n    public static void main(String args[]){\n        Scanner sc = new Scanner(System.in);\n        String s = sc.next();\n\n        if (s.length() != 6 || !s.startsWith(\"ABC\")) {\n            System.out.println(\"No\");\n            return;\n        }\n\n        String rep = s.substring(3);\n        int castI = Integer.parseInt(rep);\n        if(castI < 1 || castI > 349 || castI == 316){ // Updated condition to exclude invalid ranges and ensure valid range\n            System.out.println(\"No\");\n        }else{\n            System.out.println(\"Yes\");\n        }\n    }\n</patched>\n```\n\nThis patch updates the condition to correctly handle the exclusion of \"ABC000\" and ensures that the number is within the valid range (1 to 314 and 317 to 349). It also checks that the input string is exactly 6 characters long and starts with 'ABC'. This should resolve the issue and pass the provided test case.",
+  "patch_handle": "4",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 900,
+        "output_tokens": 389,
+        "estimated_cost_usd": 0.010335
+      },
+      {
+        "input_tokens": 1563,
+        "output_tokens": 337,
+        "estimated_cost_usd": 0.012870000000000001
+      },
+      {
+        "input_tokens": 1470,
+        "output_tokens": 357,
+        "estimated_cost_usd": 0.012705000000000001
+      },
+      {
+        "input_tokens": 1528,
+        "output_tokens": 419,
+        "estimated_cost_usd": 0.013925
+      },
+      {
+        "input_tokens": 1558,
+        "output_tokens": 419,
+        "estimated_cost_usd": 0.014075
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.06391000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

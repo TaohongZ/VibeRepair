@@ -1,0 +1,78 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54659671",
+  "task_name": "abc336_d",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T12:11:31.171108",
+  "finished_at": "2026-06-15T12:12:03.008591",
+  "elapsed_seconds": 31.84,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "3",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 31.84,
+      "estimated_cost": {
+        "total": 0.0618
+      }
+    }
+  ],
+  "faulty_function": "import sys\n\nsys.setrecursionlimit(10**7)\nread_int = lambda: int(sys.stdin.readline())\nread_ints = lambda: list(map(int, sys.stdin.readline().split(\" \")))\nread_float = lambda: float(sys.stdin.readline())\nread_floats = lambda: list(map(float, sys.stdin.readline().split(\" \")))\n\n\ndef get_logger(debug=True):\n    if not debug:\n        return type(\"Dummy\", (object,), {\"debug\": lambda self, a: None})()\n    import logging\n\n    logger = logging.getLogger(\"\")\n    logger.setLevel(logging.DEBUG)\n    handler = logging.StreamHandler(sys.stdout)\n    handler.setFormatter(logging.Formatter(\"[%(funcName)s:%(lineno)s] %(message)s\"))\n    logger.addHandler(handler)\n    return logger\n\n\n# -------------------------------\nlog = get_logger(False)\n\nN = read_int()\na = read_ints()\n\nans = 0\na[0], a[N - 1] = 1, 1\nfor i in range(1, N):\n    if a[i] > a[i - 1]:\n        a[i] = a[i - 1] + 1\nfor i in range(N - 2, -1, -1):\n    if a[i] > a[i + 1]:\n        a[i] = a[i + 1] + 1\n    ans = max(ans, a[i])\nprint(ans) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "import sys\n\nsys.setrecursionlimit(10**7)\nread_int = lambda: int(sys.stdin.readline())\nread_ints = lambda: list(map(int, sys.stdin.readline().split(\" \")))\nread_float = lambda: float(sys.stdin.readline())\nread_floats = lambda: list(map(float, sys.stdin.readline().split(\" \")))\n\n\ndef get_logger(debug=True):\n    if not debug:\n        return type(\"Dummy\", (object,), {\"debug\": lambda self, a: None})()\n    import logging\n\n    logger = logging.getLogger(\"\")\n    logger.setLevel(logging.DEBUG)\n    handler = logging.StreamHandler(sys.stdout)\n    handler.setFormatter(logging.Formatter(\"[%(funcName)s:%(lineno)s] %(message)s\"))\n    logger.addHandler(handler)\n    return logger\n\n\n# -------------------------------\nlog = get_logger(False)\n\nN = read_int()\na = read_ints()\n\nans = 0\nleft = [0] * N\nright = [0] * N\n\nleft[0] = min(a[0], 1)\nfor i in range(1, N):\n    left[i] = min(a[i], left[i - 1] + 1)\n\nright[N - 1] = min(a[N - 1], 1)\nfor i in range(N - 2, -1, -1):\n    right[i] = min(a[i], right[i + 1] + 1)\n\nans = 0\nfor i in range(N):\n    ans = max(ans, min(left[i], right[i]))\n\nprint(ans)",
+  "fix_code_raw_response": "To address the issue, we need to ensure that the sequence is adjusted to form the largest possible Pyramid Sequence. The key steps are:\n1. Adjust the sequence from left to right to ensure that each element is at most 1 greater than its predecessor.\n2. Adjust the sequence from right to left to ensure that each element is at most 1 greater than its successor.\n3. Calculate the maximum value in the adjusted sequence, which will represent the size of the largest Pyramid Sequence.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\na[0], a[N - 1] = 1, 1\nfor i in range(1, N):\n    if a[i] > a[i - 1]:\n        a[i] = a[i - 1] + 1\nfor i in range(N - 2, -1, -1):\n    if a[i] > a[i + 1]:\n        a[i] = a[i + 1] + 1\n    ans = max(ans, a[i])\nprint(ans)\n</original>\n<patched>\nleft = [0] * N\nright = [0] * N\n\nleft[0] = min(a[0], 1)\nfor i in range(1, N):\n    left[i] = min(a[i], left[i - 1] + 1)\n\nright[N - 1] = min(a[N - 1], 1)\nfor i in range(N - 2, -1, -1):\n    right[i] = min(a[i], right[i + 1] + 1)\n\nans = 0\nfor i in range(N):\n    ans = max(ans, min(left[i], right[i]))\n\nprint(ans)\n</patched>\n```\n\nExplanation:\n1. Removed the arbitrary setting of `a[0]` and `a[N-1]` to 1.\n2. Created two arrays `left` and `right` to store the maximum possible values from the left and right directions respectively.\n3. Adjusted the sequence from left to right to ensure that each element is at most 1 greater than its predecessor.\n4. Adjusted the sequence from right to left to ensure that each element is at most 1 greater than its successor.\n5. Calculated the maximum value in the adjusted sequence, which represents the size of the largest Pyramid Sequence.\n\nThis patch should correctly address the issue and produce the expected output for the given test case and other similar cases.",
+  "patch_handle": "3",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1176,
+        "output_tokens": 390,
+        "estimated_cost_usd": 0.01173
+      },
+      {
+        "input_tokens": 1822,
+        "output_tokens": 481,
+        "estimated_cost_usd": 0.016325
+      },
+      {
+        "input_tokens": 1913,
+        "output_tokens": 455,
+        "estimated_cost_usd": 0.016390000000000002
+      },
+      {
+        "input_tokens": 1905,
+        "output_tokens": 522,
+        "estimated_cost_usd": 0.017355000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.0618
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

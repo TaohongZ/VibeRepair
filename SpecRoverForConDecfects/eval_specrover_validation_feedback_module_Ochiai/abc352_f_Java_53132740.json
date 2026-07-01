@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53132740",
+  "task_name": "abc352_f",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T07:03:52.913464",
+  "finished_at": "2026-06-15T07:04:40.135956",
+  "elapsed_seconds": 47.22,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 47.22,
+      "estimated_cost": {
+        "total": 0.012395000000000002
+      }
+    }
+  ],
+  "faulty_function": "\tprivate void solve(final FastIO io, final String[] args) {\n\t\tio.setAutoFlush(true);\n\t\tio.setAutoOutFlush(false);\n\t\t/*\n\t\t * author: 31536000\n\t\t * AtCoder Beginner Contest 352 F問題\n\t\t * 考察メモ\n\t\t * まず、疎な頂点が二つある場合は明らかにそこに関しては一意に定まらない\n\t\t * よって、残りの頂点に対する割り当てだけ考えれば良い\n\t\t * 各連結成分に対して、最小値を決めれば残りは一意に定まる\n\t\t * ということは、連結成分はN/2個以下であり、それぞれに最小値を決めるのは16P8≒5e8とか(実際にはもっと小さいはず)\n\t\t */\n\t\tint N = io.nextInt(), M = io.nextInt();\n\t\tACL.DisjointSetUnion dsu = ACL.DisjointSetUnion.create(N);\n\t\tArrayList<ArrayList<Edge>> graph = new ArrayList<>(N);\n\t\tfor (int i = 0;i < N;++ i) graph.add(new ArrayList<>());\n\t\tfor (int i = 0;i < M;++ i) {\n\t\t\tint A = io.nextInt() - 1, B = io.nextInt() - 1, C = io.nextInt();\n\t\t\tdsu.merge(A, B);\n\t\t\tgraph.get(A).add(new Edge(A, B, -C));\n\t\t\tgraph.get(B).add(new Edge(B, A, C));\n\t\t}\n\t\t// 要素数1の連結成分が二つ以上あるなら、数えない\n\t\tint one = IntStream.range(0, N).filter(i -> dsu.getSize(i) == 1).sum(); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n\t\tComponent[] comp = Arrays\n\t\t\t\t.stream(dsu.getGroups().stream().filter(i -> one <= 1 || i.size() != 1).mapToInt(i -> i.get(0)).toArray())\n\t\t\t\t.mapToObj(i -> new Component(i, graph)).toArray(Component[]::new);\n\t\tdfs(comp, new BitSet(N), 0, N);\n\t\tint[] ans = new int[N];\n\t\tArrays.fill(ans, -1);\n\t\tfor (Component c : comp) {\n\t\t\tif (c.candidate.cardinality() != 1) continue;\n\t\t\tint min = c.candidate.nextSetBit(0) + 1;\n\t\t\tfor (Map.Entry<Integer, Integer> e : c.add.entrySet()) ans[e.getKey()] = e.getValue() + min;\n\t\t}\n\t\tio.println(ans);\n\t}",
+  "fix_code": "\tprivate void solve(final FastIO io, final String[] args) {\n\t\tio.setAutoFlush(true);\n\t\tio.setAutoOutFlush(false);\n\t\t/*\n\t\t * author: 31536000\n\t\t * AtCoder Beginner Contest 352 F問題\n\t\t * 考察メモ\n\t\t * まず、疎な頂点が二つある場合は明らかにそこに関しては一意に定まらない\n\t\t * よって、残りの頂点に対する割り当てだけ考えれば良い\n\t\t * 各連結成分に対して、最小値を決めれば残りは一意に定まる\n\t\t * ということは、連結成分はN/2個以下であり、それぞれに最小値を決めるのは16P8≒5e8とか(実際にはもっと小さいはず)\n\t\t */\n\t\tint N = io.nextInt(), M = io.nextInt();\n\t\tACL.DisjointSetUnion dsu = ACL.DisjointSetUnion.create(N);\n\t\tArrayList<ArrayList<Edge>> graph = new ArrayList<>(N);\n\t\tfor (int i = 0;i < N;++ i) graph.add(new ArrayList<>());\n\t\tfor (int i = 0;i < M;++ i) {\n\t\t\tint A = io.nextInt() - 1, B = io.nextInt() - 1, C = io.nextInt();\n\t\t\tdsu.merge(A, B);\n\t\t\tgraph.get(A).add(new Edge(A, B, -C));\n\t\t\tgraph.get(B).add(new Edge(B, A, C));\n\t\t}\n\t\t// 要素数1の連結成分が二つ以上あるなら、数えない\n\t\tint one = (int) IntStream.range(0, N).filter(i -> dsu.getSize(i) == 1).count();\n\t\tComponent[] comp = Arrays\n\t\t\t\t.stream(dsu.getGroups().stream().filter(i -> one <= 1 || i.size() != 1).mapToInt(i -> i.get(0)).toArray())\n\t\t\t\t.mapToObj(i -> new Component(i, graph)).toArray(Component[]::new);\n\t\tdfs(comp, new BitSet(N), 0, N);\n\t\tint[] ans = new int[N];\n\t\tArrays.fill(ans, -1);\n\t\tfor (Component c : comp) {\n\t\t\tif (c.candidate.cardinality() != 1) continue;\n\t\t\tint min = c.candidate.nextSetBit(0) + 1;\n\t\t\tfor (Map.Entry<Integer, Integer> e : c.add.entrySet()) ans[e.getKey()] = e.getValue() + min;\n\t\t}\n\t\tio.println(ans);\n\t}",
+  "fix_code_raw_response": "The issue in the provided code is that the calculation of the number of components with a single element is incorrect. The current code sums the sizes of all components that have exactly one element, which is not the intended behavior. Instead, it should count the number of such components.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\t\t// 要素数1の連結成分が二つ以上あるなら、数えない\n\t\tint one = IntStream.range(0, N).filter(i -> dsu.getSize(i) == 1).sum(); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n</original>\n<patched>\n\t\t// 要素数1の連結成分が二つ以上あるなら、数えない\n\t\tint one = (int) IntStream.range(0, N).filter(i -> dsu.getSize(i) == 1).count();\n</patched>\n```\n\nThis change ensures that `one` correctly represents the number of components with exactly one element, rather than summing their sizes. This should resolve the issue where the rank of person 15 was incorrectly determined as -1.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1681,
+        "output_tokens": 266,
+        "estimated_cost_usd": 0.012395000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.012395000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

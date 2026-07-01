@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54884677",
+  "task_name": "abc355_c",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:15:22.620234",
+  "finished_at": "2026-06-15T10:17:35.893956",
+  "elapsed_seconds": 133.27,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 133.27,
+      "estimated_cost": {
+        "total": 0.007965
+      }
+    }
+  ],
+  "faulty_function": "n, t = map(int, input().split())\na = list(map(int, input().split()))\n\nb = [0] * (n * 2 + 2)\n\nfor i, ai in enumerate(a):\n    r = (ai - 1) % n\n    c = (ai - 1) // n\n    b[r] += 1\n    b[n + c] += 1\n\n    if r == c:\n        b[-2] += 1\n\n    if r + c == n:\n        b[-1] += 1\n\n    if max(b) == n:\n        print(i + 1)\n        exit()\n\nprint(-1) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "n, t = map(int, input().split())\na = list(map(int, input().split()))\n\nb = [0] * (n * 2 + 2)\n\nfor i, ai in enumerate(a):\n    r = (ai - 1) % n\n    c = (ai - 1) // n\n    b[r] += 1\n    b[n + c] += 1\n\n    if r == c:\n        b[-2] += 1\n\n    if r + c == n - 1:\n        b[-1] += 1\n\n    if max(b) == n:\n        print(i + 1)\n        exit()\n\nprint(-1)",
+  "fix_code_raw_response": "The issue in the provided code is that the condition for checking the diagonal from top-right to bottom-left is incorrect. The condition `if r + c == n:` should be `if r + c == n - 1:` because the sum of the indices for the top-right to bottom-left diagonal should be `n - 1`.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\n    if r + c == n:\n        b[-1] += 1\n</original>\n<patched>\n    if r + c == n - 1:\n        b[-1] += 1\n</patched>\n```\n\nThis change ensures that the condition correctly identifies the top-right to bottom-left diagonal, allowing the program to correctly determine when Bingo is achieved.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1077,
+        "output_tokens": 172,
+        "estimated_cost_usd": 0.007965
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.007965
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

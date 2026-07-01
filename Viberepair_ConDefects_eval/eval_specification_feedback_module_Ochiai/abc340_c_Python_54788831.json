@@ -1,0 +1,189 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54788831",
+  "repair_index": 1,
+  "task_name": "abc340_c",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_loops": 5,
+  "test_timeout_seconds": 300.0,
+  "validated_attempt_index": 1,
+  "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629",
+  "generated_at": "2026-06-09T22:26:41.364114+00:00",
+  "elapsed_seconds": 11.756,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629",
+      "elapsed_seconds": 11.756,
+      "attempts": 1
+    }
+  ],
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "status": "pass",
+      "pass": true,
+      "pass_rate": 1.0,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629/attempt_01",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629/attempt_01/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629/attempt_01/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629/attempt_01/dataset/abc340_c/Python/54788831",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629/attempt_01/dataset/abc340_c/Python/54788831/faultyVersion.py",
+      "test_records": [
+        {
+          "task": "abc340_c",
+          "language": "Python",
+          "program_id": "54788831",
+          "pass_rate": 1.0,
+          "tests_run": 11,
+          "failed_tests": [],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The intended behavior is to calculate the total amount of money Takahashi will pay to reduce the integer N on the blackboard to a state where no integers not less than 2 remain. This involves repeatedly splitting integers not less than 2 into two smaller integers, paying an amount equal to the integer being split each time, until only integers less than 2 remain.",
+        "diagnosis_and_repair_directions": "The flawed specification incorrectly describes the behavior of the function `n_split`. The function should compute the total cost of splitting the integer N down to integers less than 2, but it currently returns incorrect results due to the following issues:\n1. The base case checks if `x` is equal to 1, which is incorrect. The base case should check if `x` is less than 2, as no operations are needed for integers less than 2.\n2. The recursive calls and the addition of `x` to the sum are correct in terms of splitting logic, but the base case and the initial computation of `ans` are flawed.\n3. The computation of `ans` as `n_split(N) + N` is incorrect because `n_split(N)` should already account for all costs, including the initial integer N.\n\nTo fix these issues:\n- Change the base case to return 0 when `x` is less than 2.\n- Remove the addition of `N` in the computation of `ans` since `n_split(N)` should already include the cost of the initial integer.",
+        "raw_response": "Intended Behavior:\nThe intended behavior is to calculate the total amount of money Takahashi will pay to reduce the integer N on the blackboard to a state where no integers not less than 2 remain. This involves repeatedly splitting integers not less than 2 into two smaller integers, paying an amount equal to the integer being split each time, until only integers less than 2 remain.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly describes the behavior of the function `n_split`. The function should compute the total cost of splitting the integer N down to integers less than 2, but it currently returns incorrect results due to the following issues:\n1. The base case checks if `x` is equal to 1, which is incorrect. The base case should check if `x` is less than 2, as no operations are needed for integers less than 2.\n2. The recursive calls and the addition of `x` to the sum are correct in terms of splitting logic, but the base case and the initial computation of `ans` are flawed.\n3. The computation of `ans` as `n_split(N) + N` is incorrect because `n_split(N)` should already account for all costs, including the initial integer N.\n\nTo fix these issues:\n- Change the base case to return 0 when `x` is less than 2.\n- Remove the addition of `N` in the computation of `ans` since `n_split(N)` should already include the cost of the initial integer.\n\nFixed Specification:\nFunction: n_split\nPurpose: To compute the total cost of recursively splitting an integer until all integers not less than 2 are removed.\nSignature: n_split(x: int) -> int\nInput: A single integer `x`, which represents the number to be split and processed.\nOutput: An integer that represents the total cost of the recursive splitting process.\nBehavior:\n1. Check if `x` is less than 2. If true, return 0.\n2. If `x` is not less than 2, check if `x` is even.\n3. If `x` is even, recursively call `n_split` with `x//2` twice, add the results together, and add `x` to the sum, then return the result.\n4. If `x` is odd, recursively call `n_split` with `x//2` and `n_split` with `x//2 + 1`, add the results together, and add `x` to the sum, then return the result.\n5. The function `n_split` is decorated with `lru_cache` to cache results of previous computations.\n6. The main program reads an integer `N` from input and computes `ans` as `n_split(N)`.\n7. Print the value of `ans`."
+      },
+      "fixed_specification": "Function: n_split\nPurpose: To compute the total cost of recursively splitting an integer until all integers not less than 2 are removed.\nSignature: n_split(x: int) -> int\nInput: A single integer `x`, which represents the number to be split and processed.\nOutput: An integer that represents the total cost of the recursive splitting process.\nBehavior:\n1. Check if `x` is less than 2. If true, return 0.\n2. If `x` is not less than 2, check if `x` is even.\n3. If `x` is even, recursively call `n_split` with `x//2` twice, add the results together, and add `x` to the sum, then return the result.\n4. If `x` is odd, recursively call `n_split` with `x//2` and `n_split` with `x//2 + 1`, add the results together, and add `x` to the sum, then return the result.\n5. The function `n_split` is decorated with `lru_cache` to cache results of previous computations.\n6. The main program reads an integer `N` from input and computes `ans` as `n_split(N)`.\n7. Print the value of `ans`.",
+      "fix_specification_usage": {
+        "input_tokens": 847,
+        "output_tokens": 578,
+        "total_tokens": 1425
+      },
+      "fix_specification_estimated_cost": 0.0078975,
+      "fix_code": "from functools import lru_cache\nS_x = lambda : input()\nN_x = lambda : int(input())\nN_more = lambda : map(int, input().split())\nA_L = lambda : list(map(int, input().split()))\n\nN = N_x()\n\n@lru_cache\ndef n_split(x):\n    if x < 2:\n        return 0\n    else:\n        if x % 2 == 0:\n            return n_split(x//2) + n_split(x//2) + x\n        else:\n            return n_split(x//2) + n_split(x//2+1) + x\n\nans = n_split(N)\nprint(ans)\n",
+      "fix_code_raw_response": "```python\nfrom functools import lru_cache\nS_x = lambda : input()\nN_x = lambda : int(input())\nN_more = lambda : map(int, input().split())\nA_L = lambda : list(map(int, input().split()))\n\nN = N_x()\n\n@lru_cache\ndef n_split(x):\n    if x < 2:\n        return 0\n    else:\n        if x % 2 == 0:\n            return n_split(x//2) + n_split(x//2) + x\n        else:\n            return n_split(x//2) + n_split(x//2+1) + x\n\nans = n_split(N)\nprint(ans)\n```",
+      "fix_code_usage": {
+        "input_tokens": 797,
+        "output_tokens": 141,
+        "total_tokens": 938
+      },
+      "fix_code_estimated_cost": 0.0034025
+    }
+  ],
+  "last_chain_summary": {
+    "status": "success",
+    "generated_at": "2026-06-09T22:26:41.159014+00:00",
+    "programId": "54788831",
+    "task_name": "abc340_c",
+    "language": "Python",
+    "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629",
+    "max_loops": 5,
+    "use_structure_adapter": false,
+    "faulty_function": "from functools import lru_cache\nS_x = lambda : input()\nN_x = lambda : int(input())\nN_more = lambda : map(int, input().split())\nA_L = lambda : list(map(int, input().split()))\n\nN = N_x()\n\n@lru_cache\ndef n_split(x):\n  if x == 1:\n    return 1\n  else:\n    if x % 2 == 0:\n      return n_split(x//2) + n_split(x//2) + x\n    else:\n      return n_split(x//2) + n_split(x//2+1) + x\n\nans = n_split(N)+N\nprint(ans) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+    "flawed_specification": "[\n  Function: n_split\n  Purpose: To compute a value based on recursive splitting of an integer.\n  Signature: n_split(x: int) -> int\n  Input: A single integer `x`, which represents the number to be split and processed.\n  Output: An integer that represents the computed result from the recursive splitting process.\n  Behavior:\n    1. Check if `x` is equal to 1. If true, return 1.\n    2. If `x` is not equal to 1, check if `x` is even.\n    3. If `x` is even, recursively call `n_split` with `x//2` twice, add the results together, and add `x` to the sum, then return the result.\n    4. If `x` is odd, recursively call `n_split` with `x//2` and `n_split` with `x//2 + 1`, add the results together, and add `x` to the sum, then return the result.\n    5. The function `n_split` is decorated with `lru_cache` to cache results of previous computations.\n    6. The main program reads an integer `N` from input and computes `ans` as `n_split(N) + N`.\n    7. Print the value of `ans` (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n]",
+    "flawed_specification_usage": {
+      "input_tokens": 648,
+      "output_tokens": 302,
+      "total_tokens": 950
+    },
+    "flawed_specification_estimated_cost": 0.00464,
+    "validated_attempt_index": 1,
+    "final_fix_code": "from functools import lru_cache\nS_x = lambda : input()\nN_x = lambda : int(input())\nN_more = lambda : map(int, input().split())\nA_L = lambda : list(map(int, input().split()))\n\nN = N_x()\n\n@lru_cache\ndef n_split(x):\n    if x < 2:\n        return 0\n    else:\n        if x % 2 == 0:\n            return n_split(x//2) + n_split(x//2) + x\n        else:\n            return n_split(x//2) + n_split(x//2+1) + x\n\nans = n_split(N)\nprint(ans)\n",
+    "outer_run_index": 1,
+    "elapsed_seconds": 11.756,
+    "attempts": [
+      {
+        "attempt_index": 1,
+        "status": "pass",
+        "pass": true,
+        "pass_rate": 1.0,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629/attempt_01",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629/attempt_01/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629/attempt_01/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629/attempt_01/dataset/abc340_c/Python/54788831",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54788831/outer_run_01/54788831_20260609_222629/attempt_01/dataset/abc340_c/Python/54788831/faultyVersion.py",
+        "test_records": [
+          {
+            "task": "abc340_c",
+            "language": "Python",
+            "program_id": "54788831",
+            "pass_rate": 1.0,
+            "tests_run": 11,
+            "failed_tests": [],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The intended behavior is to calculate the total amount of money Takahashi will pay to reduce the integer N on the blackboard to a state where no integers not less than 2 remain. This involves repeatedly splitting integers not less than 2 into two smaller integers, paying an amount equal to the integer being split each time, until only integers less than 2 remain.",
+          "diagnosis_and_repair_directions": "The flawed specification incorrectly describes the behavior of the function `n_split`. The function should compute the total cost of splitting the integer N down to integers less than 2, but it currently returns incorrect results due to the following issues:\n1. The base case checks if `x` is equal to 1, which is incorrect. The base case should check if `x` is less than 2, as no operations are needed for integers less than 2.\n2. The recursive calls and the addition of `x` to the sum are correct in terms of splitting logic, but the base case and the initial computation of `ans` are flawed.\n3. The computation of `ans` as `n_split(N) + N` is incorrect because `n_split(N)` should already account for all costs, including the initial integer N.\n\nTo fix these issues:\n- Change the base case to return 0 when `x` is less than 2.\n- Remove the addition of `N` in the computation of `ans` since `n_split(N)` should already include the cost of the initial integer.",
+          "raw_response": "Intended Behavior:\nThe intended behavior is to calculate the total amount of money Takahashi will pay to reduce the integer N on the blackboard to a state where no integers not less than 2 remain. This involves repeatedly splitting integers not less than 2 into two smaller integers, paying an amount equal to the integer being split each time, until only integers less than 2 remain.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly describes the behavior of the function `n_split`. The function should compute the total cost of splitting the integer N down to integers less than 2, but it currently returns incorrect results due to the following issues:\n1. The base case checks if `x` is equal to 1, which is incorrect. The base case should check if `x` is less than 2, as no operations are needed for integers less than 2.\n2. The recursive calls and the addition of `x` to the sum are correct in terms of splitting logic, but the base case and the initial computation of `ans` are flawed.\n3. The computation of `ans` as `n_split(N) + N` is incorrect because `n_split(N)` should already account for all costs, including the initial integer N.\n\nTo fix these issues:\n- Change the base case to return 0 when `x` is less than 2.\n- Remove the addition of `N` in the computation of `ans` since `n_split(N)` should already include the cost of the initial integer.\n\nFixed Specification:\nFunction: n_split\nPurpose: To compute the total cost of recursively splitting an integer until all integers not less than 2 are removed.\nSignature: n_split(x: int) -> int\nInput: A single integer `x`, which represents the number to be split and processed.\nOutput: An integer that represents the total cost of the recursive splitting process.\nBehavior:\n1. Check if `x` is less than 2. If true, return 0.\n2. If `x` is not less than 2, check if `x` is even.\n3. If `x` is even, recursively call `n_split` with `x//2` twice, add the results together, and add `x` to the sum, then return the result.\n4. If `x` is odd, recursively call `n_split` with `x//2` and `n_split` with `x//2 + 1`, add the results together, and add `x` to the sum, then return the result.\n5. The function `n_split` is decorated with `lru_cache` to cache results of previous computations.\n6. The main program reads an integer `N` from input and computes `ans` as `n_split(N)`.\n7. Print the value of `ans`."
+        },
+        "fixed_specification": "Function: n_split\nPurpose: To compute the total cost of recursively splitting an integer until all integers not less than 2 are removed.\nSignature: n_split(x: int) -> int\nInput: A single integer `x`, which represents the number to be split and processed.\nOutput: An integer that represents the total cost of the recursive splitting process.\nBehavior:\n1. Check if `x` is less than 2. If true, return 0.\n2. If `x` is not less than 2, check if `x` is even.\n3. If `x` is even, recursively call `n_split` with `x//2` twice, add the results together, and add `x` to the sum, then return the result.\n4. If `x` is odd, recursively call `n_split` with `x//2` and `n_split` with `x//2 + 1`, add the results together, and add `x` to the sum, then return the result.\n5. The function `n_split` is decorated with `lru_cache` to cache results of previous computations.\n6. The main program reads an integer `N` from input and computes `ans` as `n_split(N)`.\n7. Print the value of `ans`.",
+        "fix_specification_usage": {
+          "input_tokens": 847,
+          "output_tokens": 578,
+          "total_tokens": 1425
+        },
+        "fix_specification_estimated_cost": 0.0078975,
+        "fix_code": "from functools import lru_cache\nS_x = lambda : input()\nN_x = lambda : int(input())\nN_more = lambda : map(int, input().split())\nA_L = lambda : list(map(int, input().split()))\n\nN = N_x()\n\n@lru_cache\ndef n_split(x):\n    if x < 2:\n        return 0\n    else:\n        if x % 2 == 0:\n            return n_split(x//2) + n_split(x//2) + x\n        else:\n            return n_split(x//2) + n_split(x//2+1) + x\n\nans = n_split(N)\nprint(ans)\n",
+        "fix_code_raw_response": "```python\nfrom functools import lru_cache\nS_x = lambda : input()\nN_x = lambda : int(input())\nN_more = lambda : map(int, input().split())\nA_L = lambda : list(map(int, input().split()))\n\nN = N_x()\n\n@lru_cache\ndef n_split(x):\n    if x < 2:\n        return 0\n    else:\n        if x % 2 == 0:\n            return n_split(x//2) + n_split(x//2) + x\n        else:\n            return n_split(x//2) + n_split(x//2+1) + x\n\nans = n_split(N)\nprint(ans)\n```",
+        "fix_code_usage": {
+          "input_tokens": 797,
+          "output_tokens": 141,
+          "total_tokens": 938
+        },
+        "fix_code_estimated_cost": 0.0034025
+      }
+    ]
+  },
+  "faulty_function": "from functools import lru_cache\nS_x = lambda : input()\nN_x = lambda : int(input())\nN_more = lambda : map(int, input().split())\nA_L = lambda : list(map(int, input().split()))\n\nN = N_x()\n\n@lru_cache\ndef n_split(x):\n  if x == 1:\n    return 1\n  else:\n    if x % 2 == 0:\n      return n_split(x//2) + n_split(x//2) + x\n    else:\n      return n_split(x//2) + n_split(x//2+1) + x\n\nans = n_split(N)+N\nprint(ans) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "flawed_specification": "[\n  Function: n_split\n  Purpose: To compute a value based on recursive splitting of an integer.\n  Signature: n_split(x: int) -> int\n  Input: A single integer `x`, which represents the number to be split and processed.\n  Output: An integer that represents the computed result from the recursive splitting process.\n  Behavior:\n    1. Check if `x` is equal to 1. If true, return 1.\n    2. If `x` is not equal to 1, check if `x` is even.\n    3. If `x` is even, recursively call `n_split` with `x//2` twice, add the results together, and add `x` to the sum, then return the result.\n    4. If `x` is odd, recursively call `n_split` with `x//2` and `n_split` with `x//2 + 1`, add the results together, and add `x` to the sum, then return the result.\n    5. The function `n_split` is decorated with `lru_cache` to cache results of previous computations.\n    6. The main program reads an integer `N` from input and computes `ans` as `n_split(N) + N`.\n    7. Print the value of `ans` (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n]",
+  "flawed_specification_usage": {
+    "input_tokens": 648,
+    "output_tokens": 302,
+    "total_tokens": 950
+  },
+  "flawed_specification_estimated_cost": 0.00464,
+  "selected_inner_attempt_index": 1,
+  "selected_inner_attempt_status": "pass",
+  "pass_rate": 1.0,
+  "test_records": [
+    {
+      "task": "abc340_c",
+      "language": "Python",
+      "program_id": "54788831",
+      "pass_rate": 1.0,
+      "tests_run": 11,
+      "failed_tests": [],
+      "error_tests": []
+    }
+  ],
+  "test_error": null,
+  "fix_specification_reasoning": {
+    "intended_behavior": "The intended behavior is to calculate the total amount of money Takahashi will pay to reduce the integer N on the blackboard to a state where no integers not less than 2 remain. This involves repeatedly splitting integers not less than 2 into two smaller integers, paying an amount equal to the integer being split each time, until only integers less than 2 remain.",
+    "diagnosis_and_repair_directions": "The flawed specification incorrectly describes the behavior of the function `n_split`. The function should compute the total cost of splitting the integer N down to integers less than 2, but it currently returns incorrect results due to the following issues:\n1. The base case checks if `x` is equal to 1, which is incorrect. The base case should check if `x` is less than 2, as no operations are needed for integers less than 2.\n2. The recursive calls and the addition of `x` to the sum are correct in terms of splitting logic, but the base case and the initial computation of `ans` are flawed.\n3. The computation of `ans` as `n_split(N) + N` is incorrect because `n_split(N)` should already account for all costs, including the initial integer N.\n\nTo fix these issues:\n- Change the base case to return 0 when `x` is less than 2.\n- Remove the addition of `N` in the computation of `ans` since `n_split(N)` should already include the cost of the initial integer.",
+    "raw_response": "Intended Behavior:\nThe intended behavior is to calculate the total amount of money Takahashi will pay to reduce the integer N on the blackboard to a state where no integers not less than 2 remain. This involves repeatedly splitting integers not less than 2 into two smaller integers, paying an amount equal to the integer being split each time, until only integers less than 2 remain.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly describes the behavior of the function `n_split`. The function should compute the total cost of splitting the integer N down to integers less than 2, but it currently returns incorrect results due to the following issues:\n1. The base case checks if `x` is equal to 1, which is incorrect. The base case should check if `x` is less than 2, as no operations are needed for integers less than 2.\n2. The recursive calls and the addition of `x` to the sum are correct in terms of splitting logic, but the base case and the initial computation of `ans` are flawed.\n3. The computation of `ans` as `n_split(N) + N` is incorrect because `n_split(N)` should already account for all costs, including the initial integer N.\n\nTo fix these issues:\n- Change the base case to return 0 when `x` is less than 2.\n- Remove the addition of `N` in the computation of `ans` since `n_split(N)` should already include the cost of the initial integer.\n\nFixed Specification:\nFunction: n_split\nPurpose: To compute the total cost of recursively splitting an integer until all integers not less than 2 are removed.\nSignature: n_split(x: int) -> int\nInput: A single integer `x`, which represents the number to be split and processed.\nOutput: An integer that represents the total cost of the recursive splitting process.\nBehavior:\n1. Check if `x` is less than 2. If true, return 0.\n2. If `x` is not less than 2, check if `x` is even.\n3. If `x` is even, recursively call `n_split` with `x//2` twice, add the results together, and add `x` to the sum, then return the result.\n4. If `x` is odd, recursively call `n_split` with `x//2` and `n_split` with `x//2 + 1`, add the results together, and add `x` to the sum, then return the result.\n5. The function `n_split` is decorated with `lru_cache` to cache results of previous computations.\n6. The main program reads an integer `N` from input and computes `ans` as `n_split(N)`.\n7. Print the value of `ans`."
+  },
+  "fixed_specification": "Function: n_split\nPurpose: To compute the total cost of recursively splitting an integer until all integers not less than 2 are removed.\nSignature: n_split(x: int) -> int\nInput: A single integer `x`, which represents the number to be split and processed.\nOutput: An integer that represents the total cost of the recursive splitting process.\nBehavior:\n1. Check if `x` is less than 2. If true, return 0.\n2. If `x` is not less than 2, check if `x` is even.\n3. If `x` is even, recursively call `n_split` with `x//2` twice, add the results together, and add `x` to the sum, then return the result.\n4. If `x` is odd, recursively call `n_split` with `x//2` and `n_split` with `x//2 + 1`, add the results together, and add `x` to the sum, then return the result.\n5. The function `n_split` is decorated with `lru_cache` to cache results of previous computations.\n6. The main program reads an integer `N` from input and computes `ans` as `n_split(N)`.\n7. Print the value of `ans`.",
+  "fix_code": "from functools import lru_cache\nS_x = lambda : input()\nN_x = lambda : int(input())\nN_more = lambda : map(int, input().split())\nA_L = lambda : list(map(int, input().split()))\n\nN = N_x()\n\n@lru_cache\ndef n_split(x):\n    if x < 2:\n        return 0\n    else:\n        if x % 2 == 0:\n            return n_split(x//2) + n_split(x//2) + x\n        else:\n            return n_split(x//2) + n_split(x//2+1) + x\n\nans = n_split(N)\nprint(ans)\n",
+  "fix_code_raw_response": "```python\nfrom functools import lru_cache\nS_x = lambda : input()\nN_x = lambda : int(input())\nN_more = lambda : map(int, input().split())\nA_L = lambda : list(map(int, input().split()))\n\nN = N_x()\n\n@lru_cache\ndef n_split(x):\n    if x < 2:\n        return 0\n    else:\n        if x % 2 == 0:\n            return n_split(x//2) + n_split(x//2) + x\n        else:\n            return n_split(x//2) + n_split(x//2+1) + x\n\nans = n_split(N)\nprint(ans)\n```",
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 648,
+      "output_tokens": 302,
+      "total_tokens": 950
+    },
+    "fix_specification": {
+      "input_tokens": 847,
+      "output_tokens": 578,
+      "total_tokens": 1425
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 797,
+      "output_tokens": 141,
+      "total_tokens": 938
+    }
+  },
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.00464,
+    "fix_specification": 0.0078975,
+    "fix_specification_and_buggy_code_to_fix_code": 0.0034025
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "49318515",
+  "task_name": "abc336_d",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T05:14:22.026152",
+  "finished_at": "2026-06-15T05:14:42.204074",
+  "elapsed_seconds": 20.18,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 20.18,
+      "estimated_cost": {
+        "total": 0.017400000000000002
+      }
+    }
+  ],
+  "faulty_function": "\tpublic static void main(String[] args) {\n\t\ttry(Scanner sc = new Scanner(System.in);) {\n\t\t\tint n = Integer.parseInt(sc.next());\n\t\t\tint[] a = new int[n];\n\t\t\tfor(int i = 0; i < n; i++) a[i] = Integer.parseInt(sc.next());\n\t\t\tint[] l = new int[n];\n\t\t\tint[] r = new int[n];\n\t\t\tl[0] = Math.min(a[0], 1);\n\t\t\tfor(int i = 1; i < n; i++) l[i] = Math.min(a[i], l[i - 1] + 1);\n\t\t\t\n\t\t\tr[n - 1] = Math.min(a[n - 1], 1);\n\t\t\tfor(int i = n - 2; i >= 0; i--) r[i] = Math.min(a[i], r[i + 1] + 1);\n\t\t\t\n\t\t\tint ans = 0;\n\t\t\tfor(int i = 0; i < n; i++) ans = Math.max(ans, Math.min(r[i], r[i]));\n\t\t\tSystem.out.println(ans);\n\t\t}\n\t} // Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "\tpublic static void main(String[] args) {\n\t\ttry(Scanner sc = new Scanner(System.in);) {\n\t\t\tint n = Integer.parseInt(sc.next());\n\t\t\tint[] a = new int[n];\n\t\t\tfor(int i = 0; i < n; i++) a[i] = Integer.parseInt(sc.next());\n\t\t\tint[] l = new int[n];\n\t\t\tint[] r = new int[n];\n\t\t\tl[0] = Math.min(a[0], 1);\n\t\t\tfor(int i = 1; i < n; i++) l[i] = Math.min(a[i], l[i - 1] + 1);\n\t\t\t\n\t\t\tr[n - 1] = Math.min(a[n - 1], 1);\n\t\t\tfor(int i = n - 2; i >= 0; i--) r[i] = Math.min(a[i], r[i + 1] + 1);\n\t\t\t\n\t\t\tint ans = 0;\n\t\t\tfor(int i = 0; i < n; i++) ans = Math.max(ans, Math.min(l[i], r[i]));\n\t\t\tSystem.out.println(ans);\n\t\t}\n\t}",
+  "fix_code_raw_response": "The issue in the provided code is that the final calculation of `ans` is incorrect. The code is using `Math.min(r[i], r[i])` instead of `Math.min(l[i], r[i])`. This mistake results in the wrong maximum size of the Pyramid Sequence being calculated.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n\t\t\tfor(int i = 0; i < n; i++) ans = Math.max(ans, Math.min(r[i], r[i]));\n</original>\n<patched>\n\t\t\tfor(int i = 0; i < n; i++) ans = Math.max(ans, Math.min(l[i], r[i]));\n</patched>\n```\n\nThis change ensures that the correct minimum value between the left and right arrays is used to calculate the maximum size of the Pyramid Sequence.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2937,
+        "output_tokens": 181,
+        "estimated_cost_usd": 0.017400000000000002
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.017400000000000002
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

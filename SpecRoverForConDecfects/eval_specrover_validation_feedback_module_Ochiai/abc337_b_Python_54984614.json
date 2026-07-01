@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54984614",
+  "task_name": "abc337_b",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T12:17:39.160097",
+  "finished_at": "2026-06-15T12:18:02.700529",
+  "elapsed_seconds": 23.54,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "2",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 23.54,
+      "estimated_cost": {
+        "total": 0.04124
+      }
+    }
+  ],
+  "faulty_function": "S = input()\nstate = 0\nfor i in S:\n    if state == 0 and i == 'B':\n        state += 1\n    elif state == 1 and i == 'C':\n        state += 1\n    \n    if state == 0 and i != 'A':\n        print(\"No\")\n        exit() # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n    elif state == 1 and i != 'B':\n        print(\"No\")\n        exit()\n    elif state == 2 and i != 'C':\n        print(\"No\")\n        exit()\nprint(\"Yes\")",
+  "fix_code": "import re\n\nS = input()\nif re.fullmatch(r'A*B*C*', S):\n    print(\"Yes\")\nelse:\n    print(\"No\")",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the program correctly identifies strings that are composed entirely of 'A's, 'B's, or 'C's, as well as strings that follow the 'A'+'B'+'C' pattern. We can achieve this by using regular expressions to match these patterns.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nS = input()\nstate = 0\nfor i in S:\n    if state == 0 and i == 'B':\n        state += 1\n    elif state == 1 and i == 'C':\n        state += 1\n    \n    if state == 0 and i != 'A':\n        print(\"No\")\n        exit()\n    elif state == 1 and i != 'B':\n        print(\"No\")\n        exit()\n    elif state == 2 and i != 'C':\n        print(\"No\")\n        exit()\nprint(\"Yes\")\n</original>\n<patched>\nimport re\n\nS = input()\nif re.fullmatch(r'A*B*C*', S):\n    print(\"Yes\")\nelse:\n    print(\"No\")\n</patched>\n```\n\n### Reasoning:\n1. **Regular Expression**: The regular expression `r'A*B*C*'` matches strings that consist of zero or more 'A's followed by zero or more 'B's followed by zero or more 'C's. This pattern covers all valid Extended A, B, C, and ABC strings.\n2. **Simplified Logic**: By using a regular expression, we simplify the logic and ensure that all valid cases are correctly identified without the need for a state machine.\n\nThis patch ensures that the program correctly identifies strings that are composed entirely of 'A's, 'B's, or 'C's, as well as strings that follow the 'A'+'B'+'C' pattern, thus resolving the issue.",
+  "patch_handle": "2",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1047,
+        "output_tokens": 429,
+        "estimated_cost_usd": 0.01167
+      },
+      {
+        "input_tokens": 1700,
+        "output_tokens": 428,
+        "estimated_cost_usd": 0.014920000000000001
+      },
+      {
+        "input_tokens": 1736,
+        "output_tokens": 398,
+        "estimated_cost_usd": 0.01465
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.04124
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

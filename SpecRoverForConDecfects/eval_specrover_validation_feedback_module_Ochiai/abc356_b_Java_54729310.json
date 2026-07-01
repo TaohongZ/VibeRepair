@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54729310",
+  "task_name": "abc356_b",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:52:52.406678",
+  "finished_at": "2026-06-15T09:53:05.316227",
+  "elapsed_seconds": 12.91,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 12.91,
+      "estimated_cost": {
+        "total": 0.018840000000000003
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n\n        int[] A = new int[M];\n        int[][] X = new int[N][M];\n\n        for (int i = 0; i < M; i++) {\n            A[i] = sc.nextInt();\n        }\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                X[i][j] = sc.nextInt();\n            }\n        }\n        sc.close();\n\n        int[] total = new int[M];\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                X[i][j] += total[j]; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n            }\n        }\n\n        boolean result = true;\n\n        for (int i = 0; i < M; i++){\n            if(A[i] > total[i]){\n                result = false;\n                break;\n            }\n        }\n        System.out.println(result ? \"Yes\" : \"No\");\n    }",
+  "fix_code": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n\n        int[] A = new int[M];\n        int[][] X = new int[N][M];\n\n        for (int i = 0; i < M; i++) {\n            A[i] = sc.nextInt();\n        }\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                X[i][j] = sc.nextInt();\n            }\n        }\n        sc.close();\n\n        int[] total = new int[M];\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                total[j] += X[i][j]; // Correctly accumulate the nutrient values from X into total\n            }\n        }\n\n        boolean result = true;\n\n        for (int i = 0; i < M; i++){\n            if(A[i] > total[i]){\n                result = false;\n                break;\n            }\n        }\n        System.out.println(result ? \"Yes\" : \"No\");\n    }",
+  "fix_code_raw_response": "The issue in the provided code is that the `total` array is not being updated correctly. Instead of adding the nutrient values from `X` to `total`, the code is mistakenly adding the values of `total` to `X`. This results in `total` remaining zero, which causes the final check to fail.\n\nTo fix this, we need to correctly accumulate the nutrient values from `X` into `total`.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                X[i][j] += total[j]; // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n            }\n        }\n</original>\n<patched>\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                total[j] += X[i][j]; // Correctly accumulate the nutrient values from X into total\n            }\n        }\n</patched>\n```\n\nThis change ensures that the `total` array correctly accumulates the nutrient values from all the foods Takahashi ate, allowing the final check to determine if he met his nutrient goals.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 2910,
+        "output_tokens": 286,
+        "estimated_cost_usd": 0.018840000000000003
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.018840000000000003
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

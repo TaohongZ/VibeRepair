@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54769975",
+  "task_name": "abc355_d",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T19:39:00.192964",
+  "finished_at": "2026-06-15T19:39:21.763955",
+  "elapsed_seconds": 21.57,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 21.57,
+      "estimated_cost": {
+        "total": 0.008155
+      }
+    }
+  ],
+  "faulty_function": "N = int(input())\nstarts = [0] * N\nends = [0] * N\n\nfor i in range(N):\n    start, end = map(int, input().split())\n    starts[i] = start\n    ends[i] = end\n\nstarts.sort(reverse = True)\nends.sort(reverse = True)\n\nn_active_intervals = 0\nn_overlaps = 0\nwhile starts:\n    if starts[-1] <= ends[-1]:\n        # print(f\"start at {starts[-1]}, {n_active_intervals} active\")\n        starts.pop()\n        n_overlaps += n_active_intervals\n        n_active_intervals += 1\n    else:\n        # print(f\"end at {ends[-1]},  {n_active_intervals-1} active\")\n        ends.pop()\n        n_active_intervals -= 1\n\nprint(n_active_intervals) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "N = int(input())\nstarts = [0] * N\nends = [0] * N\n\nfor i in range(N):\n    start, end = map(int, input().split())\n    starts[i] = start\n    ends[i] = end\n\nstarts.sort(reverse = True)\nends.sort(reverse = True)\n\nn_active_intervals = 0\nn_overlaps = 0\nwhile starts:\n    if starts[-1] <= ends[-1]:\n        # print(f\"start at {starts[-1]}, {n_active_intervals} active\")\n        starts.pop()\n        n_overlaps += n_active_intervals\n        n_active_intervals += 1\n    else:\n        # print(f\"end at {ends[-1]},  {n_active_intervals-1} active\")\n        ends.pop()\n        n_active_intervals -= 1\n\nprint(n_overlaps)",
+  "fix_code_raw_response": "The issue in the provided code is that the final print statement outputs `n_active_intervals` instead of `n_overlaps`, which is the correct count of overlapping intervals. The variable `n_active_intervals` is used to keep track of the number of currently active intervals, but it is not the final answer we need.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nprint(n_active_intervals) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n</original>\n<patched>\nprint(n_overlaps) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n</patched>\n```\n\nThis change ensures that the program outputs the correct number of overlapping interval pairs.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 983,
+        "output_tokens": 216,
+        "estimated_cost_usd": 0.008155
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.008155
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

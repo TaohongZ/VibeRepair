@@ -1,0 +1,83 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54625327",
+  "task_name": "abc350_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T09:39:39.767779",
+  "finished_at": "2026-06-15T09:39:59.272212",
+  "elapsed_seconds": 19.5,
+  "selected_outer_run_index": 2,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": null,
+      "timed_out": null,
+      "memory_exceeded": null,
+      "pass_rate": null,
+      "patch_handle": null,
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 7.35,
+      "estimated_cost": {
+        "total": 0.023445
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "1",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 12.16,
+      "estimated_cost": {
+        "total": 0.024260000000000004
+      }
+    }
+  ],
+  "faulty_function": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String s = sc.next();\n\n        String str1 = s.substring(0,2);\n        String str2 = s.substring(3,6);\n\n        if(Integer.parseInt(str2) < 350 && Integer.parseInt(str2) !=316){ // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n            System.out.println(\"Yes\");\n        }else{\n            System.out.println(\"No\");\n        }\n\n    }",
+  "fix_code": "    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String s = sc.next();\n\n        String str1 = s.substring(0, 3);\n        String str2 = s.substring(3, 6);\n\n        if (str1.equals(\"ABC\")) {\n            int num = Integer.parseInt(str2);\n            if (num >= 1 && num <= 349 && num != 316 && str2.equals(String.format(\"%03d\", num))) {\n                System.out.println(\"Yes\");\n            } else {\n                System.out.println(\"No\");\n            }\n        } else {\n            System.out.println(\"No\");\n        }\n    }",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the last three characters of the string represent a valid three-digit number between 001 and 349, excluding 316. Additionally, we need to ensure that the first three characters are \"ABC\".\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String s = sc.next();\n\n        String str1 = s.substring(0,2);\n        String str2 = s.substring(3,6);\n\n        if(Integer.parseInt(str2) < 350 && Integer.parseInt(str2) !=316){\n            System.out.println(\"Yes\");\n        }else{\n            System.out.println(\"No\");\n        }\n\n    }\n</original>\n<patched>\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String s = sc.next();\n\n        String str1 = s.substring(0, 3);\n        String str2 = s.substring(3, 6);\n\n        if (str1.equals(\"ABC\")) {\n            int num = Integer.parseInt(str2);\n            if (num >= 1 && num <= 349 && num != 316 && str2.equals(String.format(\"%03d\", num))) {\n                System.out.println(\"Yes\");\n            } else {\n                System.out.println(\"No\");\n            }\n        } else {\n            System.out.println(\"No\");\n        }\n    }\n</patched>\n```\n\nExplanation:\n1. Changed `s.substring(0, 2)` to `s.substring(0, 3)` to correctly extract the first three characters.\n2. Added a check to ensure that `str1.equals(\"ABC\")`.\n3. Parsed the last three characters as an integer and checked if it is between 1 and 349 (inclusive) and not equal to 316.\n4. Ensured that the string representation of the number has exactly three digits using `String.format(\"%03d\", num)`.\n5. Kept the existing logic for checking the numeric part of the string.",
+  "patch_handle": "1",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 912,
+        "output_tokens": 358,
+        "estimated_cost_usd": 0.009930000000000001
+      },
+      {
+        "input_tokens": 1546,
+        "output_tokens": 440,
+        "estimated_cost_usd": 0.01433
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.024260000000000004
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

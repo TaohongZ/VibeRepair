@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "53695200",
+  "task_name": "abc352_a",
+  "language": "Java",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T07:40:22.667483",
+  "finished_at": "2026-06-15T07:40:33.414054",
+  "elapsed_seconds": 10.75,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 10.75,
+      "estimated_cost": {
+        "total": 0.011855000000000001
+      }
+    }
+  ],
+  "faulty_function": "  public static void main( String[] args ){\n    Scanner scan = new Scanner(System.in);\n    \n    int n = scan.nextInt();\n    int x = scan.nextInt();\n    int y = scan.nextInt();\n    int z = scan.nextInt();\n    \n    \n      if((x <= z && z <= y) || (y <= z && z <= x)){\n        System.out.println(\"Yes\");\n      }else{\n        System.out.println(\"NO\"); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      }\n  }",
+  "fix_code": "  public static void main( String[] args ){\n    Scanner scan = new Scanner(System.in);\n    \n    int n = scan.nextInt();\n    int x = scan.nextInt();\n    int y = scan.nextInt();\n    int z = scan.nextInt();\n    \n    // Determine if the travel is inbound or outbound\n    if (x < y) { // Inbound travel\n      if (x < z && z < y) {\n        System.out.println(\"Yes\");\n      } else {\n        System.out.println(\"No\");\n      }\n    } else { // Outbound travel\n      if (y < z && z < x) {\n        System.out.println(\"Yes\");\n      } else {\n        System.out.println(\"No\");\n      }\n    }\n  }",
+  "fix_code_raw_response": "The issue in the code is that it does not correctly determine whether the train stops at station Z during the travel from station X to station Y. The logic should be based on the direction of travel (inbound or outbound) and whether Z lies between X and Y in that direction.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.java</file>\n<original>\n  public static void main( String[] args ){\n    Scanner scan = new Scanner(System.in);\n    \n    int n = scan.nextInt();\n    int x = scan.nextInt();\n    int y = scan.nextInt();\n    int z = scan.nextInt();\n    \n    \n      if((x <= z && z <= y) || (y <= z && z <= x)){\n        System.out.println(\"Yes\");\n      }else{\n        System.out.println(\"NO\"); // faultLocation.txt identifies this line as the provided fault location. It is used because Ochiai fault localization is unavailable.\n      }\n  }\n</original>\n<patched>\n  public static void main( String[] args ){\n    Scanner scan = new Scanner(System.in);\n    \n    int n = scan.nextInt();\n    int x = scan.nextInt();\n    int y = scan.nextInt();\n    int z = scan.nextInt();\n    \n    // Determine if the travel is inbound or outbound\n    if (x < y) { // Inbound travel\n      if (x < z && z < y) {\n        System.out.println(\"Yes\");\n      } else {\n        System.out.println(\"No\");\n      }\n    } else { // Outbound travel\n      if (y < z && z < x) {\n        System.out.println(\"Yes\");\n      } else {\n        System.out.println(\"No\");\n      }\n    }\n  }\n</patched>\n```\n\nExplanation:\n- The original code incorrectly checks if Z is between X and Y without considering the direction of travel.\n- The patched code first determines the direction of travel (inbound or outbound) by comparing X and Y.\n- For inbound travel (X < Y), it checks if Z is strictly between X and Y.\n- For outbound travel (X > Y), it checks if Z is strictly between Y and X.\n- This ensures that the program correctly determines whether the train stops at station Z during the travel from station X to station Y.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 931,
+        "output_tokens": 480,
+        "estimated_cost_usd": 0.011855000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.011855000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

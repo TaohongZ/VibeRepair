@@ -1,0 +1,83 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55141825",
+  "task_name": "abc350_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:24:24.057653",
+  "finished_at": "2026-06-15T11:24:45.917872",
+  "elapsed_seconds": 21.86,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 21.86,
+      "estimated_cost": {
+        "total": 0.05379500000000001
+      }
+    }
+  ],
+  "faulty_function": "s = input()\n\nnum = int(s[3:6])\nif num > 349:\n  print(\"No\")\nelif num == 316:\n  print(\"No\")\nelif s[0:3] != \"ABC\":\n  print(\"No\")\nelse:\n  print(\"Yes\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "s = input()\n\nif s[0:3] != 'ABC':\n    print('No')\nelse:\n    num = int(s[3:6])\n    if 1 <= num <= 349 and num != 316:\n        print('Yes')\n    else:\n        print('No')",
+  "fix_code_raw_response": "To resolve the issue, we need to ensure that the number part of the string is within the range 001 to 349, excluding 316. The current code does not handle the case where the number is less than 1 (e.g., 000). We will add a condition to check if the number is within the valid range and not equal to 316.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\ns = input()\n\nnum = int(s[3:6])\nif num > 349:\n  print(\"No\")\nelif num == 316:\n  print(\"No\")\nelif s[0:3] != \"ABC\":\n  print(\"No\")\nelse:\n  print(\"Yes\")\n</original>\n<patched>\ns = input()\n\nif s[0:3] != 'ABC':\n    print('No')\nelse:\n    num = int(s[3:6])\n    if 1 <= num <= 349 and num != 316:\n        print('Yes')\n    else:\n        print('No')\n</patched>\n```\n\nThis patch ensures that the number part of the string is within the valid range (001 to 349, excluding 316) and that the string starts with \"ABC\". This should correctly handle all edge cases, including the one provided in the test case.",
+  "patch_handle": "4",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 895,
+        "output_tokens": 223,
+        "estimated_cost_usd": 0.00782
+      },
+      {
+        "input_tokens": 1355,
+        "output_tokens": 304,
+        "estimated_cost_usd": 0.011335000000000001
+      },
+      {
+        "input_tokens": 1451,
+        "output_tokens": 289,
+        "estimated_cost_usd": 0.01159
+      },
+      {
+        "input_tokens": 1439,
+        "output_tokens": 289,
+        "estimated_cost_usd": 0.011530000000000002
+      },
+      {
+        "input_tokens": 1464,
+        "output_tokens": 280,
+        "estimated_cost_usd": 0.01152
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.05379500000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "programId": "53419632",
+  "repair_index": 1,
+  "task_name": "arc177_c",
+  "language": "Java",
+  "root_cause": "Inconsistent initial condition handling for case `c != 'R'`. Specifically, the provided code incorrectly checks `S[0][0]` instead of `S[0][N - 1]`. This causes incorrect initialization of the `len` array and the `que` for characters other than 'R'.",
+  "suggestion": "Suggestion 1. Correct Initial Condition Check Modify the line:\n```java\nelse if (S[0][0] == c) {\n```\nto:\n```java\nelse if (S[0][N - 1] == c) {\n```\nThis change ensures that the appropriate initial condition is checked, providing correct initialization for `len` and `que`.\n",
+  "fix_code": "private int calc(char c) {\n    int[][] len = new int[N][N];\n    for (var is : len)\n      fill(is, infI);\n\n    Deque<int[]> que = new ArrayDeque<>();\n    if (c == 'R') {\n      if (S[0][0] == c) {\n        len[0][0] = 0;\n        que.add(new int[]{0, 0, 0});\n      } else {\n        len[0][0] = 1;\n        que.add(new int[]{0, 0, 1});\n      }\n    } else if (S[0][N - 1] == c) { // fixed initial condition check\n      len[0][N - 1] = 0;\n      que.add(new int[]{0, N - 1, 0});\n    } else {\n      len[0][N - 1] = 1;\n      que.add(new int[]{0, N - 1, 1});\n    }\n\n    while (!que.isEmpty()) {\n      var cur = que.poll();\n      int i = cur[0];\n      int j = cur[1];\n\n      List<int[]> sur = new ArrayList<>();\n      if (0 < i)\n        sur.add(new int[]{i - 1, j});\n      if (0 < j)\n        sur.add(new int[]{i, j - 1});\n      if (i + 1 < N)\n        sur.add(new int[]{i + 1, j});\n      if (j + 1 < N)\n        sur.add(new int[]{i, j + 1});\n\n      for (var s : sur) {\n        int l = S[s[0]][s[1]] == c ? 0 : 1;\n        if (len[s[0]][s[1]] > cur[2] + l) {\n          len[s[0]][s[1]] = cur[2] + l;\n          if (l == 0)\n            que.addFirst(new int[]{s[0], s[1], len[s[0]][s[1]]});\n          else\n            que.addLast(new int[]{s[0], s[1], len[s[0]][s[1]]});\n        }\n      }\n    }\n\n    return c == 'R' ? len[N - 1][N - 1] : len[N - 1][0];\n  }",
+  "repair_run": 1,
+  "source_repair_index": 1,
+  "discarded_patch_count_in_same_run": 2,
+  "batch_attempt_work_dir": "/home/taohongzhu/VibeRepair/ReinFixForConDecfects/output/batch_repair_dataset_2024_work/attempts/53419632/repair_01",
+  "batch_generated_at": "2026-06-14T09:44:00.200226"
+}

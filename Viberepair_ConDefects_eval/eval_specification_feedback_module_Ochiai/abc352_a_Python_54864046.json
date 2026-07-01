@@ -1,0 +1,196 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54864046",
+  "repair_index": 2,
+  "task_name": "abc352_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_loops": 5,
+  "test_timeout_seconds": 300.0,
+  "validated_attempt_index": 1,
+  "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849",
+  "generated_at": "2026-06-10T07:38:58.870123+00:00",
+  "elapsed_seconds": 9.078,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "failed",
+      "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_01/54864046_20260610_073722",
+      "elapsed_seconds": 86.947,
+      "attempts": 5
+    },
+    {
+      "outer_run_index": 2,
+      "status": "success",
+      "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849",
+      "elapsed_seconds": 9.078,
+      "attempts": 1
+    }
+  ],
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "status": "pass",
+      "pass": true,
+      "pass_rate": 1.0,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849/attempt_01",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849/attempt_01/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849/attempt_01/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849/attempt_01/dataset/abc352_a/Python/54864046",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849/attempt_01/dataset/abc352_a/Python/54864046/faultyVersion.py",
+      "test_records": [
+        {
+          "task": "abc352_a",
+          "language": "Python",
+          "program_id": "54864046",
+          "pass_rate": 1.0,
+          "tests_run": 12,
+          "failed_tests": [],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function should determine if a train traveling from station X to station Y will stop at station Z. This involves checking if Z is on the path between X and Y, considering the direction of travel (inbound or outbound). The function should output \"Yes\" if the train stops at Z, and \"No\" otherwise.",
+        "diagnosis_and_repair_directions": "The flawed specification incorrectly treats the problem as a simple range check between X and Y, without considering the direction of travel. The key issue is that the function does not account for whether the travel is inbound (from 1 to N) or outbound (from N to 1). The function should instead check if Z is between X and Y in the correct travel direction. Additionally, the function should accept integer inputs rather than strings, as the station numbers are integers.\nRepair Directions:\n1. Change the input types from strings to integers.\n2. Determine the direction of travel based on whether X < Y (inbound) or X > Y (outbound).\n3. For inbound travel, check if X <= Z <= Y.\n4. For outbound travel, check if Y <= Z <= X.\n5. Output \"Yes\" if Z is on the path between X and Y in the correct direction, otherwise output \"No\".",
+        "raw_response": "Intended Behavior:\nThe function should determine if a train traveling from station X to station Y will stop at station Z. This involves checking if Z is on the path between X and Y, considering the direction of travel (inbound or outbound). The function should output \"Yes\" if the train stops at Z, and \"No\" otherwise.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly treats the problem as a simple range check between X and Y, without considering the direction of travel. The key issue is that the function does not account for whether the travel is inbound (from 1 to N) or outbound (from N to 1). The function should instead check if Z is between X and Y in the correct travel direction. Additionally, the function should accept integer inputs rather than strings, as the station numbers are integers.\n\nRepair Directions:\n1. Change the input types from strings to integers.\n2. Determine the direction of travel based on whether X < Y (inbound) or X > Y (outbound).\n3. For inbound travel, check if X <= Z <= Y.\n4. For outbound travel, check if Y <= Z <= X.\n5. Output \"Yes\" if Z is on the path between X and Y in the correct direction, otherwise output \"No\".\n\nFixed Specification:\nFunction: check_station_on_route\nPurpose: To determine if a train traveling from station X to station Y stops at station Z.\nSignature: check_station_on_route(N: int, X: int, Y: int, Z: int) -> None\nInput: Four integer inputs, N (total number of stations), X (starting station), Y (destination station), and Z (station to check).\nOutput: Prints \"Yes\" if the train stops at station Z, otherwise prints \"No\".\nBehavior:\n1. Read four integer inputs N, X, Y, and Z.\n2. If X < Y (inbound travel), check if X <= Z <= Y.\n3. If X > Y (outbound travel), check if Y <= Z <= X.\n4. Print \"Yes\" if Z is on the path between X and Y in the correct travel direction, otherwise print \"No\"."
+      },
+      "fixed_specification": "Function: check_station_on_route\nPurpose: To determine if a train traveling from station X to station Y stops at station Z.\nSignature: check_station_on_route(N: int, X: int, Y: int, Z: int) -> None\nInput: Four integer inputs, N (total number of stations), X (starting station), Y (destination station), and Z (station to check).\nOutput: Prints \"Yes\" if the train stops at station Z, otherwise prints \"No\".\nBehavior:\n1. Read four integer inputs N, X, Y, and Z.\n2. If X < Y (inbound travel), check if X <= Z <= Y.\n3. If X > Y (outbound travel), check if Y <= Z <= X.\n4. Print \"Yes\" if Z is on the path between X and Y in the correct travel direction, otherwise print \"No\".",
+      "fix_specification_usage": {
+        "input_tokens": 776,
+        "output_tokens": 445,
+        "total_tokens": 1221
+      },
+      "fix_specification_estimated_cost": 0.00639,
+      "fix_code": "N, X, Y, Z = map(int, input().split())\n\nresult = \"No\"\nif X < Y and X <= Z <= Y:\n    result = \"Yes\"\nelif X > Y and Y <= Z <= X:\n    result = \"Yes\"\n\nprint(result)\n",
+      "fix_code_raw_response": "```python\nN, X, Y, Z = map(int, input().split())\n\nresult = \"No\"\nif X < Y and X <= Z <= Y:\n    result = \"Yes\"\nelif X > Y and Y <= Z <= X:\n    result = \"Yes\"\n\nprint(result)\n```",
+      "fix_code_usage": {
+        "input_tokens": 621,
+        "output_tokens": 61,
+        "total_tokens": 682
+      },
+      "fix_code_estimated_cost": 0.0021625
+    }
+  ],
+  "last_chain_summary": {
+    "status": "success",
+    "generated_at": "2026-06-10T07:38:58.698744+00:00",
+    "programId": "54864046",
+    "task_name": "abc352_a",
+    "language": "Python",
+    "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849",
+    "max_loops": 5,
+    "use_structure_adapter": false,
+    "faulty_function": "N, X, Y, Z = input().split()\n\nstart = min(X, Y)\nend = max(X, Y)\n\nresult = \"No\"\nif start <= Z and end >= Z:\n    result = \"Yes\" # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\nprint(result)",
+    "flawed_specification": "[\n  Function: check_value_in_range\n  Purpose: To determine if a given value Z falls within the range defined by two other values X and Y.\n  Signature: check_value_in_range(N: str, X: str, Y: str, Z: str) -> None\n  Input: Four string inputs, N, X, Y, and Z, where X and Y define the range, and Z is the value to check against this range.\n  Output: Prints a string \"Yes\" if Z is within the range [min(X, Y), max(X, Y)], otherwise prints \"No\".\n  Behavior:\n    1. Read four space-separated string inputs N, X, Y, and Z from the user.\n    2. Determine the minimum of X and Y and assign it to the variable `start`.\n    3. Determine the maximum of X and Y and assign it to the variable `end`.\n    4. Initialize the variable `result` with the string \"No\".\n    5. Check if Z is greater than or equal to `start` and less than or equal to `end`.\n    6. If the condition in step 5 is true, set `result` to \"Yes\" (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n    7. Print the value of `result`.\n]",
+    "flawed_specification_usage": {
+      "input_tokens": 558,
+      "output_tokens": 283,
+      "total_tokens": 841
+    },
+    "flawed_specification_estimated_cost": 0.004225,
+    "validated_attempt_index": 1,
+    "final_fix_code": "N, X, Y, Z = map(int, input().split())\n\nresult = \"No\"\nif X < Y and X <= Z <= Y:\n    result = \"Yes\"\nelif X > Y and Y <= Z <= X:\n    result = \"Yes\"\n\nprint(result)\n",
+    "outer_run_index": 2,
+    "elapsed_seconds": 9.078,
+    "attempts": [
+      {
+        "attempt_index": 1,
+        "status": "pass",
+        "pass": true,
+        "pass_rate": 1.0,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849/attempt_01",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849/attempt_01/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849/attempt_01/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849/attempt_01/dataset/abc352_a/Python/54864046",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54864046/outer_run_02/54864046_20260610_073849/attempt_01/dataset/abc352_a/Python/54864046/faultyVersion.py",
+        "test_records": [
+          {
+            "task": "abc352_a",
+            "language": "Python",
+            "program_id": "54864046",
+            "pass_rate": 1.0,
+            "tests_run": 12,
+            "failed_tests": [],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function should determine if a train traveling from station X to station Y will stop at station Z. This involves checking if Z is on the path between X and Y, considering the direction of travel (inbound or outbound). The function should output \"Yes\" if the train stops at Z, and \"No\" otherwise.",
+          "diagnosis_and_repair_directions": "The flawed specification incorrectly treats the problem as a simple range check between X and Y, without considering the direction of travel. The key issue is that the function does not account for whether the travel is inbound (from 1 to N) or outbound (from N to 1). The function should instead check if Z is between X and Y in the correct travel direction. Additionally, the function should accept integer inputs rather than strings, as the station numbers are integers.\nRepair Directions:\n1. Change the input types from strings to integers.\n2. Determine the direction of travel based on whether X < Y (inbound) or X > Y (outbound).\n3. For inbound travel, check if X <= Z <= Y.\n4. For outbound travel, check if Y <= Z <= X.\n5. Output \"Yes\" if Z is on the path between X and Y in the correct direction, otherwise output \"No\".",
+          "raw_response": "Intended Behavior:\nThe function should determine if a train traveling from station X to station Y will stop at station Z. This involves checking if Z is on the path between X and Y, considering the direction of travel (inbound or outbound). The function should output \"Yes\" if the train stops at Z, and \"No\" otherwise.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly treats the problem as a simple range check between X and Y, without considering the direction of travel. The key issue is that the function does not account for whether the travel is inbound (from 1 to N) or outbound (from N to 1). The function should instead check if Z is between X and Y in the correct travel direction. Additionally, the function should accept integer inputs rather than strings, as the station numbers are integers.\n\nRepair Directions:\n1. Change the input types from strings to integers.\n2. Determine the direction of travel based on whether X < Y (inbound) or X > Y (outbound).\n3. For inbound travel, check if X <= Z <= Y.\n4. For outbound travel, check if Y <= Z <= X.\n5. Output \"Yes\" if Z is on the path between X and Y in the correct direction, otherwise output \"No\".\n\nFixed Specification:\nFunction: check_station_on_route\nPurpose: To determine if a train traveling from station X to station Y stops at station Z.\nSignature: check_station_on_route(N: int, X: int, Y: int, Z: int) -> None\nInput: Four integer inputs, N (total number of stations), X (starting station), Y (destination station), and Z (station to check).\nOutput: Prints \"Yes\" if the train stops at station Z, otherwise prints \"No\".\nBehavior:\n1. Read four integer inputs N, X, Y, and Z.\n2. If X < Y (inbound travel), check if X <= Z <= Y.\n3. If X > Y (outbound travel), check if Y <= Z <= X.\n4. Print \"Yes\" if Z is on the path between X and Y in the correct travel direction, otherwise print \"No\"."
+        },
+        "fixed_specification": "Function: check_station_on_route\nPurpose: To determine if a train traveling from station X to station Y stops at station Z.\nSignature: check_station_on_route(N: int, X: int, Y: int, Z: int) -> None\nInput: Four integer inputs, N (total number of stations), X (starting station), Y (destination station), and Z (station to check).\nOutput: Prints \"Yes\" if the train stops at station Z, otherwise prints \"No\".\nBehavior:\n1. Read four integer inputs N, X, Y, and Z.\n2. If X < Y (inbound travel), check if X <= Z <= Y.\n3. If X > Y (outbound travel), check if Y <= Z <= X.\n4. Print \"Yes\" if Z is on the path between X and Y in the correct travel direction, otherwise print \"No\".",
+        "fix_specification_usage": {
+          "input_tokens": 776,
+          "output_tokens": 445,
+          "total_tokens": 1221
+        },
+        "fix_specification_estimated_cost": 0.00639,
+        "fix_code": "N, X, Y, Z = map(int, input().split())\n\nresult = \"No\"\nif X < Y and X <= Z <= Y:\n    result = \"Yes\"\nelif X > Y and Y <= Z <= X:\n    result = \"Yes\"\n\nprint(result)\n",
+        "fix_code_raw_response": "```python\nN, X, Y, Z = map(int, input().split())\n\nresult = \"No\"\nif X < Y and X <= Z <= Y:\n    result = \"Yes\"\nelif X > Y and Y <= Z <= X:\n    result = \"Yes\"\n\nprint(result)\n```",
+        "fix_code_usage": {
+          "input_tokens": 621,
+          "output_tokens": 61,
+          "total_tokens": 682
+        },
+        "fix_code_estimated_cost": 0.0021625
+      }
+    ]
+  },
+  "faulty_function": "N, X, Y, Z = input().split()\n\nstart = min(X, Y)\nend = max(X, Y)\n\nresult = \"No\"\nif start <= Z and end >= Z:\n    result = \"Yes\" # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n\nprint(result)",
+  "flawed_specification": "[\n  Function: check_value_in_range\n  Purpose: To determine if a given value Z falls within the range defined by two other values X and Y.\n  Signature: check_value_in_range(N: str, X: str, Y: str, Z: str) -> None\n  Input: Four string inputs, N, X, Y, and Z, where X and Y define the range, and Z is the value to check against this range.\n  Output: Prints a string \"Yes\" if Z is within the range [min(X, Y), max(X, Y)], otherwise prints \"No\".\n  Behavior:\n    1. Read four space-separated string inputs N, X, Y, and Z from the user.\n    2. Determine the minimum of X and Y and assign it to the variable `start`.\n    3. Determine the maximum of X and Y and assign it to the variable `end`.\n    4. Initialize the variable `result` with the string \"No\".\n    5. Check if Z is greater than or equal to `start` and less than or equal to `end`.\n    6. If the condition in step 5 is true, set `result` to \"Yes\" (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n    7. Print the value of `result`.\n]",
+  "flawed_specification_usage": {
+    "input_tokens": 558,
+    "output_tokens": 283,
+    "total_tokens": 841
+  },
+  "flawed_specification_estimated_cost": 0.004225,
+  "selected_inner_attempt_index": 1,
+  "selected_inner_attempt_status": "pass",
+  "pass_rate": 1.0,
+  "test_records": [
+    {
+      "task": "abc352_a",
+      "language": "Python",
+      "program_id": "54864046",
+      "pass_rate": 1.0,
+      "tests_run": 12,
+      "failed_tests": [],
+      "error_tests": []
+    }
+  ],
+  "test_error": null,
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should determine if a train traveling from station X to station Y will stop at station Z. This involves checking if Z is on the path between X and Y, considering the direction of travel (inbound or outbound). The function should output \"Yes\" if the train stops at Z, and \"No\" otherwise.",
+    "diagnosis_and_repair_directions": "The flawed specification incorrectly treats the problem as a simple range check between X and Y, without considering the direction of travel. The key issue is that the function does not account for whether the travel is inbound (from 1 to N) or outbound (from N to 1). The function should instead check if Z is between X and Y in the correct travel direction. Additionally, the function should accept integer inputs rather than strings, as the station numbers are integers.\nRepair Directions:\n1. Change the input types from strings to integers.\n2. Determine the direction of travel based on whether X < Y (inbound) or X > Y (outbound).\n3. For inbound travel, check if X <= Z <= Y.\n4. For outbound travel, check if Y <= Z <= X.\n5. Output \"Yes\" if Z is on the path between X and Y in the correct direction, otherwise output \"No\".",
+    "raw_response": "Intended Behavior:\nThe function should determine if a train traveling from station X to station Y will stop at station Z. This involves checking if Z is on the path between X and Y, considering the direction of travel (inbound or outbound). The function should output \"Yes\" if the train stops at Z, and \"No\" otherwise.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly treats the problem as a simple range check between X and Y, without considering the direction of travel. The key issue is that the function does not account for whether the travel is inbound (from 1 to N) or outbound (from N to 1). The function should instead check if Z is between X and Y in the correct travel direction. Additionally, the function should accept integer inputs rather than strings, as the station numbers are integers.\n\nRepair Directions:\n1. Change the input types from strings to integers.\n2. Determine the direction of travel based on whether X < Y (inbound) or X > Y (outbound).\n3. For inbound travel, check if X <= Z <= Y.\n4. For outbound travel, check if Y <= Z <= X.\n5. Output \"Yes\" if Z is on the path between X and Y in the correct direction, otherwise output \"No\".\n\nFixed Specification:\nFunction: check_station_on_route\nPurpose: To determine if a train traveling from station X to station Y stops at station Z.\nSignature: check_station_on_route(N: int, X: int, Y: int, Z: int) -> None\nInput: Four integer inputs, N (total number of stations), X (starting station), Y (destination station), and Z (station to check).\nOutput: Prints \"Yes\" if the train stops at station Z, otherwise prints \"No\".\nBehavior:\n1. Read four integer inputs N, X, Y, and Z.\n2. If X < Y (inbound travel), check if X <= Z <= Y.\n3. If X > Y (outbound travel), check if Y <= Z <= X.\n4. Print \"Yes\" if Z is on the path between X and Y in the correct travel direction, otherwise print \"No\"."
+  },
+  "fixed_specification": "Function: check_station_on_route\nPurpose: To determine if a train traveling from station X to station Y stops at station Z.\nSignature: check_station_on_route(N: int, X: int, Y: int, Z: int) -> None\nInput: Four integer inputs, N (total number of stations), X (starting station), Y (destination station), and Z (station to check).\nOutput: Prints \"Yes\" if the train stops at station Z, otherwise prints \"No\".\nBehavior:\n1. Read four integer inputs N, X, Y, and Z.\n2. If X < Y (inbound travel), check if X <= Z <= Y.\n3. If X > Y (outbound travel), check if Y <= Z <= X.\n4. Print \"Yes\" if Z is on the path between X and Y in the correct travel direction, otherwise print \"No\".",
+  "fix_code": "N, X, Y, Z = map(int, input().split())\n\nresult = \"No\"\nif X < Y and X <= Z <= Y:\n    result = \"Yes\"\nelif X > Y and Y <= Z <= X:\n    result = \"Yes\"\n\nprint(result)\n",
+  "fix_code_raw_response": "```python\nN, X, Y, Z = map(int, input().split())\n\nresult = \"No\"\nif X < Y and X <= Z <= Y:\n    result = \"Yes\"\nelif X > Y and Y <= Z <= X:\n    result = \"Yes\"\n\nprint(result)\n```",
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 558,
+      "output_tokens": 283,
+      "total_tokens": 841
+    },
+    "fix_specification": {
+      "input_tokens": 776,
+      "output_tokens": 445,
+      "total_tokens": 1221
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 621,
+      "output_tokens": 61,
+      "total_tokens": 682
+    }
+  },
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.004225,
+    "fix_specification": 0.00639,
+    "fix_specification_and_buggy_code_to_fix_code": 0.0021625
+  }
+}

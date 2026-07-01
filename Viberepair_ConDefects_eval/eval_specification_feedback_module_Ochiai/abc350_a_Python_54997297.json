@@ -1,0 +1,189 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54997297",
+  "repair_index": 1,
+  "task_name": "abc350_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_loops": 5,
+  "test_timeout_seconds": 300.0,
+  "validated_attempt_index": 1,
+  "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710",
+  "generated_at": "2026-06-10T06:27:20.088355+00:00",
+  "elapsed_seconds": 10.028,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710",
+      "elapsed_seconds": 10.028,
+      "attempts": 1
+    }
+  ],
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "status": "pass",
+      "pass": true,
+      "pass_rate": 1.0,
+      "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710/attempt_01",
+      "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710/attempt_01/verification_bundle",
+      "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710/attempt_01/dataset",
+      "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710/attempt_01/dataset/abc350_a/Python/54997297",
+      "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710/attempt_01/dataset/abc350_a/Python/54997297/faultyVersion.py",
+      "test_records": [
+        {
+          "task": "abc350_a",
+          "language": "Python",
+          "program_id": "54997297",
+          "pass_rate": 1.0,
+          "tests_run": 10,
+          "failed_tests": [],
+          "error_tests": []
+        }
+      ],
+      "test_error": null,
+      "fix_specification_reasoning": {
+        "intended_behavior": "The function should determine if a given string `S` is a valid abbreviation of a contest held and concluded on AtCoder before the start of this contest. The string `S` must be of the form \"ABC\" followed by a three-digit number. This number should be within the range 001 to 349, excluding 316. If `S` matches one of these valid contest abbreviations, the function should output \"Yes\"; otherwise, it should output \"No\".",
+        "diagnosis_and_repair_directions": "The flawed specification has several issues:\n1. The function checks if `S` is exactly \"ABC316\" and exits immediately, which is correct, but it should not exit the program; it should simply return \"No\".\n2. The loop iterates over numbers from 1 to 349, but it should correctly format these numbers as three-digit strings (e.g., \"001\", \"002\", ..., \"349\").\n3. The function should not print the result; instead, it should return \"Yes\" or \"No\" as specified in the output section.\n4. The initialization of `num` is unnecessary and misleading; the variable should be used to store the concatenated string directly within the loop.\n5. The function signature is missing parameters, and the input should be passed directly to the function rather than being read from user input.",
+        "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` is a valid abbreviation of a contest held and concluded on AtCoder before the start of this contest. The string `S` must be of the form \"ABC\" followed by a three-digit number. This number should be within the range 001 to 349, excluding 316. If `S` matches one of these valid contest abbreviations, the function should output \"Yes\"; otherwise, it should output \"No\".\n\nDiagnosis and Repair Directions:\nThe flawed specification has several issues:\n1. The function checks if `S` is exactly \"ABC316\" and exits immediately, which is correct, but it should not exit the program; it should simply return \"No\".\n2. The loop iterates over numbers from 1 to 349, but it should correctly format these numbers as three-digit strings (e.g., \"001\", \"002\", ..., \"349\").\n3. The function should not print the result; instead, it should return \"Yes\" or \"No\" as specified in the output section.\n4. The initialization of `num` is unnecessary and misleading; the variable should be used to store the concatenated string directly within the loop.\n5. The function signature is missing parameters, and the input should be passed directly to the function rather than being read from user input.\n\nFixed Specification:\nFunction: check_string\nPurpose: To determine if a given input string is a valid abbreviation of a past AtCoder contest.\nSignature: check_string(S: str) -> str\nInput: A single string input `S` of length 6, where the first three characters are \"ABC\" and the last three characters are digits.\nOutput: Returns \"Yes\" if `S` is a valid contest abbreviation, otherwise returns \"No\".\nBehavior:\n1. Accepts a string input `S`.\n2. If `S` is \"ABC316\", return \"No\".\n3. Iterate over numbers from 1 to 349.\n4. Convert each number `x` to a three-digit string.\n5. Concatenate \"ABC\" with the three-digit string representation of `x`.\n6. If the concatenated string matches `S`, return \"Yes\".\n7. If no match is found after the loop completes, return \"No\"."
+      },
+      "fixed_specification": "Function: check_string\nPurpose: To determine if a given input string is a valid abbreviation of a past AtCoder contest.\nSignature: check_string(S: str) -> str\nInput: A single string input `S` of length 6, where the first three characters are \"ABC\" and the last three characters are digits.\nOutput: Returns \"Yes\" if `S` is a valid contest abbreviation, otherwise returns \"No\".\nBehavior:\n1. Accepts a string input `S`.\n2. If `S` is \"ABC316\", return \"No\".\n3. Iterate over numbers from 1 to 349.\n4. Convert each number `x` to a three-digit string.\n5. Concatenate \"ABC\" with the three-digit string representation of `x`.\n6. If the concatenated string matches `S`, return \"Yes\".\n7. If no match is found after the loop completes, return \"No\".",
+      "fix_specification_usage": {
+        "input_tokens": 739,
+        "output_tokens": 467,
+        "total_tokens": 1206
+      },
+      "fix_specification_estimated_cost": 0.0065175,
+      "fix_code": "S = input()\nif \"ABC316\" == S:\n    print(\"No\")\nelse:\n    for x in range(1, 350):\n        x = f\"{x:03}\"\n        num = 'ABC' + x\n        if num == S:\n            print(\"Yes\")\n            break\n    else:\n        print(\"No\")\n",
+      "fix_code_raw_response": "```python\nS = input()\nif \"ABC316\" == S:\n    print(\"No\")\nelse:\n    for x in range(1, 350):\n        x = f\"{x:03}\"\n        num = 'ABC' + x\n        if num == S:\n            print(\"Yes\")\n            break\n    else:\n        print(\"No\")\n```",
+      "fix_code_usage": {
+        "input_tokens": 644,
+        "output_tokens": 74,
+        "total_tokens": 718
+      },
+      "fix_code_estimated_cost": 0.00235
+    }
+  ],
+  "last_chain_summary": {
+    "status": "success",
+    "generated_at": "2026-06-10T06:27:19.933451+00:00",
+    "programId": "54997297",
+    "task_name": "abc350_a",
+    "language": "Python",
+    "work_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710",
+    "max_loops": 5,
+    "use_structure_adapter": false,
+    "faulty_function": "S=input()\nnum=0\nif \"ABC316\"==S:\n    print(\"No\")\n    exit()\nfor x in range(1,350):\n    x=str(x)\n    num=('ABC'+x)\n    if num==S:\n        print(\"Yes\")\n        break\nelse:\n    print(\"No\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+    "flawed_specification": "[\n  Function: check_string\n  Purpose: To determine if a given input string matches a specific pattern or a specific string.\n  Signature: check_string()\n  Input: A single string input `S` from the user.\n  Output: Prints \"Yes\" or \"No\" based on the matching condition.\n  Behavior:\n    1. Accepts a string input `S` from the user.\n    2. Initializes a variable `num` to 0.\n    3. Checks if the input string `S` is exactly \"ABC316\". If true, prints \"No\" and exits the program.\n    4. Iterates over numbers from 1 to 349.\n    5. Converts the current number `x` to a string.\n    6. Concatenates \"ABC\" with the string representation of `x` and assigns it to `num`.\n    7. Checks if `num` is equal to the input string `S`.\n    8. If a match is found, prints \"Yes\" and breaks out of the loop.\n    9. If no match is found after the loop completes, prints \"No\" (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n]",
+    "flawed_specification_usage": {
+      "input_tokens": 574,
+      "output_tokens": 258,
+      "total_tokens": 832
+    },
+    "flawed_specification_estimated_cost": 0.004015,
+    "validated_attempt_index": 1,
+    "final_fix_code": "S = input()\nif \"ABC316\" == S:\n    print(\"No\")\nelse:\n    for x in range(1, 350):\n        x = f\"{x:03}\"\n        num = 'ABC' + x\n        if num == S:\n            print(\"Yes\")\n            break\n    else:\n        print(\"No\")\n",
+    "outer_run_index": 1,
+    "elapsed_seconds": 10.028,
+    "attempts": [
+      {
+        "attempt_index": 1,
+        "status": "pass",
+        "pass": true,
+        "pass_rate": 1.0,
+        "attempt_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710/attempt_01",
+        "verification_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710/attempt_01/verification_bundle",
+        "temp_dataset_root": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710/attempt_01/dataset",
+        "temp_program_dir": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710/attempt_01/dataset/abc350_a/Python/54997297",
+        "temp_source_path": "/tmp/viberepair_specification_feedback_module_Ochiai/54997297/outer_run_01/54997297_20260610_062710/attempt_01/dataset/abc350_a/Python/54997297/faultyVersion.py",
+        "test_records": [
+          {
+            "task": "abc350_a",
+            "language": "Python",
+            "program_id": "54997297",
+            "pass_rate": 1.0,
+            "tests_run": 10,
+            "failed_tests": [],
+            "error_tests": []
+          }
+        ],
+        "test_error": null,
+        "fix_specification_reasoning": {
+          "intended_behavior": "The function should determine if a given string `S` is a valid abbreviation of a contest held and concluded on AtCoder before the start of this contest. The string `S` must be of the form \"ABC\" followed by a three-digit number. This number should be within the range 001 to 349, excluding 316. If `S` matches one of these valid contest abbreviations, the function should output \"Yes\"; otherwise, it should output \"No\".",
+          "diagnosis_and_repair_directions": "The flawed specification has several issues:\n1. The function checks if `S` is exactly \"ABC316\" and exits immediately, which is correct, but it should not exit the program; it should simply return \"No\".\n2. The loop iterates over numbers from 1 to 349, but it should correctly format these numbers as three-digit strings (e.g., \"001\", \"002\", ..., \"349\").\n3. The function should not print the result; instead, it should return \"Yes\" or \"No\" as specified in the output section.\n4. The initialization of `num` is unnecessary and misleading; the variable should be used to store the concatenated string directly within the loop.\n5. The function signature is missing parameters, and the input should be passed directly to the function rather than being read from user input.",
+          "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` is a valid abbreviation of a contest held and concluded on AtCoder before the start of this contest. The string `S` must be of the form \"ABC\" followed by a three-digit number. This number should be within the range 001 to 349, excluding 316. If `S` matches one of these valid contest abbreviations, the function should output \"Yes\"; otherwise, it should output \"No\".\n\nDiagnosis and Repair Directions:\nThe flawed specification has several issues:\n1. The function checks if `S` is exactly \"ABC316\" and exits immediately, which is correct, but it should not exit the program; it should simply return \"No\".\n2. The loop iterates over numbers from 1 to 349, but it should correctly format these numbers as three-digit strings (e.g., \"001\", \"002\", ..., \"349\").\n3. The function should not print the result; instead, it should return \"Yes\" or \"No\" as specified in the output section.\n4. The initialization of `num` is unnecessary and misleading; the variable should be used to store the concatenated string directly within the loop.\n5. The function signature is missing parameters, and the input should be passed directly to the function rather than being read from user input.\n\nFixed Specification:\nFunction: check_string\nPurpose: To determine if a given input string is a valid abbreviation of a past AtCoder contest.\nSignature: check_string(S: str) -> str\nInput: A single string input `S` of length 6, where the first three characters are \"ABC\" and the last three characters are digits.\nOutput: Returns \"Yes\" if `S` is a valid contest abbreviation, otherwise returns \"No\".\nBehavior:\n1. Accepts a string input `S`.\n2. If `S` is \"ABC316\", return \"No\".\n3. Iterate over numbers from 1 to 349.\n4. Convert each number `x` to a three-digit string.\n5. Concatenate \"ABC\" with the three-digit string representation of `x`.\n6. If the concatenated string matches `S`, return \"Yes\".\n7. If no match is found after the loop completes, return \"No\"."
+        },
+        "fixed_specification": "Function: check_string\nPurpose: To determine if a given input string is a valid abbreviation of a past AtCoder contest.\nSignature: check_string(S: str) -> str\nInput: A single string input `S` of length 6, where the first three characters are \"ABC\" and the last three characters are digits.\nOutput: Returns \"Yes\" if `S` is a valid contest abbreviation, otherwise returns \"No\".\nBehavior:\n1. Accepts a string input `S`.\n2. If `S` is \"ABC316\", return \"No\".\n3. Iterate over numbers from 1 to 349.\n4. Convert each number `x` to a three-digit string.\n5. Concatenate \"ABC\" with the three-digit string representation of `x`.\n6. If the concatenated string matches `S`, return \"Yes\".\n7. If no match is found after the loop completes, return \"No\".",
+        "fix_specification_usage": {
+          "input_tokens": 739,
+          "output_tokens": 467,
+          "total_tokens": 1206
+        },
+        "fix_specification_estimated_cost": 0.0065175,
+        "fix_code": "S = input()\nif \"ABC316\" == S:\n    print(\"No\")\nelse:\n    for x in range(1, 350):\n        x = f\"{x:03}\"\n        num = 'ABC' + x\n        if num == S:\n            print(\"Yes\")\n            break\n    else:\n        print(\"No\")\n",
+        "fix_code_raw_response": "```python\nS = input()\nif \"ABC316\" == S:\n    print(\"No\")\nelse:\n    for x in range(1, 350):\n        x = f\"{x:03}\"\n        num = 'ABC' + x\n        if num == S:\n            print(\"Yes\")\n            break\n    else:\n        print(\"No\")\n```",
+        "fix_code_usage": {
+          "input_tokens": 644,
+          "output_tokens": 74,
+          "total_tokens": 718
+        },
+        "fix_code_estimated_cost": 0.00235
+      }
+    ]
+  },
+  "faulty_function": "S=input()\nnum=0\nif \"ABC316\"==S:\n    print(\"No\")\n    exit()\nfor x in range(1,350):\n    x=str(x)\n    num=('ABC'+x)\n    if num==S:\n        print(\"Yes\")\n        break\nelse:\n    print(\"No\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "flawed_specification": "[\n  Function: check_string\n  Purpose: To determine if a given input string matches a specific pattern or a specific string.\n  Signature: check_string()\n  Input: A single string input `S` from the user.\n  Output: Prints \"Yes\" or \"No\" based on the matching condition.\n  Behavior:\n    1. Accepts a string input `S` from the user.\n    2. Initializes a variable `num` to 0.\n    3. Checks if the input string `S` is exactly \"ABC316\". If true, prints \"No\" and exits the program.\n    4. Iterates over numbers from 1 to 349.\n    5. Converts the current number `x` to a string.\n    6. Concatenates \"ABC\" with the string representation of `x` and assigns it to `num`.\n    7. Checks if `num` is equal to the input string `S`.\n    8. If a match is found, prints \"Yes\" and breaks out of the loop.\n    9. If no match is found after the loop completes, prints \"No\" (Ochiai fault localization identifies this line as having the highest suspiciousness score (T0)).\n]",
+  "flawed_specification_usage": {
+    "input_tokens": 574,
+    "output_tokens": 258,
+    "total_tokens": 832
+  },
+  "flawed_specification_estimated_cost": 0.004015,
+  "selected_inner_attempt_index": 1,
+  "selected_inner_attempt_status": "pass",
+  "pass_rate": 1.0,
+  "test_records": [
+    {
+      "task": "abc350_a",
+      "language": "Python",
+      "program_id": "54997297",
+      "pass_rate": 1.0,
+      "tests_run": 10,
+      "failed_tests": [],
+      "error_tests": []
+    }
+  ],
+  "test_error": null,
+  "fix_specification_reasoning": {
+    "intended_behavior": "The function should determine if a given string `S` is a valid abbreviation of a contest held and concluded on AtCoder before the start of this contest. The string `S` must be of the form \"ABC\" followed by a three-digit number. This number should be within the range 001 to 349, excluding 316. If `S` matches one of these valid contest abbreviations, the function should output \"Yes\"; otherwise, it should output \"No\".",
+    "diagnosis_and_repair_directions": "The flawed specification has several issues:\n1. The function checks if `S` is exactly \"ABC316\" and exits immediately, which is correct, but it should not exit the program; it should simply return \"No\".\n2. The loop iterates over numbers from 1 to 349, but it should correctly format these numbers as three-digit strings (e.g., \"001\", \"002\", ..., \"349\").\n3. The function should not print the result; instead, it should return \"Yes\" or \"No\" as specified in the output section.\n4. The initialization of `num` is unnecessary and misleading; the variable should be used to store the concatenated string directly within the loop.\n5. The function signature is missing parameters, and the input should be passed directly to the function rather than being read from user input.",
+    "raw_response": "Intended Behavior:\nThe function should determine if a given string `S` is a valid abbreviation of a contest held and concluded on AtCoder before the start of this contest. The string `S` must be of the form \"ABC\" followed by a three-digit number. This number should be within the range 001 to 349, excluding 316. If `S` matches one of these valid contest abbreviations, the function should output \"Yes\"; otherwise, it should output \"No\".\n\nDiagnosis and Repair Directions:\nThe flawed specification has several issues:\n1. The function checks if `S` is exactly \"ABC316\" and exits immediately, which is correct, but it should not exit the program; it should simply return \"No\".\n2. The loop iterates over numbers from 1 to 349, but it should correctly format these numbers as three-digit strings (e.g., \"001\", \"002\", ..., \"349\").\n3. The function should not print the result; instead, it should return \"Yes\" or \"No\" as specified in the output section.\n4. The initialization of `num` is unnecessary and misleading; the variable should be used to store the concatenated string directly within the loop.\n5. The function signature is missing parameters, and the input should be passed directly to the function rather than being read from user input.\n\nFixed Specification:\nFunction: check_string\nPurpose: To determine if a given input string is a valid abbreviation of a past AtCoder contest.\nSignature: check_string(S: str) -> str\nInput: A single string input `S` of length 6, where the first three characters are \"ABC\" and the last three characters are digits.\nOutput: Returns \"Yes\" if `S` is a valid contest abbreviation, otherwise returns \"No\".\nBehavior:\n1. Accepts a string input `S`.\n2. If `S` is \"ABC316\", return \"No\".\n3. Iterate over numbers from 1 to 349.\n4. Convert each number `x` to a three-digit string.\n5. Concatenate \"ABC\" with the three-digit string representation of `x`.\n6. If the concatenated string matches `S`, return \"Yes\".\n7. If no match is found after the loop completes, return \"No\"."
+  },
+  "fixed_specification": "Function: check_string\nPurpose: To determine if a given input string is a valid abbreviation of a past AtCoder contest.\nSignature: check_string(S: str) -> str\nInput: A single string input `S` of length 6, where the first three characters are \"ABC\" and the last three characters are digits.\nOutput: Returns \"Yes\" if `S` is a valid contest abbreviation, otherwise returns \"No\".\nBehavior:\n1. Accepts a string input `S`.\n2. If `S` is \"ABC316\", return \"No\".\n3. Iterate over numbers from 1 to 349.\n4. Convert each number `x` to a three-digit string.\n5. Concatenate \"ABC\" with the three-digit string representation of `x`.\n6. If the concatenated string matches `S`, return \"Yes\".\n7. If no match is found after the loop completes, return \"No\".",
+  "fix_code": "S = input()\nif \"ABC316\" == S:\n    print(\"No\")\nelse:\n    for x in range(1, 350):\n        x = f\"{x:03}\"\n        num = 'ABC' + x\n        if num == S:\n            print(\"Yes\")\n            break\n    else:\n        print(\"No\")\n",
+  "fix_code_raw_response": "```python\nS = input()\nif \"ABC316\" == S:\n    print(\"No\")\nelse:\n    for x in range(1, 350):\n        x = f\"{x:03}\"\n        num = 'ABC' + x\n        if num == S:\n            print(\"Yes\")\n            break\n    else:\n        print(\"No\")\n```",
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 574,
+      "output_tokens": 258,
+      "total_tokens": 832
+    },
+    "fix_specification": {
+      "input_tokens": 739,
+      "output_tokens": 467,
+      "total_tokens": 1206
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 644,
+      "output_tokens": 74,
+      "total_tokens": 718
+    }
+  },
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.004015,
+    "fix_specification": 0.0065175,
+    "fix_specification_and_buggy_code_to_fix_code": 0.00235
+  }
+}

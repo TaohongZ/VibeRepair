@@ -1,0 +1,118 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54889106",
+  "task_name": "abc338_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:18:07.914412",
+  "finished_at": "2026-06-15T10:20:52.417783",
+  "elapsed_seconds": 164.5,
+  "selected_outer_run_index": 4,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "error",
+      "pass": false,
+      "validation_passed": false,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 0.8947368421052632,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 43.68,
+      "estimated_cost": {
+        "total": 0.047850000000000004
+      }
+    },
+    {
+      "outer_run_index": 2,
+      "status": "error",
+      "pass": false,
+      "validation_passed": false,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 0.8947368421052632,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 48.08,
+      "estimated_cost": {
+        "total": 0.04867
+      }
+    },
+    {
+      "outer_run_index": 3,
+      "status": "error",
+      "pass": false,
+      "validation_passed": false,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 0.8947368421052632,
+      "patch_handle": "4",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 43.8,
+      "estimated_cost": {
+        "total": 0.04686
+      }
+    },
+    {
+      "outer_run_index": 4,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "2",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 28.93,
+      "estimated_cost": {
+        "total": 0.029915000000000004
+      }
+    }
+  ],
+  "faulty_function": "s = input()\n\nif s.islower():\n    print(\"No\")\n    exit()\nfor i in range(1, len(s) - 1):\n    if s[i].isupper():\n        print(\"No\")\n        exit()\n\nprint(\"Yes\") # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "s = input()\n\nif len(s) == 1:\n    if s.isupper():\n        print(\"Yes\")\n    else:\n        print(\"No\")\nelse:\n    if s[0].isupper() and s[1:].islower():\n        print(\"Yes\")\n    else:\n        print(\"No\")",
+  "fix_code_raw_response": "The issue with the current implementation is that it does not correctly handle the case where the first character is uppercase and the rest are lowercase. Specifically, the loop condition `for i in range(1, len(s) - 1)` is incorrect because it does not check the last character of the string. Additionally, the initial check `if s.islower()` is not sufficient to determine if the first character is uppercase and the rest are lowercase.\n\nTo fix this, we need to:\n1. Check if the first character is uppercase.\n2. Ensure all other characters are lowercase.\n\nHere is the patch:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\ns = input()\n\nif s.islower():\n    print(\"No\")\n    exit()\nfor i in range(1, len(s) - 1):\n    if s[i].isupper():\n        print(\"No\")\n        exit()\n\nprint(\"Yes\")\n</original>\n<patched>\ns = input()\n\nif len(s) == 1:\n    if s.isupper():\n        print(\"Yes\")\n    else:\n        print(\"No\")\nelse:\n    if s[0].isupper() and s[1:].islower():\n        print(\"Yes\")\n    else:\n        print(\"No\")\n</patched>\n```\n\nExplanation:\n- The condition `if len(s) == 1:` handles the edge case where the string length is 1. If the single character is uppercase, it prints \"Yes\"; otherwise, it prints \"No\".\n- The condition `if s[0].isupper() and s[1:].islower():` checks if the first character is uppercase and all other characters are lowercase.\n- If both conditions are met, it prints \"Yes\"; otherwise, it prints \"No\".",
+  "patch_handle": "2",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 810,
+        "output_tokens": 300,
+        "estimated_cost_usd": 0.008550000000000002
+      },
+      {
+        "input_tokens": 1137,
+        "output_tokens": 301,
+        "estimated_cost_usd": 0.0102
+      },
+      {
+        "input_tokens": 1138,
+        "output_tokens": 365,
+        "estimated_cost_usd": 0.011165000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.029915000000000004
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

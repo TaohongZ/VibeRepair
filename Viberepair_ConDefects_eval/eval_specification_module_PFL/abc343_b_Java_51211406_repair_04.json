@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "programId": "51211406",
+  "repair_index": 4,
+  "task_name": "abc343_b",
+  "language": "Java",
+  "flawed_specification": "[\n  Function: main\n  Purpose: To read a square matrix of integers from user input and print specific elements based on certain conditions.\n  Signature: main(String[] args)\n  Input: \n    - args: An array of Strings, typically used for command-line arguments (not used in this implementation).\n    - User input: An integer 'n' followed by 'n*n' integers representing the elements of an 'n x n' matrix.\n  Output: \n    - Prints the 1-based index of columns where the matrix element is 1.\n    - Prints a newline when the column index is 3.\n  Behavior:\n    1. Initialize a Scanner object to read from standard input.\n    2. Read an integer 'n' from input, which determines the size of the matrix.\n    3. Create a 2D integer array 'a' with dimensions 'n x n'.\n    4. Populate the matrix 'a' with integers from input, filling it row by row.\n    5. Iterate over each element of the matrix 'a' using two nested loops.\n    6. For each element, if the element is 1, print the column index (1-based).\n    7. If the column index 'j' is 3, print a newline (bug is here).\n]",
+  "fix_specification_reasoning": {
+    "intended_behavior": "The intended behavior is to process an adjacency matrix representing an undirected graph and, for each vertex, print the indices of vertices directly connected to it. The indices should be printed in ascending order, and each vertex's connections should be printed on a new line.",
+    "diagnosis_and_repair_directions": "The flawed specification incorrectly describes the output behavior. It states that a newline should be printed when the column index is 3, which is not aligned with the intended behavior. Instead, a newline should be printed after listing all vertices connected to a given vertex. The specification also lacks clarity on the order of the output, which should be in ascending order. Additionally, the specification should clarify that the adjacency matrix is symmetric and that self-loops (A[i,i] = 0) are not allowed.\nTo realign the specification:\n1. Remove the condition to print a newline when the column index is 3.\n2. Specify that a newline should be printed after listing all directly connected vertices for each vertex.\n3. Ensure the output is in ascending order.\n4. Clarify that the adjacency matrix is symmetric and does not allow self-loops.",
+    "raw_response": "Intended Behavior:\nThe intended behavior is to process an adjacency matrix representing an undirected graph and, for each vertex, print the indices of vertices directly connected to it. The indices should be printed in ascending order, and each vertex's connections should be printed on a new line.\n\nDiagnosis and Repair Directions:\nThe flawed specification incorrectly describes the output behavior. It states that a newline should be printed when the column index is 3, which is not aligned with the intended behavior. Instead, a newline should be printed after listing all vertices connected to a given vertex. The specification also lacks clarity on the order of the output, which should be in ascending order. Additionally, the specification should clarify that the adjacency matrix is symmetric and that self-loops (A[i,i] = 0) are not allowed.\n\nTo realign the specification:\n1. Remove the condition to print a newline when the column index is 3.\n2. Specify that a newline should be printed after listing all directly connected vertices for each vertex.\n3. Ensure the output is in ascending order.\n4. Clarify that the adjacency matrix is symmetric and does not allow self-loops.\n\nFixed Specification:\nFunction: main\nPurpose: To read an adjacency matrix of an undirected graph from user input and print the vertices directly connected to each vertex.\nSignature: main(String[] args)\nInput:\n  - args: An array of Strings, typically used for command-line arguments (not used in this implementation).\n  - User input: An integer 'n' followed by 'n*n' integers representing the elements of an 'n x n' adjacency matrix.\nOutput:\n  - For each vertex i (1 to n), print the 1-based indices of vertices directly connected to vertex i in ascending order, each list on a new line.\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer 'n' from input, which determines the size of the adjacency matrix.\n  3. Create a 2D integer array 'a' with dimensions 'n x n'.\n  4. Populate the matrix 'a' with integers from input, filling it row by row.\n  5. For each vertex i (1 to n), iterate over the row i of the matrix.\n  6. For each element a[i][j], if it is 1, add the column index j+1 (1-based) to a list.\n  7. Sort the list of connected vertices in ascending order.\n  8. Print the sorted list of connected vertices for each vertex i, followed by a newline."
+  },
+  "fixed_specification": "Function: main\nPurpose: To read an adjacency matrix of an undirected graph from user input and print the vertices directly connected to each vertex.\nSignature: main(String[] args)\nInput:\n  - args: An array of Strings, typically used for command-line arguments (not used in this implementation).\n  - User input: An integer 'n' followed by 'n*n' integers representing the elements of an 'n x n' adjacency matrix.\nOutput:\n  - For each vertex i (1 to n), print the 1-based indices of vertices directly connected to vertex i in ascending order, each list on a new line.\nBehavior:\n  1. Initialize a Scanner object to read from standard input.\n  2. Read an integer 'n' from input, which determines the size of the adjacency matrix.\n  3. Create a 2D integer array 'a' with dimensions 'n x n'.\n  4. Populate the matrix 'a' with integers from input, filling it row by row.\n  5. For each vertex i (1 to n), iterate over the row i of the matrix.\n  6. For each element a[i][j], if it is 1, add the column index j+1 (1-based) to a list.\n  7. Sort the list of connected vertices in ascending order.\n  8. Print the sorted list of connected vertices for each vertex i, followed by a newline.",
+  "fix_code": "public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int n = sc.nextInt();\n    int a[][] = new int[n][n];\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            a[i][j] = sc.nextInt();\n        }\n    }\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            if (a[i][j] == 1) {\n                System.out.print((j + 1) + \" \");\n            }\n        }\n        System.out.println();\n    }\n}\n",
+  "estimated_cost": {
+    "buggy_code_to_flawed_specification": 0.0039875,
+    "fix_specification": 0.0072875,
+    "fix_specification_and_buggy_code_to_fix_code": 0.0031375,
+    "total": 0.0144125
+  },
+  "usage": {
+    "buggy_code_to_flawed_specification": {
+      "input_tokens": 507,
+      "output_tokens": 272,
+      "total_tokens": 779
+    },
+    "fix_specification": {
+      "input_tokens": 791,
+      "output_tokens": 531,
+      "total_tokens": 1322
+    },
+    "fix_specification_and_buggy_code_to_fix_code": {
+      "input_tokens": 623,
+      "output_tokens": 158,
+      "total_tokens": 781
+    }
+  }
+}

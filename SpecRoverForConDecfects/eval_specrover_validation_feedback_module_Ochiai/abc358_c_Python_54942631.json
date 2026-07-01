@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "54942631",
+  "task_name": "abc358_c",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T10:50:26.885882",
+  "finished_at": "2026-06-15T10:50:37.644533",
+  "elapsed_seconds": 10.76,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 10.76,
+      "estimated_cost": {
+        "total": 0.008235000000000001
+      }
+    }
+  ],
+  "faulty_function": "n, m = map(int, input().split())\ngrid = []\n\nfor _ in range(n):\n  row = input().strip()\n  grid.append(list(row))\n\nans = n\n\nfor bin in range(1 << n):\n  exist = [False] * m\n  cnt = 0\n  for i in range(n):\n    if (bin >> i) & 1:\n      cnt += 1\n      for j in range(m):\n        if grid[i][j] == \"o\":\n          exist[j] == True\n  \n  if all(exist):\n    ans = min(ans, cnt)\n\nprint(ans) # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.",
+  "fix_code": "n, m = map(int, input().split())\ngrid = []\n\nfor _ in range(n):\n  row = input().strip()\n  grid.append(list(row))\n\nans = n\n\nfor bin in range(1 << n):\n  exist = [False] * m\n  cnt = 0\n  for i in range(n):\n    if (bin >> i) & 1:\n      cnt += 1\n      for j in range(m):\n        if grid[i][j] == \"o\":\n          exist[j] = True\n  \n  if all(exist):\n    ans = min(ans, cnt)\n\nprint(ans)",
+  "fix_code_raw_response": "The issue in the provided code is due to a typo in the line where the `exist` array is updated. The line `exist[j] == True` should be `exist[j] = True`. This typo causes the program to not correctly track which flavors of popcorn are available at the selected stands, leading to an incorrect result.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\n        if grid[i][j] == \"o\":\n          exist[j] == True\n</original>\n<patched>\n        if grid[i][j] == \"o\":\n          exist[j] = True\n</patched>\n```\n\nThis change ensures that the `exist` array is correctly updated to reflect the availability of each flavor of popcorn at the selected stands. This should resolve the issue and produce the correct output.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 1107,
+        "output_tokens": 180,
+        "estimated_cost_usd": 0.008235000000000001
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.008235000000000001
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}

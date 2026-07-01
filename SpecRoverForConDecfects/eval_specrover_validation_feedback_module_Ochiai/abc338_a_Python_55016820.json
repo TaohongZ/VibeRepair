@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "pass": true,
+  "programId": "55016820",
+  "task_name": "abc338_a",
+  "language": "Python",
+  "outer_runs": 5,
+  "max_independent_runs": 5,
+  "review_rounds": 5,
+  "max_validation_feedbacks_to_patch_agent": 4,
+  "max_patch_retries": 1,
+  "test_timeout_seconds": 300.0,
+  "memory_limit_mb": 4096,
+  "enable_validation": true,
+  "reproduce_and_review": true,
+  "max_reproducer_tests": null,
+  "generated_at": "2026-06-15T11:12:02.169047",
+  "finished_at": "2026-06-15T11:12:11.231219",
+  "elapsed_seconds": 9.06,
+  "selected_outer_run_index": 1,
+  "outer_run_history": [
+    {
+      "outer_run_index": 1,
+      "status": "success",
+      "pass": true,
+      "validation_passed": true,
+      "timed_out": false,
+      "memory_exceeded": false,
+      "pass_rate": 1.0,
+      "patch_handle": "0",
+      "workflow": "reproduce_and_review",
+      "elapsed_seconds": 9.06,
+      "estimated_cost": {
+        "total": 0.00839
+      }
+    }
+  ],
+  "faulty_function": "S = input()\n\nif S[0].isupper():\n  if (len(S)>= 2 and S[1:].islower()) or len(S) == 1: # Ochiai fault localization identifies this line as having the highest suspiciousness score (T0). It may be related to the bug, but this is only a reference and should not be considered conclusive evidence.\n    print(\"Yes\")\nelse:\n  print(\"No\")",
+  "fix_code": "S = input()\n\nif S[0].isupper() and (len(S) == 1 or S[1:].islower()):\n  print(\"Yes\")\nelse:\n  print(\"No\")",
+  "fix_code_raw_response": "The issue in the provided code is that it does not correctly handle the case where the first character is uppercase, but the subsequent characters are not all lowercase. The condition should be that the first character is uppercase and all other characters are lowercase. The current code incorrectly allows for the case where the string length is 1 and the first character is uppercase, but it does not correctly handle strings longer than 1 character where the subsequent characters are not all lowercase.\n\nHere is the patch to fix the issue:\n\n# modification 1\n```\n<file>faultyVersion.py</file>\n<original>\nif S[0].isupper():\n  if (len(S)>= 2 and S[1:].islower()) or len(S) == 1:\n    print(\"Yes\")\nelse:\n  print(\"No\")\n</original>\n<patched>\nif S[0].isupper() and (len(S) == 1 or S[1:].islower()):\n  print(\"Yes\")\nelse:\n  print(\"No\")\n</patched>\n```\n\nExplanation:\n- The condition `if S[0].isupper() and (len(S) == 1 or S[1:].islower()):` ensures that the first character is uppercase and either the string length is 1 or all subsequent characters are lowercase.\n- This change ensures that the program correctly identifies strings that meet the specified condition and outputs \"Yes\" only for those cases.",
+  "patch_handle": "0",
+  "workflow": "reproduce_and_review",
+  "usage": {
+    "patch_generation": [
+      {
+        "input_tokens": 808,
+        "output_tokens": 290,
+        "estimated_cost_usd": 0.00839
+      }
+    ]
+  },
+  "estimated_cost": {
+    "total": 0.00839
+  },
+  "pass_rate": 1.0,
+  "validation": {
+    "passed": true,
+    "message": "the patch successfully resolved the issue",
+    "pass_rate": 1.0,
+    "timed_out": false,
+    "memory_exceeded": false
+  }
+}
